@@ -14,7 +14,7 @@ var input = {
   "keyName": "particles/assets/awsconfigrules.zip",
   "zipFile" : "awsconfigrules.zip",
   "sourceFolder" : "../..",
-  "src" : ["awsconfigrules/index_*.js", "awsconfigrules/json/*.json", "lib/flow_controller.js", "lib/aws/*.js"]
+  "src" : ["awsconfigrules/index_*.js", "awsconfigrules/json/*.json", "lib/flow_controller.js", "lib/aws/*.js", "lib/aws-promise/*.js"]
 }
 console.log(input);
 
