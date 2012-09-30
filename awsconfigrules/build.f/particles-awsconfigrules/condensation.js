@@ -9,7 +9,7 @@ module.exports.initialize = function(cb) {
     if (error) return cb(error);
   });
 
-  vfs.src(['awsconfigrules/index_*.js', 'awsconfigrules/json/*.json', 'lib/flow_controller.js', 'lib/aws/*.js'],{cwd:'../../..', base:'../../..'})
+  vfs.src(['awsconfigrules/index_*.js', 'awsconfigrules/json/*.json', 'lib/flow_controller.js', 'lib/aws/*.js' , 'lib/aws-promise/*.js'],{cwd:'../../..', base:'../../..'})
   .pipe(zip('awsconfigrules.zip'))
   .pipe(gulp.dest('./particles/assets'))
   .on('end', function(err, data) {
