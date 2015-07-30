@@ -1,0 +1,36 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+      {
+          "Effect": "Allow",
+          "Action": [
+              "logs:CreateLogGroup",
+              "logs:CreateLogStream",
+              "logs:PutLogEvents"
+          ],
+          "Resource": "arn:aws:logs:*:*:*"
+      },
+      {
+          "Effect": "Allow",
+          "Action": [
+              "s3:GetObject"
+          ],
+          "Resource": "arn:aws:s3:::*"
+      },
+      {
+          "Effect": "Allow",
+          "Action": [
+              "cloudtrail:DescribeTrails",
+              "cloudtrail:GetTrailStatus",
+              "cloudtrail:LookupEvents",
+              "cloudtrail:CreateTrail",
+              "cloudtrail:StartLogging",
+              "cloudtrail:StopLogging",
+              "cloudtrail:DeleteTrail",
+              "s3:ListAllMyBuckets",
+              "s3:CreateBucket"
+          ],
+          "Resource": "*"
+      }
+  ]
+}
