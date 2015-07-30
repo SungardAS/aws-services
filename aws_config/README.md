@@ -1,9 +1,4 @@
 
-## How to push function codes to S3 bucket
-
-  > node deploy_copy_file
-
-
 ## AWSConfig
 
 AWS Lambda function to manage the AWSConfig Service
@@ -31,7 +26,7 @@ AWS Lambda function to manage the AWSConfig Service
   > node deploy_aws_config remove -f checker
 
   > node deploy_aws_config remove -f enabler
-  
+
   > node deploy_aws_config remove -f remover
 
 ### How to remove the pre-configuration

@@ -1,9 +1,4 @@
 
-## How to push function codes to S3 bucket
-
-  > node deploy_copy_file
-
-
 ## CloudTrail
 
 AWS Lambda functions to manage the CloudTrail Service
@@ -31,7 +26,7 @@ AWS Lambda functions to manage the CloudTrail Service
   > node deploy_cloudtrail remove -f checker
 
   > node deploy_cloudtrail remove -f enabler
-  
+
   > node deploy_cloudtrail remove -f remover
 
 
