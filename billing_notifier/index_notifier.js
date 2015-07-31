@@ -1,8 +1,6 @@
 
 exports.handler = function (event, context) {
 
-  var threshold = 20000;
-
   console.log(JSON.stringify(event));
   var message = JSON.parse(event.Records[0].Sns.Message);
   /*{ AlarmName: 'IncreasedPercentagesSimAlarm',
@@ -57,30 +55,42 @@ exports.handler = function (event, context) {
 
   var input = {
     region: region,
-    threshold: threshold,
     //percent_threshold: event.percent_threshold,  // 10.0 %
     //topicName: event.topicName,
   };
 
-  function findMaximum(str) {
+  function findValue(str) {
     var fi = str.indexOf('(');
     var ti = str.indexOf(')');
     if (fi > 0 && ti > fi) {
-      return parseFloat(str.substring(fi+1, ti));
+      return str.substring(fi+1, ti);
     }
     else {
-      return 0;
+      return null;
     }
   }
 
+  function findValues(str) {
+    var ret = {max:0, threshold:0};
+    var max = findValue(str);
+    if (max == null) return ret;
+    str = str.substring(str.indexOf(max)+max.length+1);
+    var threshold = findValue(str);
+    if (threshold == null) return ret;
+    ret.max = parseFloat(max);
+    ret.threshold = parseFloat(threshold);
+    return ret;
+  }
+
   function buildCalculatePercentagesMetricData(input) {
-    var maximum = findMaximum(message.NewStateReason);
-    if (maximum == 0) {
+    var retValues = findValues(message.NewStateReason);
+    console.log(retValues);
+    if (retValues.max == 0 || retValues.threshold == 0) {
       console.log("can't find the changed value");
       fc.run_failure_function(buildCalculatePercentagesMetricData, input);
     }
     else {
-      var percentage = ((maximum - input.threshold) / input.threshold) * 100;
+      var percentage = ((retValues.max - retValues.threshold) / retValues.threshold) * 100;
       var metricData = {
         MetricData: [
           {

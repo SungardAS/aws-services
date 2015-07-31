@@ -16,6 +16,7 @@ var topicName = 'IncreasedPercentages' + sim + 'Topic';
 var functionName = (sim != '') ? 'billing_notifier_sim' : 'billing_notifier';
 //var handler = (sim != '') ? 'index_notifier_sim.handler' : 'index_notifier.handler';
 var handler = 'index_notifier.handler';
+var threshold = 20000;
 
 var AWSCloudWatch = require('../lib/cloudwatch.js');
 var aws_watch = new AWSCloudWatch();
@@ -38,7 +39,7 @@ var CalculatedChargesAlarm = {
   Namespace: namespace, /* required */
   Period: 60 * 1, // in seconds /* required */
   Statistic: 'Maximum', /* required */
-  Threshold: 0, /* required */
+  Threshold: threshold, /* required */
   ActionsEnabled: true,
   AlarmActions: [],
   AlarmDescription: '',
@@ -66,11 +67,12 @@ var input = {
   zipFile : '../files/' + fileName
 };
 
-function setTopicArnInAlarmActions(input) {
+function setTopicArnInActions(input) {
+  CalculatedChargesAlarm.OKActions.push(input.topicArn);
   CalculatedChargesAlarm.AlarmActions.push(input.topicArn);
   console.log("successfully set topicArn");
   console.log(input);
-  fc.run_success_function(setTopicArnInAlarmActions, input);
+  fc.run_success_function(setTopicArnInActions, input);
 }
 
 function wait(input) {
@@ -94,8 +96,8 @@ var functionChains = {
     {func:wait, success:aws_topic.findTopic},
     {func:aws_topic.findTopic, success:aws_watch.findAlarm, failure:aws_topic.createTopic},
     {func:aws_topic.createTopic, success:aws_watch.findAlarm},
-    {func:aws_watch.findAlarm, success:aws_bucket.findBucket, failure:setTopicArnInAlarmActions},
-    {func:setTopicArnInAlarmActions, success:aws_watch.setAlarm},
+    {func:aws_watch.findAlarm, success:aws_bucket.findBucket, failure:setTopicArnInActions},
+    {func:setTopicArnInActions, success:aws_watch.setAlarm},
     {func:aws_watch.setAlarm, success:aws_bucket.findBucket},
     {func:aws_bucket.findBucket, success:aws_bucket.findObject},
     {func:aws_bucket.findObject, success:aws_lambda.findFunction},
