@@ -9,7 +9,7 @@ var profile = 'default';
 var accountId = '290093585298';
 var bucketName = accountId + '.sgas.cto.lambda-files';
 var sourceFolder = '/Users/alex.ough/Projects/Node/aws-services';
-var src = ['aws_config/**/*', 'cloudtrail/**/*', 'lib/**/*'];
+var src = ['aws_config/**/*', 'cloudtrail/**/*', 'lib/**/*', 'billing_notifier/**/*'];
 var fileName = 'aws_services.zip';
 
 input = {
