@@ -1,9 +1,8 @@
 
 var argv = require('minimist')(process.argv.slice(2));
-//console.dir(argv);  // { _: [ 'deploy' ], f: 'checker', m: 128, t: 3 }
-var profile = argv.p;
-var region = argv.r;
-var value = (argv.v) ? argv.v : 10000 + Math.floor(Math.random() * 20000);
+var profile = process.env.aws_profile;
+var region = process.env.aws_region;
+var value = (argv.v) ? argv.v : 15000 + Math.floor(Math.random() * 20000);
 
 var metricData = {
   MetricData: [
@@ -34,6 +33,6 @@ function addMetricData(profile, region) {
 addMetricData(profile, region);
 setInterval(function(){
   input.metricData.MetricData[0].Timestamp = new Date;
-  input.metricData.MetricData[0].Value = 10000 + Math.floor(Math.random() * 20000);
+  input.metricData.MetricData[0].Value = 15000 + Math.floor(Math.random() * 20000);
   addMetricData(profile, region);
 }, 10 * 60 * 1000);

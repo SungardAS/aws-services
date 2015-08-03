@@ -5,9 +5,8 @@ exports.handler = function (event, context) {
   var aws_trail = new AWSCloudTrail();
 
   var input = {
-    profile: event.profile,
-    region: event.region,
-    trailName: event.trailName
+    profile: (event.profile === undefined) ? null : event.profile,
+    region: event.region
   };
 
   function succeeded(input) { context.done(null, true); }
@@ -19,5 +18,5 @@ exports.handler = function (event, context) {
   ]
   input.functionChain = functionChain;
 
-  aws_trail.findTrails(input);
+  input.functionChain[0].func(input);
 };

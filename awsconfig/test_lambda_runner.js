@@ -1,5 +1,5 @@
 
-var region = 'us-west-1';
+var region = 'us-east-1';
 var profile = 'default';
 var account = '290093585298';
 
@@ -19,7 +19,7 @@ i.handler(event, context);
 var i = require('./index_enabler');
 var event = {
   profile: profile,
-  region: region,
+  region : region,
   account: account
 }
 var context = {fail:function(a){console.log(a)}, done:function(e, a){console.log(a)}};
@@ -30,7 +30,7 @@ i.handler(event, context);
 var i = require('./index_remover');
 var event = {
   profile: profile,
-  region: region,
+  region : region,
   account: account
 }
 var context = {fail:function(a){console.log(a)}, done:function(e, a){console.log(a)}};

@@ -4,10 +4,14 @@ exports.handler = function (event, context) {
   var AWSCloudTrail = require('../lib/cloudtrail.js');
   var aws_trail = new AWSCloudTrail();
 
+  var fs = require("fs");
+  data = fs.readFileSync(__dirname + '/data.json', {encoding:'utf8'});
+  data_json = JSON.parse(data);
+
   var input = {
-    profile: event.profile,
+    profile: (event.profile === undefined) ? null : event.profile,
     region: event.region,
-    trailName: event.trailName,
+    trailName: data_json.trailName
   };
 
   var functionChain = [
@@ -21,5 +25,5 @@ exports.handler = function (event, context) {
   function succeeded(input) { context.done(null, true); }
   function failed(input) { context.done(null, false); }
 
-  aws_trail.findTrails(input);
+  input.functionChain[0].func(input);
 };

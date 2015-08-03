@@ -1,0 +1,4 @@
+{
+  "bucketNamePostfix" : ".cloudtrail",
+  "trailName" : "Default"
+}

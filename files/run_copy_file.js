@@ -1,15 +1,16 @@
 
+var argv = require('minimist')(process.argv.slice(2));
+
 var Zipper = require('../lib/zipper');
 var zipper = new Zipper();
 var AWSS3Bucket = require('../lib/s3bucket.js');
 var aws_bucket = new AWSS3Bucket();
 
-var profile = 'default';
-//var profile = 'federated_sgas_admin';
-var accountId = '290093585298';
-var bucketName = accountId + '.sgas.cto.lambda-files';
+var profile = argv.p;
+var account = argv.i;
+var bucketName = account + '.sgas.cto.lambda-files';
 var sourceFolder = '/Users/alex.ough/Projects/Node/aws-services';
-var src = ['aws_config/**/*', 'cloudtrail/**/*', 'lib/**/*', 'billing_notifier/**/*'];
+var src = ['awsconfig/**/*', 'cloudtrail/**/*', 'lib/**/*', 'billing_notifier/**/*'];
 var fileName = 'aws_services.zip';
 
 input = {
@@ -22,7 +23,8 @@ input = {
 };
 
 var functionChain = [
-  {func:aws_bucket.findBucket, success:zipper.zip},
+  {func:aws_bucket.findBucket, success:zipper.zip, failure:aws_bucket.createBucket},
+  {func:aws_bucket.createBucket, success:zipper.zip},
   {func:zipper.zip, success:aws_bucket.putObject},
   {func:aws_bucket.putObject},
 ]

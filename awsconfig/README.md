@@ -1,7 +1,10 @@
 
-## CloudTrail
+## AWSConfig
 
-AWS Lambda functions to manage the CloudTrail Service
+AWS Lambda function to manage the AWSConfig Service
+
+
+## How To Depoly & Remove Functions
 
 ### Environment Variables
 
@@ -11,20 +14,20 @@ AWS Lambda functions to manage the CloudTrail Service
 
 ### Deploy Functions
 
-  > node deploy_cloudtrail deploy -f <func_name> -m <memory_size> -t <timeout>
+  > node deploy_awsconfig deploy -f <func_name> -m <memory_size> -t <timeout>
 
     where
     <func_name> is one of 'checker', 'enabler' or 'remover'
 
 ### Remove Functions
 
-  > node deploy_cloudtrail remove -f <func_name>
+  > node deploy_awsconfig remove -f <func_name>
 
     where <func_name> is one of 'checker', 'enabler' or 'remover'
 
 ### Remove Role
 
-  > node deploy_cloudtrail remove_role
+  > node deploy_awsconfig remove_role
 
 
 ## How To Run Functions using CLI
@@ -39,5 +42,5 @@ AWS Lambda functions to manage the CloudTrail Service
     outputfile.txt
 
     where
-      <function_full_name> is one of 'cloudtrail-checker', 'cloudtrail-enabler' or 'cloudtrail-remover'
+      <function_full_name> is one of 'awsconfig-checker', 'awsconfig-enabler' or 'awsconfig-remover'
       <region_where_function_run> is the region where the function will be run

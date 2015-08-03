@@ -1,0 +1,9 @@
+{
+  "bucketNamePostfix" : ".awsconfig",
+  "topicName" : "awsconfig-topic",
+  "roleName" : "awsconfig-setup-role",
+  "assumeRolePolicyName" : "awsconfig_assume_role_policy",
+  "inlinePolicyName" : "awsconfig_setup_policy",
+  "deliveryChannelName" : "default",
+  "configRecorderName" : "default"
+}

@@ -1,11 +1,11 @@
 
 exports.handler = function (event, context) {
 
-  var AwsConfig = require('../lib/aws_config.js');
+  var AwsConfig = require('../lib/awsconfig.js');
   var aws_config = new AwsConfig();
 
   var input = {
-    profile: event.profile,
+    profile: (event.profile === undefined) ? null : event.profile,
     region: event.region
   };
 
@@ -20,5 +20,5 @@ exports.handler = function (event, context) {
   function succeeded(input) { context.done(null, true); }
   function failed(input) { context.done(null, false); }
 
-  aws_config.findRecorders(input);
+  input.functionChain[0].func(input);
 };

@@ -3,15 +3,17 @@ exports.handler = function (event, context) {
 
   var AWSTopic = require('../lib/topic.js');
   var aws_topic = new AWSTopic();
-  //var AWSRole = require('../lib/role.js');
-  //var aws_role = new AWSRole();
-  var AwsConfig = require('../lib/aws_config.js');
+  var AwsConfig = require('../lib/awsconfig.js');
   var aws_config = new AwsConfig();
 
+  var fs = require("fs");
+  data = fs.readFileSync(__dirname + '/data.json', {encoding:'utf8'});
+  data_json = JSON.parse(data);
+
   var input = {
-    profile : event.profile,
+    profile: (event.profile === undefined) ? null : event.profile,
     region: event.region,
-    topicName : event.topicName
+    topicName : data_json.topicName
   };
 
   var functionChain = [
@@ -27,6 +29,6 @@ exports.handler = function (event, context) {
 
   function done(input) { context.done(null, true); }
 
-  aws_config.findRecorders(input);
+  input.functionChain[0].func(input);
 
 };

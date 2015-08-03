@@ -15,13 +15,13 @@ var LambdaDeployer = require('../lib/lambda_deployer.js');
 var deployer = new LambdaDeployer();
 
 var bucketName = account + '.sgas.cto.lambda-files';
-var roleName = 'lambda_cloudtrail_execution';
+var roleName = 'lambda_awsconfig_invoke';
 var assumeRolePolicyName = 'lambda_assume_role_policy';
-var inlinePolicyName = 'lambda_cloudtrail_execution_policy';
+var inlinePolicyName = 'lambda_awsconfig_execution_policy';
 var fileName = 'aws_services.zip';
 
-var functionName = 'cloudtrail-' + func;
-var handler = 'cloudtrail/index_' + func + '.handler';
+var functionName = 'awsconfig-' + func;
+var handler = 'awsconfig/index_' + func + '.handler';
 var memorySize = argv.m;
 var timeout = argv.t;
 

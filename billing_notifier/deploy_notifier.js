@@ -1,12 +1,17 @@
 
 var argv = require('minimist')(process.argv.slice(2));
+var profile = process.env.aws_profile;
+var region = process.env.aws_region;
+var account = process.env.aws_account;
 var action = argv._[0];
-var profile = argv.p;
-var region = argv.r;
+console.log('profile = ' + profile);
+console.log('region = ' + region);
+console.log('account = ' + account);
+console.log('action = ' + action);
+
 var memorySize = argv.m;
 var timeout = argv.t;
-var accountId = argv.i;
-var bucketName = accountId + '.sgas.cto.lambda-files';
+var bucketName = account + '.sgas.cto.lambda-files';
 var fileName = 'aws_services.zip';
 
 var sim = (argv.sim == 'true') ? 'Sim': '';
@@ -14,9 +19,15 @@ var alarmName = 'IncreasedPercentages' + sim + 'Alarm';
 var namespace = (sim != '') ? 'CTOBilling' : 'AWS/Billing';
 var topicName = 'IncreasedPercentages' + sim + 'Topic';
 var functionName = (sim != '') ? 'billing_notifier_sim' : 'billing_notifier';
-//var handler = (sim != '') ? 'index_notifier_sim.handler' : 'index_notifier.handler';
 var handler = 'index_notifier.handler';
 var threshold = 20000;
+
+////// Variables for OverIncreasedPercentagesAlarm/Topic
+var overAlarmName = 'OverIncreasedPercentages' + sim + 'Alarm';
+var overNamespace = 'CTOBilling';
+var overTopicName = 'OverIncreasedPercentages' + sim + 'Topic';
+var overThreshold = 10;
+var subscriberEmailForOver = 'alex.ough@sungardas.com';
 
 var AWSCloudWatch = require('../lib/cloudwatch.js');
 var aws_watch = new AWSCloudWatch();
@@ -31,7 +42,7 @@ var aws_lambda = new AWSLambda();
 var FC = require('../lib/function_chain');
 var fc = new FC();
 
-var CalculatedChargesAlarm = {
+var IncreasedPercentagesAlarm = {
   AlarmName: alarmName, /* required */
   ComparisonOperator: 'GreaterThanThreshold', /* required */
   EvaluationPeriods: 1, /* required */
@@ -49,14 +60,33 @@ var CalculatedChargesAlarm = {
   Unit: 'None'
 };
 
+////// Spec for OverIncreasedPercentagesAlarm
+var OverIncreasedPercentagesAlarm = {
+  AlarmName: overAlarmName, /* required */
+  ComparisonOperator: 'GreaterThanThreshold', /* required */
+  EvaluationPeriods: 1, /* required */
+  MetricName: 'IncreasedPercentages' + sim, /* required */
+  Namespace: overNamespace, /* required */
+  Period: 60 * 1, // in seconds /* required */
+  Statistic: 'Maximum', /* required */
+  Threshold: overThreshold, /* required */
+  ActionsEnabled: true,
+  AlarmActions: [],
+  AlarmDescription: '',
+  Dimensions: [ {Name: 'None', Value: 'Percent'} ],
+  InsufficientDataActions: [],
+  OKActions: [],
+  Unit: 'Percent'
+};
+
 var input = {
   profile : profile,
   region: region,
   bucketName: bucketName,
   keyName: 'nodejs/' + fileName,
-  alarmName: CalculatedChargesAlarm.AlarmName,
+  alarmName: IncreasedPercentagesAlarm.AlarmName,
   topicName: topicName,
-  alarmSpec: CalculatedChargesAlarm,
+  alarmSpec: IncreasedPercentagesAlarm,
   functionName: functionName,
   handler: 'billing_notifier/' + handler,
   roleName: 'lambda_billing_notifier_execution',
@@ -67,24 +97,71 @@ var input = {
   zipFile : '../files/' + fileName
 };
 
+////// input varialbe for OverIncreasedPercentagesAlarm/Topic
+var inputForOver = {
+  profile : profile,
+  region: region,
+  alarmName: OverIncreasedPercentagesAlarm.AlarmName,
+  topicName: overTopicName,
+  alarmSpec: OverIncreasedPercentagesAlarm,
+  emailAddress: subscriberEmailForOver
+};
+
 function setTopicArnInActions(input) {
-  CalculatedChargesAlarm.OKActions.push(input.topicArn);
-  CalculatedChargesAlarm.AlarmActions.push(input.topicArn);
+  IncreasedPercentagesAlarm.OKActions.push(input.topicArn);
+  IncreasedPercentagesAlarm.AlarmActions.push(input.topicArn);
   console.log("successfully set topicArn");
   console.log(input);
   fc.run_success_function(setTopicArnInActions, input);
 }
 
+////// Function for OverIncreasedPercentagesAlarm/Topic
+function setOverTopicArnInActions(input) {
+  OverIncreasedPercentagesAlarm.AlarmActions.push(input.topicArn);
+  console.log("successfully set topicArn");
+  console.log(input);
+  fc.run_success_function(setOverTopicArnInActions, input);
+}
+
 function wait(input) {
-  console.log('pause a little bit....')
+  console.log('pause a little bit for preparing new role....')
   setTimeout(function() {
     fc.run_success_function(wait, input);
-  }, 3000);
+  }, 10000);
 }
 
 function done(input) {
   console.log("\n\nSuccessfully deployed!!!");
   console.log(input);
+}
+
+////// Function Chain for OverIncreasedPercentagesAlarm/Topic
+var overFunctionChains = {
+  deploy: [
+    {func:aws_topic.findTopic, success:aws_watch.findAlarm, failure:aws_topic.createTopic},
+    {func:aws_topic.createTopic, success:aws_watch.findAlarm},
+    {func:aws_watch.findAlarm, success:aws_topic.subscribeEmail, failure:setOverTopicArnInActions},
+    {func:setOverTopicArnInActions, success:aws_watch.setAlarm},
+    {func:aws_watch.setAlarm, success:aws_topic.subscribeEmail},
+    {func:aws_topic.subscribeEmail, success:done},
+  ],
+  remove: [
+    {func:aws_topic.findTopic, success:aws_topic.listSubscriptions, failure:aws_watch.findAlarm},
+    {func:aws_topic.listSubscriptions, success:aws_topic.unsubscribeAll},
+    {func:aws_topic.unsubscribeAll, success:aws_topic.deleteTopic},
+    {func:aws_topic.deleteTopic, success:aws_watch.findAlarm},
+    {func:aws_watch.findAlarm, success:aws_watch.deleteAlarm, failure:done},
+    {func:aws_watch.deleteAlarm, success:done},
+  ]
+};
+
+////// Starting function for OverIncreasedPercentagesAlarm/Topic
+function runForOverAlarm(input) {
+  input = inputForOver;
+  input.functionChain = overFunctionChains[action];
+  console.log(input);
+
+  input.functionChain[0].func(input);
 }
 
 var functionChains = {
@@ -104,9 +181,10 @@ var functionChains = {
     {func:aws_lambda.findFunction, success:aws_topic.subscribeLambda, failure:aws_lambda.createFunction},
     {func:aws_lambda.createFunction, success:aws_lambda.addPermission},
     {func:aws_lambda.addPermission, success:aws_topic.subscribeLambda},
-    {func:aws_topic.subscribeLambda, success:done},
+    {func:aws_topic.subscribeLambda, success:runForOverAlarm},
+    {func:runForOverAlarm, success:done},
   ],
-  undeploy: [
+  remove: [
     {func:aws_lambda.findFunction, success:aws_lambda.deleteFunction, failure:aws_role.findInlinePolicy},
     {func:aws_lambda.deleteFunction, success:aws_role.findInlinePolicy},
     {func:aws_role.findInlinePolicy, success:aws_role.deleteInlinePolicy, failure:aws_role.findRole},
@@ -117,8 +195,9 @@ var functionChains = {
     {func:aws_topic.listSubscriptions, success:aws_topic.unsubscribeAll},
     {func:aws_topic.unsubscribeAll, success:aws_topic.deleteTopic},
     {func:aws_topic.deleteTopic, success:aws_watch.findAlarm},
-    {func:aws_watch.findAlarm, success:aws_watch.deleteAlarm, failure:done},
-    {func:aws_watch.deleteAlarm, success:done},
+    {func:aws_watch.findAlarm, success:aws_watch.deleteAlarm, failure:runForOverAlarm},
+    {func:aws_watch.deleteAlarm, success:runForOverAlarm},
+    {func:runForOverAlarm, success:done},
   ]
 };
 
