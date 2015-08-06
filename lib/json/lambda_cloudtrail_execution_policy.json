@@ -28,7 +28,9 @@
               "cloudtrail:StopLogging",
               "cloudtrail:DeleteTrail",
               "s3:ListAllMyBuckets",
-              "s3:CreateBucket"
+              "s3:CreateBucket",
+              "s3:GetBucketPolicy",
+              "s3:PutBucketPolicy"
           ],
           "Resource": "*"
       }

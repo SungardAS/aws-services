@@ -4,3 +4,4 @@ node_modules
 __*.js
 README.md.local
 outputfile.txt
+demo.script

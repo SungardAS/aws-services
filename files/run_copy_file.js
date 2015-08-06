@@ -6,8 +6,8 @@ var zipper = new Zipper();
 var AWSS3Bucket = require('../lib/s3bucket.js');
 var aws_bucket = new AWSS3Bucket();
 
-var profile = argv.p;
-var account = argv.i;
+var profile = process.env.aws_profile;
+var account = process.env.aws_account;
 var bucketName = account + '.sgas.cto.lambda-files';
 var sourceFolder = '/Users/alex.ough/Projects/Node/aws-services';
 var src = ['awsconfig/**/*', 'cloudtrail/**/*', 'lib/**/*', 'billing_notifier/**/*'];

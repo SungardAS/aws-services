@@ -10,6 +10,8 @@
   "license": "ISC",
   "dependencies": {
     "archiver": "^0.14.4",
-    "aws-sdk": "^2.1.41"
+    "aws-sdk": "^2.1.41",
+    "google-auth-library": "^0.9.6",
+    "googleapis": "^2.1.3"
   }
 }
