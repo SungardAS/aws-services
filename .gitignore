@@ -5,3 +5,5 @@ __*.js
 README.md.local
 outputfile.txt
 demo.script
+lib/json/client_secret.json
+lib/json/gmail-api-quickstart.json
