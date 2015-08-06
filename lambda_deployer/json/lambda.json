@@ -1,0 +1,14 @@
+{
+  "region": "region",
+  "bucketName": "bucketName",
+  "roleName": "roleName",
+  "assumeRolePolicyName": "assumeRolePolicyName",
+  "inlinePolicyName": "inlinePolicyName",
+  "keyName": "",
+  "functionName": "functionName",
+  "handler": "handler",
+  "roleARN": null,
+  "memorySize": 128,
+  "timeout": 10,
+  "zipFile": "zipFile"
+}

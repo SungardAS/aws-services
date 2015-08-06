@@ -1,16 +1,10 @@
 
 exports.handler = function (event, context) {
 
-  var AWSS3Bucket = require('../lib/s3bucket.js');
-  var aws_bucket = new AWSS3Bucket();
-  var AWSTopic = require('../lib/topic.js');
-  var aws_topic = new AWSTopic();
-  var AWSRole = require('../lib/role.js');
-  var aws_role = new AWSRole();
-  var AwsConfig = require('../lib/awsconfig.js');
-  var aws_config = new AwsConfig();
-  var FC = require('../lib/function_chain');
-  var fc = new FC();
+  var aws_bucket = new (require('../lib/s3bucket.js'))();
+  var aws_topic = new (require('../lib/topic.js'))();
+  var aws_role = new (require('../lib/role.js'))();
+  var aws_config = new (require('../lib/awsconfig.js'))();
 
   var fs = require("fs");
   data = fs.readFileSync(__dirname + '/data.json', {encoding:'utf8'});
@@ -31,19 +25,12 @@ exports.handler = function (event, context) {
     inlinePolicyDoc : null
   };
 
-  function wait(input) {
-    console.log('pause a little bit for preparing new role....')
-    setTimeout(function() {
-      fc.run_success_function(wait, input);
-    }, 10000);
-  }
-
-  var functionChain = [
+  var flows = [
     {func:aws_role.findRole, success:aws_role.findInlinePolicy, failure:aws_role.createRole, error:context.fail},
     {func:aws_role.createRole, success:aws_role.findInlinePolicy, failure:context.fail, error:context.fail},
     {func:aws_role.findInlinePolicy, success:aws_bucket.findBucket, failure:aws_role.createInlinePolicy, error:context.fail},
-    {func:aws_role.createInlinePolicy, success:wait, failure:context.fail, error:context.fail},
-    {func:wait, success:aws_bucket.findBucket, failure:context.fail, error:context.fail},
+    {func:aws_role.createInlinePolicy, success:aws_role.wait, failure:context.fail, error:context.fail},
+    {func:aws_role.wait, success:aws_bucket.findBucket, failure:context.fail, error:context.fail},
     {func:aws_bucket.findBucket, success:aws_topic.findTopic, failure:aws_bucket.createBucket, error:context.fail},
     {func:aws_bucket.createBucket, success:aws_topic.findTopic, failure:context.fail, error:context.fail},
     {func:aws_topic.findTopic, success:aws_config.findRecorders, failure:aws_topic.createTopic, error:context.fail},
@@ -55,9 +42,13 @@ exports.handler = function (event, context) {
     {func:aws_config.findRecordersStatus, success:done, failure:aws_config.startRecorder, error:context.fail},
     {func:aws_config.startRecorder, success:done, failure:context.fail, error:context.fail},
   ]
-  input.functionChain = functionChain;
+  input.flows = flows;
+  aws_bucket.flows = flows;
+  aws_topic.flows = flows;
+  aws_role.flows = flows;
+  aws_config.flows = flows;
 
   function done(input) { context.done(null, true); }
 
-  input.functionChain[0].func(input);
+  flows[0].func(input);
 };

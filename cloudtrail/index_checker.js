@@ -1,8 +1,7 @@
 
 exports.handler = function (event, context) {
 
-  var AWSCloudTrail = require('../lib/cloudtrail.js');
-  var aws_trail = new AWSCloudTrail();
+  var aws_trail = new (require('../lib/cloudtrail.js'))();
 
   var input = {
     profile: (event.profile === undefined) ? null : event.profile,
@@ -12,11 +11,11 @@ exports.handler = function (event, context) {
   function succeeded(input) { context.done(null, true); }
   function failed(input) { context.done(null, false); }
 
-  var functionChain = [
+  var flows = [
     {func:aws_trail.findTrails, success:aws_trail.isLogging, failure:failed, error:context.fail},
     {func:aws_trail.isLogging, success:succeeded, failure:failed, error:context.fail},
   ]
-  input.functionChain = functionChain;
+  aws_trail.flows = flows;
 
-  input.functionChain[0].func(input);
+  flows[0].func(input);
 };

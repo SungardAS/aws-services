@@ -1,0 +1,12 @@
+{
+  "bucketNamePostfix": ".sgas.cto.lambda-files",
+  "keyName": "nodejs/awsconfig.zip",
+  "zipFile" : "awsconfig.zip",
+  "sourceFolder" : "/Users/alex.ough/Projects/Node/aws-services",
+  "src" : ["awsconfig/**/*", "lib/**/*"],
+  "roleName": "lambda_awsconfig_execution",
+  "assumeRolePolicyName": "lambda_assume_role_policy",
+  "inlinePolicyName": "lambda_awsconfig_execution_policy",
+  "memorySize": 128,
+  "timeout": 30
+}

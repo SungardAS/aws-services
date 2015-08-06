@@ -1,0 +1,12 @@
+{
+  "bucketNamePostfix": ".sgas.cto.lambda-files",
+  "keyName": "nodejs/cloudtrail.zip",
+  "zipFile" : "cloudtrail.zip",
+  "sourceFolder" : "/Users/alex.ough/Projects/Node/aws-services",
+  "src" : ["cloudtrail/**/*", "lib/**/*"],
+  "roleName": "lambda_cloudtrail_execution",
+  "assumeRolePolicyName": "lambda_assume_role_policy",
+  "inlinePolicyName": "lambda_cloudtrail_execution_policy",
+  "memorySize": 128,
+  "timeout": 10
+}

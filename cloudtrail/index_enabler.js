@@ -1,10 +1,8 @@
 
 exports.handler = function (event, context) {
 
-  var AWSS3Bucket = require('../lib/s3bucket.js');
-  var aws_bucket = new AWSS3Bucket();
-  var AWSCloudTrail = require('../lib/cloudtrail.js');
-  var aws_trail = new AWSCloudTrail();
+  var aws_bucket = new (require('../lib/s3bucket.js'))();
+  var aws_trail = new (require('../lib/cloudtrail.js'))();
 
   var fs = require("fs");
   data = fs.readFileSync(__dirname + '/data.json', {encoding:'utf8'});
@@ -25,8 +23,8 @@ exports.handler = function (event, context) {
   function succeeded(input) { context.done(null, true); }
   function failed(input) { context.done(null, false); }
 
-  var functionChain = [
-    {func:aws_bucket.findBucket, success:aws_bucket.getPolicy, failure:aws_bucket.createBucket, error:context.fail},
+  var flows = [
+    {func:aws_bucket.findBucket, success:aws_trail.findTrails, failure:aws_bucket.createBucket, error:context.fail},
     {func:aws_bucket.createBucket, success:aws_bucket.addPolicy, failure:failed, error:context.fail},
     {func:aws_bucket.getPolicy, success:aws_trail.findTrails, failure:aws_bucket.addPolicy, error:context.fail},
     {func:aws_bucket.addPolicy, success:aws_trail.findTrails, failure:failed, error:context.fail},
@@ -35,7 +33,8 @@ exports.handler = function (event, context) {
     {func:aws_trail.isLogging, success:succeeded, failure:aws_trail.startLogging, error:context.fail},
     {func:aws_trail.startLogging, success:succeeded, failure:context.fail, error:context.fail},
   ]
-  input.functionChain = functionChain;
+  aws_bucket.flows = flows;
+  aws_trail.flows = flows;
 
-  input.functionChain[0].func(input);
+  flows[0].func(input);
 };

@@ -27,7 +27,7 @@ var overAlarmName = 'OverIncreasedPercentages' + sim + 'Alarm';
 var overNamespace = 'CTOBilling';
 var overTopicName = 'OverIncreasedPercentages' + sim + 'Topic';
 var overThreshold = 10;
-var subscriberEmailForOver = 'alex.ough@sungardas.com';
+var subscriberEmailForOver = 'as.us.awscto@sungardas.com';
 
 var AWSCloudWatch = require('../lib/cloudwatch.js');
 var aws_watch = new AWSCloudWatch();
