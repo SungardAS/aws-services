@@ -1,0 +1,20 @@
+{
+  "bucketNamePostfix": ".sgas.cto.lambda-files",
+  "keyName": "nodejs/billingalert.zip",
+  "zipFile" : "billingalert.zip",
+  "sourceFolder" : "/Users/alex.ough/Projects/Node/aws-services",
+  "src" : ["billingalert/*.js", "billingalert/json/*", "billingalert/node_modules/**/*", "lib/**/*"],
+  "functionName": "billingalert_notifier",
+  "handler":"billingalert/index.handler",
+  "roleName": "lambda_billingalert_invoke",
+  "assumeRolePolicyName": "lambda_assume_role_policy",
+  "inlinePolicyName": "lambda_billingalert_execution_policy",
+  "memorySize": 128,
+  "timeout": 30,
+  "alarmName": "IncreasedPercentagesAlarm-Test",
+  "topicName": "IncreasedPercentagesTopic",
+  "awsBillingMetricNamespace": "AWS/Billing",
+  "ctoBillingMetricNamespace": "CTOBilling",
+  "overThreshold": 10,
+  "overSubscriberEmail": "as.us.awscto@sungardas.com"
+}

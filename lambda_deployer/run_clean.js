@@ -1,8 +1,6 @@
 
 var argv = require('minimist')(process.argv.slice(2));
 
-var zipper = new (require('../lib/zipper'))();
-var aws_bucket = new (require('../lib/s3bucket.js'))();
 var aws_role = new(require('../lib/role.js'))();
 var aws_lambda = new (require('../lib/lambda.js'))();
 
@@ -10,10 +8,6 @@ var profile = process.env.aws_profile;
 var account = process.env.aws_account;
 var region = process.env.aws_region;
 var group = argv._[0];
-console.log('profile = ' + profile);
-console.log('account = ' + account);
-console.log('region = ' + region);
-console.log('service = ' + group);
 
 console.log("Current path = " + __dirname);
 var fs = require("fs");
@@ -46,12 +40,12 @@ function find(moduleName, input, callback) {
   aws_lambda.findFunction(input, function(err, data) {
     if (err) {
       console.log(">>>..." + moduleName + " : not found");
-      deploy(moduleName, input, callback);
+      callback(input);
     }
     else {
       console.log(data);
       console.log(">>>..." + moduleName + " : found");
-      update(moduleName, input, callback);
+      remove(moduleName, input, callback);
     }
   });
 }
@@ -68,52 +62,29 @@ function find_enabler(input) {
 
 function find_remover(input) {
   console.log("\n<<<Starting finding remover....!!")
-  find('remover', input, succeeded);
+  find('remover', input, aws_role.findInlinePolicy);
 }
 
-//// update functions
-function update(moduleName, input, callback) {
+//// remove functions
+function remove(moduleName, input, callback) {
   input.functionName = group + '-' + moduleName;
-  aws_lambda.updateFunctionCode(input, function(err, data) {
+  aws_lambda.deleteFunction(input, function(err, data) {
     if (err) {
-      console.log(">>>Error in updating codes " + moduleName + " : " + err, err.stack);
+      console.log(">>>Error in removing " + moduleName + " : " + err, err.stack);
     }
     else {
       console.log(data);
-      console.log(">>>...successfully updated codes " + moduleName)
-      if (callback) callback(input);
-    }
-  });
-}
-
-//// deploy functions
-function deploy(moduleName, input, callback) {
-  input.functionName = group + '-' + moduleName;
-  input.handler = group + '/index_' + moduleName + '.handler';
-  aws_lambda.createFunction(input, function(err, data) {
-    if (err) {
-      console.log(">>>Error in deploying " + moduleName + " : " + err, err.stack);
-    }
-    else {
-      console.log(data);
-      console.log(">>>...successfully deployed " + moduleName)
+      console.log(">>>...successfully removed " + moduleName)
       if (callback) callback(input);
     }
   });
 }
 
 var flows = [
-  {func:aws_role.findRole, success:aws_role.findInlinePolicy, failure:aws_role.createRole},
-  {func:aws_role.createRole, success:aws_role.findInlinePolicy},
-  {func:aws_role.findInlinePolicy, success:aws_bucket.findBucket, failure:aws_role.createInlinePolicy},
-  {func:aws_role.createInlinePolicy, success:aws_role.wait},
-  {func:aws_role.wait, success:aws_bucket.findBucket},
-  {func:aws_bucket.findBucket, success:zipper.zip, failure:aws_bucket.createBucket},
-  {func:aws_bucket.createBucket, success:zipper.zip},
-  {func:zipper.zip, success:aws_bucket.putObject},
-  {func:aws_bucket.putObject, success:find_checker},
+  {func:aws_role.findInlinePolicy, success:aws_role.deleteInlinePolicy, failure:aws_role.findRole},
+  {func:aws_role.deleteInlinePolicy, success:aws_role.findRole},
+  {func:aws_role.findRole, success:aws_role.deleteRole, failure:succeeded},
+  {func:aws_role.deleteRole, success:succeeded},
 ]
 aws_role.flows = flows;
-aws_bucket.flows = flows;
-zipper.flows = flows;
-flows[0].func(input);
+find_checker(input);
