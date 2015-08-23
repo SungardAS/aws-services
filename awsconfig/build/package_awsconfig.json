@@ -1,11 +1,13 @@
 {
   "bucketNamePostfix": ".sgas.cto.lambda-files",
-  "keyName": "nodejs/awsconfig.zip",
-  "zipFile" : "awsconfig.zip",
+  "keyName": "nodejs/",
+  "zipFile" : "",
   "sourceFolder" : "/Users/alex.ough/Projects/Node/aws-services",
-  "src" : ["awsconfig/**/*", "lib/**/*"],
-  "roleName": "lambda_awsconfig_execution",
+  "src" : ["", "awsconfig/json/*", "lib/flow_controller.js", "lib/aws/**/*"],
+  "functionName": "",
+  "handler": "",
   "assumeRolePolicyName": "lambda_assume_role_policy",
+  "roleName": "lambda_awsconfig_execution",
   "inlinePolicyName": "lambda_awsconfig_execution_policy",
   "memorySize": 128,
   "timeout": 30

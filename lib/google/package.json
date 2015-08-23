@@ -1,14 +1,15 @@
 {
-  "name": "lambda_deployer",
+  "name": "lib_google",
   "version": "1.0.0",
   "description": "",
-  "main": "lambda_deployer.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "minimist": "^1.1.2"
+    "google-auth-library": "^0.9.6",
+    "googleapis": "^2.1.3"
   }
 }

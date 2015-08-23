@@ -1,0 +1,5 @@
+{
+  "bucketNamePostfix" : ".cloudtrail",
+  "trailName" : "Default",
+  "bucketPolicyName": "bucket_cloudtrail_policy"
+}

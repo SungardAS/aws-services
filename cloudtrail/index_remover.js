@@ -1,28 +1,41 @@
 
 exports.handler = function (event, context) {
 
-  var aws_trail = new (require('../lib/cloudtrail.js'))();
+  var aws_sts = new (require('../lib/aws/sts'))();
+  var aws_trail = new (require('../lib/aws/cloudtrail.js'))();
+
+  var roles = [];
+  if (event.profile) {
+    roles.push({roleArn:'arn:aws:iam::' + event.federate_account + ':role/cto_across_accounts'});
+  }
+  roles.push({roleArn:'arn:aws:iam::' + event.federate_account + ':role/federate'});
+  roles.push({roleArn:'arn:aws:iam::' + event.account + ':role/' + event.roleName});
 
   var fs = require("fs");
-  data = fs.readFileSync(__dirname + '/data.json', {encoding:'utf8'});
+  data = fs.readFileSync(__dirname + '/json/data.json', {encoding:'utf8'});
   data_json = JSON.parse(data);
 
   var input = {
     profile: (event.profile === undefined) ? null : event.profile,
+    sessionName: event.sessionName,
+    roles: roles,
     region: event.region,
     trailName: data_json.trailName
   };
 
-  var flows = [
-    {func:aws_trail.findTrails, success:aws_trail.isLogging, failure:succeeded, error:context.fail},
-    {func:aws_trail.isLogging, success:aws_trail.stopLogging, failure:aws_trail.deleteTrail, error:context.fail},
-    {func:aws_trail.stopLogging, success:aws_trail.deleteTrail, failure:context.fail, error:context.fail},
-    {func:aws_trail.deleteTrail, success:succeeded, failure:context.fail, error:context.fail},
-  ]
-  aws_trail.flows = flows;
-
   function succeeded(input) { context.done(null, true); }
   function failed(input) { context.done(null, false); }
+  function errored(err) { context.fail(err, null); }
+
+  var flows = [
+    {func:aws_sts.assumeRoles, success:aws_trail.findTrails, failure:failed, error:errored},
+    {func:aws_trail.findTrails, success:aws_trail.isLogging, failure:succeeded, error:errored},
+    {func:aws_trail.isLogging, success:aws_trail.stopLogging, failure:aws_trail.deleteTrail, error:errored},
+    {func:aws_trail.stopLogging, success:aws_trail.deleteTrail, failure:failed, error:errored},
+    {func:aws_trail.deleteTrail, success:succeeded, failure:failed, error:errored},
+  ];
+  aws_sts.flows = flows;
+  aws_trail.flows = flows;
 
   flows[0].func(input);
 };
