@@ -1,6 +1,6 @@
 
-var aws_watch = new (require('../lib/cloudwatch.js'))();
-var aws_topic = new (require('../lib/topic.js'))();
+var aws_watch = new (require('../lib/aws/cloudwatch.js'))();
+var aws_topic = new (require('../lib/aws/topic.js'))();
 
 exports.handler = function (event, context) {
 
@@ -139,7 +139,7 @@ exports.handler = function (event, context) {
     var current = new Date();
     var startTime = new Date();
     current.setMinutes(current.getMinutes() - 5);
-    startTime.setHours(startTime.getHours() - 24);
+    startTime.setHours(startTime.getHours() - 20);
     CTOEstimatedChargesMetricQuery.StartTime = startTime;
     CTOEstimatedChargesMetricQuery.EndTime = current;
     return CTOEstimatedChargesMetricQuery;

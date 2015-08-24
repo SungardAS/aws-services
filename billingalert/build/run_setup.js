@@ -1,14 +1,28 @@
 
 var argv = require('minimist')(process.argv.slice(2));
-
-if (argv.sim === undefined) {
-  console.log("please set --sim=true/false");
+var action = argv._[0];
+if (!action || (action != 'deploy' && action != 'clean') || argv.sim === undefined) {
+  console.log(action);
+  console.log("node run_setup deploy|clean --sim=true|false");
   return;
 }
 
-var profile = process.env.aws_profile;
-var region = process.env.aws_region;
-var account = process.env.aws_account;
+//var profile = process.env.aws_profile;
+//var region = process.env.aws_region;
+//var account = process.env.aws_account;
+var profile = 'default';
+//var account = '054649790173'; // CTO Master Account for billing
+var federate_account = '089476987273';
+var account = '876224653878';
+var roleName = 'sgas_dev_admin';
+var region = 'us-east-1';
+var roles = [
+  {roleArn:'arn:aws:iam::' + federate_account + ':role/cto_across_accounts'},
+  {roleArn:'arn:aws:iam::' + federate_account + ':role/federate'},
+  {roleArn:'arn:aws:iam::' + account + ':role/' + roleName},
+];
+var sessionName = 'abcde';
+
 var action = argv._[0];
 var sim = (argv.sim == 'true') ? true: false;
 console.log('profile = ' + profile);
@@ -17,16 +31,17 @@ console.log('account = ' + account);
 console.log('action = ' + action);
 console.log('sim = ' + sim);
 
-var aws_watch = new (require('../lib/cloudwatch.js'))();
-var aws_topic = new (require('../lib/topic.js'))();
-var aws_bucket = new (require('../lib/s3bucket.js'))();
-var aws_role = new (require('../lib/role.js'))();
-var aws_lambda = new (require('../lib/lambda.js'))();
-var zipper = new (require('../lib/zipper'))();
+var aws_sts = new (require('../../lib/aws/sts'))();
+var aws_watch = new (require('../../lib/aws/cloudwatch'))();
+var aws_topic = new (require('../../lib/aws/topic'))();
+var aws_bucket = new (require('../../lib/aws/s3bucket'))();
+var aws_role = new (require('../../lib/aws/role'))();
+var aws_lambda = new (require('../../lib/aws/lambda'))();
+var zipper = new (require('../../lib/zipper/zipper'))();
 
 console.log("Current path = " + __dirname);
 var fs = require("fs");
-var data = fs.readFileSync(__dirname + '/json/package_billingalert.json', {encoding:'utf8'});
+var data = fs.readFileSync(__dirname + '/package_billingalert.json', {encoding:'utf8'});
 var package_json = JSON.parse(data);
 console.log(package_json);
 
@@ -40,6 +55,12 @@ var assumeRolePolicyName = package_json.assumeRolePolicyName;
 var inlinePolicyName = package_json.inlinePolicyName;
 var memorySize = package_json.memorySize;
 var timeout = package_json.timeout;
+
+var assumeRolePolicyDocument = fs.readFileSync(__dirname + '/' + package_json.assumeRolePolicyName + '.json', {encoding:'utf8'});
+console.log(assumeRolePolicyDocument);
+
+var inlinePolicyDocument = fs.readFileSync(__dirname + '/' + package_json.inlinePolicyName + '.json', {encoding:'utf8'});
+console.log(inlinePolicyDocument);
 
 ////// Variables for IncreasedPercentagesAlarm/Topic
 var alarmName = package_json.alarmName;
@@ -112,6 +133,8 @@ console.log(OverIncreasedPercentagesAlarm)
 ////// input varialbes for main resources
 var input = {
   profile : profile,
+  roles: roles,
+  sessionName: sessionName,
   region: region,
   bucketName: bucketName,
   keyName: keyName,
@@ -120,14 +143,16 @@ var input = {
   alarmSpec: IncreasedPercentagesAlarm,
   functionName: functionName,
   handler: handler,
-  roleName: roleName,
   assumeRolePolicyName: assumeRolePolicyName,
+  assumeRolePolicyDocument: assumeRolePolicyDocument,
+  roleName: roleName,
   inlinePolicyName: inlinePolicyName,
+  inlinePolicyDocument: inlinePolicyDocument,
   memorySize: memorySize,
   timeout: timeout,
-  zipFile : zipFile,
-  sourceFolder : sourceFolder,
-  src : src,
+  zipFile: zipFile,
+  sourceFolder: sourceFolder,
+  src: src,
 };
 
 ////// input varialbes for OverIncreasedPercentagesAlarm/Topic
@@ -142,9 +167,11 @@ var inputForOver = {
 
 ////// Starting function for OverIncreasedPercentagesAlarm/Topic
 function runForOverAlarm(input) {
+  console.log('<<<Starting tasks for Over Alarm/Topic...');
+  inputForOver.creds = input.creds,
+  aws_sts.flows = flowsForOver[action];
   aws_topic.flows = flowsForOver[action];
   aws_watch.flows = flowsForOver[action];
-  console.log('<<<Starting tasks for Over Alarm/Topic...');
   console.log(inputForOver);
   flowsForOver[action][0].func(inputForOver);
 }
@@ -183,7 +210,7 @@ var flowsForOver = {
     {func:aws_watch.setAlarm, success:aws_topic.subscribeEmail},
     {func:aws_topic.subscribeEmail, success:done},
   ],
-  remove: [
+  clean: [
     {func:aws_topic.findTopic, success:aws_topic.listSubscriptions, failure:aws_watch.findAlarm},
     {func:aws_topic.listSubscriptions, success:aws_topic.unsubscribeAll},
     {func:aws_topic.unsubscribeAll, success:aws_topic.deleteTopic},
@@ -196,6 +223,7 @@ var flowsForOver = {
 ////// Function flows for IncreasedPercentagesAlarm/Topic
 var flows = {
   deploy: [
+    {func:aws_sts.assumeRoles, success:aws_role.findRole},
     {func:aws_role.findRole, success:aws_role.findInlinePolicy, failure:aws_role.createRole},
     {func:aws_role.createRole, success:aws_role.findInlinePolicy},
     {func:aws_role.findInlinePolicy, success:aws_bucket.findBucket, failure:aws_role.createInlinePolicy},
@@ -215,7 +243,8 @@ var flows = {
     {func:aws_lambda.addPermission, success:aws_topic.subscribeLambda},
     {func:aws_topic.subscribeLambda, success:runForOverAlarm},
   ],
-  remove: [
+  clean: [
+    {func:aws_sts.assumeRoles, success:aws_lambda.findFunction},
     {func:aws_lambda.findFunction, success:aws_lambda.deleteFunction, failure:aws_role.findInlinePolicy},
     {func:aws_lambda.deleteFunction, success:aws_role.findInlinePolicy},
     {func:aws_role.findInlinePolicy, success:aws_role.deleteInlinePolicy, failure:aws_role.findRole},
@@ -230,7 +259,7 @@ var flows = {
     {func:aws_watch.deleteAlarm, success:runForOverAlarm},
   ]
 };
-
+aws_sts.flows = flows[action];
 aws_role.flows = flows[action];
 aws_topic.flows = flows[action];
 aws_watch.flows = flows[action];

@@ -1,10 +1,23 @@
 
 var argv = require('minimist')(process.argv.slice(2));
-var profile = process.env.aws_profile;
-var region = process.env.aws_region;
 var value = (argv.v) ? argv.v : 0;
+//var profile = process.env.aws_profile;
+//var region = process.env.aws_region;
+var profile = 'default';
+var federate_account = '089476987273';
+//var account = '054649790173'; // CTO Master Account for billing
+var account = '876224653878';
+var roleName = 'sgas_dev_admin';
+var region = 'us-east-1';
+var roles = [
+  {roleArn:'arn:aws:iam::' + federate_account + ':role/cto_across_accounts'},
+  {roleArn:'arn:aws:iam::' + federate_account + ':role/federate'},
+  {roleArn:'arn:aws:iam::' + account + ':role/' + roleName},
+];
+var sessionName = 'abcde';
 
-var aws_watch = new (require('../lib/cloudwatch.js'))();
+var aws_sts = new (require('../../lib/aws/sts.js'))();
+var aws_watch = new (require('../../lib/aws/cloudwatch.js'))();
 
 var current = new Date();
 var startTime = new Date();
@@ -43,6 +56,8 @@ var metricData = {
 
 var input = {
   profile: profile,
+  roles: roles,
+  sessionName: sessionName,
   region: region,
   metricQuery: metricQuery,
   metricData: metricData,
@@ -62,20 +77,32 @@ function addMetricData(max) {
 }
 
 if (value > 0) {
-  addMetricData(value);
-}
-else {
-  aws_watch.findMetricsStatistics(input, function(err, data) {
+  aws_sts.assumeRoles(input, function(err, data) {
     if (err) {
       console.log("failed to get metric statistics");
       return;
     }
-    console.log("found metric data");
-    console.log(data);
-    outputs = data.Datapoints;
-    outputs.sort(function(a, b){return b.Timestamp - a.Timestamp});
-    var max = (outputs[0]) ? outputs[0].Maximum : 100;
-    console.log("Maximum value : " + max);
-    addMetricData(max);
+    addMetricData(value);
+  });
+}
+else {
+  aws_sts.assumeRoles(input, function(err, data) {
+    if (err) {
+      console.log("failed to get metric statistics");
+      return;
+    }
+    aws_watch.findMetricsStatistics(input, function(err, data) {
+      if (err) {
+        console.log("failed to get metric statistics");
+        return;
+      }
+      console.log("found metric data");
+      console.log(data);
+      outputs = data.Datapoints;
+      outputs.sort(function(a, b){return b.Timestamp - a.Timestamp});
+      var max = (outputs[0]) ? outputs[0].Maximum : 100;
+      console.log("Maximum value : " + max);
+      addMetricData(max);
+    });
   });
 }
