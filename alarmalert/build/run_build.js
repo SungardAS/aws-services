@@ -4,7 +4,6 @@
 //var region = process.env.aws_region;
 var profile = 'default';
 var federate_account = '089476987273';
-//var account = '054649790173'; // CTO Master Account for billing
 var account = '876224653878';
 var roleName = 'sgas_dev_admin';
 var region = 'us-east-1';
@@ -17,21 +16,29 @@ var sessionName = 'abcde';
 
 var argv = require('minimist')(process.argv.slice(2));
 var action = argv._[0];
-if (!action || (action != 'deploy' && action != 'clean') || argv.sim === undefined) {
+var module = argv._[1];
+if (!action || !module || (action != 'deploy' && action != 'clean') || (module != 'cron' && module != 'eventlog')) {
   console.log(action);
-  console.log("node run_build deploy|clean --sim=true|false");
+  console.log(module);
+  console.log("node run_build deploy|clean cron|eventlog");
   return;
 }
-var sim = (argv.sim == 'true') ? true: false;
 
 console.log('profile = ' + profile);
 console.log('account = ' + account);
 console.log('region = ' + region);
 console.log('action = ' + action);
+console.log('module = ' + module);
 
 console.log("Current path = " + __dirname);
 var fs = require("fs");
-var data = fs.readFileSync(__dirname + '/package_billingalert.json', {encoding:'utf8'});
+var data = null;
+if (module == 'cron') {
+  data = fs.readFileSync(__dirname + '/package_cron.json', {encoding:'utf8'});
+}
+else if (module == 'eventlog') {
+  data = fs.readFileSync(__dirname + '/package_eventlog.json', {encoding:'utf8'});
+}
 var package_json = JSON.parse(data);
 console.log(package_json);
 
@@ -40,11 +47,6 @@ console.log(assumeRolePolicyDocument);
 
 var inlinePolicyDocument = fs.readFileSync(__dirname + '/' + package_json.inlinePolicyName + '.json', {encoding:'utf8'});
 console.log(inlinePolicyDocument);
-
-var functionName = package_json.functionName;
-if (sim) {
-  package_json.functionName += '_sim';
-}
 
 input = {
   profile: profile,

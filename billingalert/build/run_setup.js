@@ -168,7 +168,7 @@ var inputForOver = {
 ////// Starting function for OverIncreasedPercentagesAlarm/Topic
 function runForOverAlarm(input) {
   console.log('<<<Starting tasks for Over Alarm/Topic...');
-  inputForOver.creds = input.creds,
+  inputForOver.creds = input.creds;
   aws_sts.flows = flowsForOver[action];
   aws_topic.flows = flowsForOver[action];
   aws_watch.flows = flowsForOver[action];

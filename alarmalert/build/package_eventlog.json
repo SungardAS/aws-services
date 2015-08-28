@@ -1,0 +1,20 @@
+{
+  "bucketNamePostfix": ".sgas.cto.lambda-files",
+  "keyName": "nodejs/email_to_eventlog.zip",
+  "zipFile" : "email_to_eventlog.zip",
+  "sourceFolder" : "/Users/alex.ough/Projects/Node/aws-services",
+  "src" : ["alarmalert/index_eventlog.js", "alarmalert/json/*.json", "lib/flow_controller.js", "lib/aws/**/*", "lib/google/**/*"],
+  "assumeRolePolicyName": "lambda_assume_role_policy",
+  "roleName": "lambda_alarmalert_invoke",
+  "inlinePolicyName": "lambda_alarmalert_execution_policy",
+  "functionName": "email_to_eventlog",
+  "handler":"alarmalert/index_eventlog.handler",
+  "memorySize": 128,
+  "timeout": 60,
+  "labelId": "INBOX",
+  "userId": "me",
+  "eventLogGroupName": "alert_email_group",
+  "alarmName": "AlertEmailAlarm",
+  "topicName": "AlertEmailTopic",
+  "subscriberEmail": "alex.ough@sungardas.com"
+}

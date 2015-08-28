@@ -1,11 +1,11 @@
 
 exports.handler = function (event, context) {
 
-  var gmail = new (require('../lib/gmail.js'))();
-  var aws_watchlog = new (require('../lib/cloudwatchlog.js'))();
+  var gmail = new (require('../lib/google/gmail.js'))();
+  var aws_watchlog = new (require('../lib/aws/cloudwatchlog.js'))();
 
   var fs = require("fs");
-  data = fs.readFileSync(__dirname + '/json/package_alarmalert.json', {encoding:'utf8'});
+  data = fs.readFileSync(__dirname + '/json/data.json', {encoding:'utf8'});
   data_json = JSON.parse(data);
 
   var input = {
@@ -17,7 +17,7 @@ exports.handler = function (event, context) {
     messages: [],
     labelsToAdd: [],
     labelsToRemove: ['UNREAD'],
-    groupName: data_json.alertEmail.eventLogGroupName,
+    groupName: data_json.eventLogGroupName,
     streamName: null
   };
 

@@ -1,18 +1,18 @@
 
 exports.handler = function (event, context) {
 
-  var aws_queue = new (require('../lib/queue.js'))();
+  var aws_queue = new (require('../lib/aws/queue.js'))();
 
   var fs = require("fs");
-  data = fs.readFileSync(__dirname + '/json/package_alarmalert.json', {encoding:'utf8'});
+  data = fs.readFileSync(__dirname + '/json/data.json', {encoding:'utf8'});
   data_json = JSON.parse(data);
 
   var input = {
     profile: (event.profile === undefined) ? null : event.profile,
     region: event.region,
-    queueName : data_json.cron.queueName,
-    messageBody : data_json.cron.messageBody,
-    delaySeconds : data_json.cron.delaySeconds,
+    queueName : data_json.queueName,
+    messageBody : data_json.messageBody,
+    delaySeconds : data_json.delaySeconds,
   };
 
   var flows = [

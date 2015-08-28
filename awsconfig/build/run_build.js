@@ -47,7 +47,7 @@ package_json.keyName = 'nodejs/awsconfig-' + module + '.zip';
 package_json.zipFile = 'awsconfig-' + module + '.zip';
 package_json.src[0] = 'awsconfig/index_' + module + '.js';
 package_json.functionName = 'awsconfig-' + module;
-package_json.hanlder = 'awsconfig/index_' + module + ".handler";
+package_json.handler = 'awsconfig/index_' + module + ".handler";
 
 input = {
   profile: profile,
@@ -60,7 +60,7 @@ input = {
   sourceFolder: package_json.sourceFolder,
   src: package_json.src,
   functionName: package_json.functionName,
-  handler: package_json.hanlder,
+  handler: package_json.handler,
   assumeRolePolicyName: package_json.assumeRolePolicyName,
   assumeRolePolicyDocument: assumeRolePolicyDocument,
   roleName: package_json.roleName,

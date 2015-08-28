@@ -47,7 +47,7 @@ package_json.keyName = 'nodejs/cloudtrail-' + module + '.zip';
 package_json.zipFile = 'cloudtrail-' + module + '.zip';
 package_json.src[0] = 'cloudtrail/index_' + module + '.js';
 package_json.functionName = 'cloudtrail-' + module;
-package_json.hanlder = 'cloudtrail/index_' + module + ".handler";
+package_json.handler = 'cloudtrail/index_' + module + ".handler";
 
 input = {
   profile: profile,
@@ -60,7 +60,7 @@ input = {
   sourceFolder: package_json.sourceFolder,
   src: package_json.src,
   functionName: package_json.functionName,
-  handler: package_json.hanlder,
+  handler: package_json.handler,
   assumeRolePolicyName: package_json.assumeRolePolicyName,
   assumeRolePolicyDocument: assumeRolePolicyDocument,
   roleName: package_json.roleName,

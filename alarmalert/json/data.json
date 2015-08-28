@@ -1,0 +1,6 @@
+{
+  "queueName": "CTOCronQueue",
+  "messageBody": "cto-cron-message",
+  "delaySeconds": 300,
+  "eventLogGroupName": "alert_email_group"
+}
