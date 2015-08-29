@@ -69,6 +69,8 @@ var functionName = package_json.functionName;
 if (sim) {
   alarmName = alarmName.replace('Alarm', 'SimAlarm');
   topicName = topicName.replace('Topic', 'SimTopic');
+  keyName = keyName.replace('.zip', '_sim.zip');
+  zipFile = zipFile.replace('.zip', '_sim.zip');
   functionName += '_sim';
 }
 var namespace = package_json.awsBillingMetricNamespace;

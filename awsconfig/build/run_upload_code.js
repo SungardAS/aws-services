@@ -16,20 +16,21 @@ var roles = [
 var sessionName = 'abcde';
 
 var argv = require('minimist')(process.argv.slice(2));
-var action = argv._[0];
-var module = argv._[1];
-if (!action || !module || (action != 'deploy' && action != 'clean') || (module != 'checker' && module != 'enabler' && module != 'remover')) {
-  console.log(action);
+var module = argv._[0];
+if (!module || (module != 'checker' && module != 'enabler' && module != 'remover')) {
   console.log(module);
-  console.log("node run_build deploy|clean checker|enabler|remover");
+  console.log("node run_upload_code checker|enabler|remover");
   return;
 }
 
 console.log('profile = ' + profile);
 console.log('account = ' + account);
 console.log('region = ' + region);
-console.log('action = ' + action);
 console.log('module = ' + module);
+
+var aws_sts = new (require('../../lib/aws/sts'))();
+var aws_bucket = new (require('../../lib/aws/s3bucket'))();
+var zipper = new (require('../../lib/zipper/zipper'))();
 
 console.log("Current path = " + __dirname);
 var fs = require("fs");
@@ -37,19 +38,9 @@ var data = fs.readFileSync(__dirname + '/package_awsconfig.json', {encoding:'utf
 var package_json = JSON.parse(data);
 console.log(package_json);
 
-var lambdaArn = 'arn:aws:iam::' + account + ':role/' + package_json.roleName;
-
-var assumeRolePolicyDocument = fs.readFileSync(__dirname + '/' + package_json.assumeRolePolicyName + '.json', {encoding:'utf8'});
-console.log(assumeRolePolicyDocument);
-
-var inlinePolicyDocument = fs.readFileSync(__dirname + '/' + package_json.inlinePolicyName + '.json', {encoding:'utf8'});
-console.log(inlinePolicyDocument);
-
 package_json.keyName = 'nodejs/awsconfig-' + module + '.zip';
 package_json.zipFile = 'awsconfig-' + module + '.zip';
 package_json.src[0] = 'awsconfig/index_' + module + '.js';
-package_json.functionName = 'awsconfig-' + module;
-package_json.handler = 'awsconfig/index_' + module + ".handler";
 
 input = {
   profile: profile,
@@ -60,20 +51,10 @@ input = {
   keyName: package_json.keyName,
   zipFile: package_json.zipFile,
   sourceFolder: package_json.sourceFolder,
-  src: package_json.src,
-  functionName: package_json.functionName,
-  handler: package_json.handler,
-  assumeRolePolicyName: package_json.assumeRolePolicyName,
-  assumeRolePolicyDocument: assumeRolePolicyDocument,
-  roleName: package_json.roleName,
-  inlinePolicyName: package_json.inlinePolicyName,
-  inlinePolicyDocument: inlinePolicyDocument,
-  memorySize: package_json.memorySize,
-  timeout: package_json.timeout,
-  federateRoleName: federateRoleName,
-  lambdaArn: lambdaArn
+  src: package_json.src
 };
+
 console.log(input);
 
-var deployer = new (require('../../lib/lambda_deployer'))();
-deployer[action](input);
+var uploader = new (require('../../lib/file_uploader'))();
+uploader.upload(input);

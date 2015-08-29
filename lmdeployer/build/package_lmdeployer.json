@@ -1,0 +1,14 @@
+{
+  "bucketNamePostfix": ".sgas.cto.lambda-files",
+  "keyName": "nodejs/lmdeployer.zip",
+  "zipFile" : "lmdeployer.zip",
+  "sourceFolder" : "/Users/alex.ough/Projects/Node/aws-services",
+  "src" : ["lmdeployer/index.js", "lmdeployer/json/*.json", "lib/flow_controller.js", "lib/aws/**/*"],
+  "assumeRolePolicyName": "lambda_assume_role_policy",
+  "roleName": "lambda_lmdeployer_execution",
+  "inlinePolicyName": "lambda_lmdeployer_execution_policy",
+  "functionName": "lmdeployer",
+  "handler":"lmdeployer/index.handler",
+  "memorySize": 128,
+  "timeout": 30
+}
