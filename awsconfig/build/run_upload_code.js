@@ -11,7 +11,7 @@ var region = 'us-east-1';
 var roles = [
   {roleArn:'arn:aws:iam::' + federateAccount + ':role/cto_across_accounts'},
   {roleArn:'arn:aws:iam::' + federateAccount + ':role/' + federateRoleName},
-  {roleArn:'arn:aws:iam::' + account + ':role/' + roleName},
+  {roleArn:'arn:aws:iam::' + account + ':role/' + roleName, externalId:'4939a983-fa81-42d0-a93c-9cb63daa1bd6'},
 ];
 var sessionName = 'abcde';
 
