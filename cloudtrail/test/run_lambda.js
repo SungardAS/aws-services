@@ -1,6 +1,6 @@
 
 var profile = "default";
-var federate_account = "089476987273";
+var federateAccount = "089476987273";
 var account = "876224653878";
 var roleName = "sgas_dev_admin";
 var region = "us-west-1";
@@ -11,7 +11,7 @@ var sessionName = "abcde";
 var i = require('./index_checker');
 var event = {
   "profile": profile,
-  "federate_account": federate_account,
+  "federateAccount": federateAccount,
   "account": account,
   "roleName": roleName,
   "sessionName": sessionName,
@@ -25,7 +25,7 @@ i.handler(event, context);
 var i = require('./index_enabler');
 var event = {
   "profile": profile,
-  "federate_account": federate_account,
+  "federateAccount": federateAccount,
   "account": account,
   "roleName": roleName,
   "sessionName": sessionName,
@@ -39,7 +39,7 @@ i.handler(event, context);
 var i = require('./index_remover');
 var event = {
   "profile": profile,
-  "federate_account": federate_account,
+  "federateAccount": federateAccount,
   "account": account,
   "roleName": roleName,
   "sessionName": sessionName,

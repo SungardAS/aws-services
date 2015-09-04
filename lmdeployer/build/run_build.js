@@ -3,14 +3,14 @@
 //var account = process.env.aws_account;
 //var region = process.env.aws_region;
 var profile = 'default';
-var federate_account = '089476987273';
+var federateAccount = '089476987273';
 var account = '876224653878';
-//var account = federate_account;
+//var account = federateAccount;
 var roleName = 'sgas_dev_admin';
 var region = 'us-east-1';
 var roles = [
-  {roleArn:'arn:aws:iam::' + federate_account + ':role/cto_across_accounts'},
-  {roleArn:'arn:aws:iam::' + federate_account + ':role/federate'},
+  {roleArn:'arn:aws:iam::' + federateAccount + ':role/cto_across_accounts'},
+  {roleArn:'arn:aws:iam::' + federateAccount + ':role/federate'},
   {roleArn:'arn:aws:iam::' + account + ':role/' + roleName},
 ];
 var sessionName = 'abcde';

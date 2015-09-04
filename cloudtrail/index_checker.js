@@ -6,10 +6,15 @@ exports.handler = function (event, context) {
 
   var roles = [];
   if (event.profile) {
-    roles.push({roleArn:'arn:aws:iam::' + event.federate_account + ':role/cto_across_accounts'});
+    roles.push({roleArn:'arn:aws:iam::' + event.federateAccount + ':role/cto_across_accounts'});
   }
-  roles.push({roleArn:'arn:aws:iam::' + event.federate_account + ':role/federate'});
-  roles.push({roleArn:'arn:aws:iam::' + event.account + ':role/' + event.roleName});
+  roles.push({roleArn:'arn:aws:iam::' + event.federateAccount + ':role/federate'});
+  var admin_role = {roleArn:'arn:aws:iam::' + event.account + ':role/' + event.roleName};
+  if (event.roleExternalId) {
+    admin_role.externalId = event.roleExternalId;
+  }
+  roles.push(admin_role);
+  console.log(roles);
 
   var input = {
     profile: (event.profile === undefined) ? null : event.profile,

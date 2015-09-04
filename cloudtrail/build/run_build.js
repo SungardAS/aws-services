@@ -8,7 +8,7 @@ var region = 'us-east-1';
 var roles = [
   {roleArn:'arn:aws:iam::089476987273:role/cto_across_accounts'},
   {roleArn:'arn:aws:iam::089476987273:role/federate'},
-  {roleArn:'arn:aws:iam::089476987273:role/sgas_dev_admin'},
+  {roleArn:'arn:aws:iam::089476987273:role/sgas_dev_admin', externalId:'4939a983-fa81-42d0-a93c-9cb63daa1bd6'},
 ];
 var sessionName = 'abcde';
 var federateRoleName = 'federate';
