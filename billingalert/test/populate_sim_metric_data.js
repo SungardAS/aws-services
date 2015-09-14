@@ -15,9 +15,10 @@ var roles = [
   {roleArn:'arn:aws:iam::' + account + ':role/' + roleName},
 ];
 var sessionName = 'abcde';
+var durationSeconds = 900;
 
-var aws_sts = new (require('../../lib/aws/sts.js'))();
 var aws_watch = new (require('../../lib/aws/cloudwatch.js'))();
+var assumeRoleProvider = new (require('../../lib/aws/assume_role_provider.js'))();
 
 var current = new Date();
 var startTime = new Date();
@@ -63,46 +64,78 @@ var input = {
   metricData: metricData,
 };
 
-function addMetricData(max) {
-  max += Math.floor(max * (Math.random() / 7));
+function addMetricData(max, callback) {
   input.metricData.MetricData[0].Timestamp = new Date;
   input.metricData.MetricData[0].Value = max;
-  aws_watch.addMetricData(input);
+  if (assumeRoleProvider.isAlmostExpired()) {
+    assumeRoleProvider.getCredential(roles, sessionName, durationSeconds, profile, function(err, data) {
+      if(err) console.log(err);
+      else {
+        input.creds = data;
+        aws_watch.addMetricData(input, callback);
+      }
+    });
+  }
+  else {
+    aws_watch.addMetricData(input, callback);
+  }
+}
+
+function initAddMetricData(max, callback) {
+  max += Math.floor(max * (Math.random() / 7));
+  addMetricData(max, function(err, data) {
+    if (err) {
+      console.log("Failed to add metric data");
+      callback(err);
+    }
+    else {
+      console.log(data);
+      callback(null, data);
+    }
+  });
   setInterval(function(){
     max += Math.floor(max * (Math.random() / 7));
-    input.metricData.MetricData[0].Timestamp = new Date;
-    input.metricData.MetricData[0].Value = max;
-    aws_watch.addMetricData(input);
+    addMetricData(max, function(err, data) {
+      if (err) {
+        console.log("Failed to add metric data");
+        console.log(err);
+      }
+      else {
+        console.log(data);
+        callback(null, data);
+      }
+    });
   }, 10 * 60 * 1000);
 }
 
-if (value > 0) {
-  aws_sts.assumeRoles(input, function(err, data) {
-    if (err) {
-      console.log("failed to get metric statistics");
-      return;
+assumeRoleProvider.getCredential(roles, sessionName, durationSeconds, profile, function(err, data) {
+  if(err) console.log(err);
+  else {
+    input.creds = data;
+    if (value > 0) {
+        initAddMetricData(value, function(err, data) {
+          if (err)  console.log(err);
+          else console.log(data);
+        });
     }
-    addMetricData(value);
-  });
-}
-else {
-  aws_sts.assumeRoles(input, function(err, data) {
-    if (err) {
-      console.log("failed to get metric statistics");
-      return;
+    else {
+      aws_watch.findMetricsStatistics(input, function(err, data) {
+        if (err) {
+          console.log("failed to get metric statistics");
+          console.log(err);
+          return;
+        }
+        console.log("found metric data");
+        console.log(data);
+        outputs = data.Datapoints;
+        outputs.sort(function(a, b){return b.Timestamp - a.Timestamp});
+        var max = (outputs[0]) ? outputs[0].Maximum : 100;
+        console.log("Maximum value : " + max);
+        initAddMetricData(max, function(err, data) {
+          if (err)  console.log(err);
+          else console.log(data);
+        });
+      });
     }
-    aws_watch.findMetricsStatistics(input, function(err, data) {
-      if (err) {
-        console.log("failed to get metric statistics");
-        return;
-      }
-      console.log("found metric data");
-      console.log(data);
-      outputs = data.Datapoints;
-      outputs.sort(function(a, b){return b.Timestamp - a.Timestamp});
-      var max = (outputs[0]) ? outputs[0].Maximum : 100;
-      console.log("Maximum value : " + max);
-      addMetricData(max);
-    });
-  });
-}
+  }
+});
