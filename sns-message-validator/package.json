@@ -1,0 +1,15 @@
+{
+  "name": "sns-message-validator",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "jsrsasign": "^4.9.0",
+    "request": "^2.61.0"
+  }
+}
