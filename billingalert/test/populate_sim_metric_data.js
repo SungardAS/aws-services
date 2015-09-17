@@ -83,6 +83,7 @@ function addMetricData(max, callback) {
 
 function initAddMetricData(max, callback) {
   max += Math.floor(max * (Math.random() / 7));
+  //max += Math.floor(max * 0.15);
   addMetricData(max, function(err, data) {
     if (err) {
       console.log("Failed to add metric data");
@@ -95,6 +96,7 @@ function initAddMetricData(max, callback) {
   });
   setInterval(function(){
     max += Math.floor(max * (Math.random() / 7));
+    //max += Math.floor(max * 0.15);
     addMetricData(max, function(err, data) {
       if (err) {
         console.log("Failed to add metric data");
