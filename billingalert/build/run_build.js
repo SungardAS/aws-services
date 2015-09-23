@@ -5,13 +5,14 @@
 var profile = 'default';
 var federateAccount = '089476987273';
 //var account = '054649790173'; // CTO Master Account for billing
-var account = '876224653878';
+var account = '089476987273';
 var roleName = 'sgas_dev_admin';
+var externalId = '88df904d-c597-40ef-8b29-b767aba1eaa4';
 var region = 'us-east-1';
 var roles = [
   {roleArn:'arn:aws:iam::' + federateAccount + ':role/cto_across_accounts'},
   {roleArn:'arn:aws:iam::' + federateAccount + ':role/federate'},
-  {roleArn:'arn:aws:iam::' + account + ':role/' + roleName},
+  {roleArn:'arn:aws:iam::' + account + ':role/' + roleName, externalId:externalId},
 ];
 var sessionName = 'abcde';
 
