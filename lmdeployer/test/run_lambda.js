@@ -1,22 +1,20 @@
 
-var profile = 'aws_876224653878';
-var region = "us-east-1";
-var bucketName = '876224653878.sgas.cto.lambda-files';
-var keyName = 'nodejs/cto_cron_runner.zip';
-var versionId = 'v1';
+var argv = require('minimist')(process.argv.slice(2));
+var profile = argv._[0];
 
 var i = require('../index');
 var event = {
-  profile: profile,
-  Records : [
+  "Records" : [
     {
-      awsRegion: region,
-      s3: {
-        bucket: {name: bucketName},
-        object: {key: keyName, versionId: versionId}
+      "awsRegion": "us-east-1",
+      "s3": {
+        "bucket": {"name": "089476987273.sgas.cto.lambda-files"},
+        "object": {"key": "nodejs/awsconfig-checker.zip", "versionId": "v1"}
       }
     }
   ]
 }
+if (profile)  event.profile = profile;
+
 var context = {fail:function(a){console.log(a)}, done:function(e, a){console.log(a)}};
 i.handler(event, context);

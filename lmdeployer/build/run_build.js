@@ -1,25 +1,23 @@
 
-//var profile = process.env.aws_profile;
-//var account = process.env.aws_account;
-//var region = process.env.aws_region;
-var profile = 'default';
-var federateAccount = '089476987273';
-var account = '876224653878';
-//var account = federateAccount;
-var roleName = 'sgas_dev_admin';
-var region = 'us-east-1';
-var roles = [
-  {roleArn:'arn:aws:iam::' + federateAccount + ':role/cto_across_accounts'},
-  {roleArn:'arn:aws:iam::' + federateAccount + ':role/federate'},
-  {roleArn:'arn:aws:iam::' + account + ':role/' + roleName},
-];
-var sessionName = 'abcde';
+var fs = require("fs");
+var params = fs.readFileSync(__dirname + '/run_params.json', {encoding:'utf8'});
+var param_json = JSON.parse(params);
+console.log(param_json);
+
+var federateAccount = param_json.federateAccount;
+var account = param_json.account;
+var externalId = param_json.externalId;
+var federateRoleName = param_json.federateRoleName;
+var roleName = param_json.roleName;
+var region = param_json.region;
+var sessionName = param_json.sessionName;
 
 var argv = require('minimist')(process.argv.slice(2));
 var action = argv._[0];
-if (!action || !module || (action != 'deploy' && action != 'clean')) {
+var profile = argv._[1];
+if (!action || (action != 'deploy' && action != 'clean')) {
   console.log(action);
-  console.log("node run_build deploy|clean");
+  console.log("node run_build deploy|clean [profile]");
   return;
 }
 
@@ -27,6 +25,13 @@ console.log('profile = ' + profile);
 console.log('account = ' + account);
 console.log('region = ' + region);
 console.log('action = ' + action);
+
+var roles = [];
+if (profile) {
+  roles.push({roleArn:'arn:aws:iam::' + federateAccount + ':role/cto_across_accounts'});
+}
+roles.push({roleArn:'arn:aws:iam::' + federateAccount + ':role/' + federateRoleName});
+roles.push({roleArn:'arn:aws:iam::' + account + ':role/' + roleName, externalId:externalId});
 
 console.log("Current path = " + __dirname);
 var fs = require("fs");
@@ -83,4 +88,30 @@ function done(input) {
 }
 
 var deployer = new (require('../../lib/lambda_deployer'))();
-deployer[action](input);
+var aws_sts = new (require('../../lib/aws/sts'))();
+var aws_bucket = new (require('../../lib/aws/s3bucket'))();
+var aws_lambda = new (require('../../lib/aws/lambda'))();
+
+var flows = {
+  deploy: [
+    {func:aws_lambda.getPolicy, success:aws_bucket.findBucketNotificationConfiguration, failure:aws_lambda.addPermission},
+    {func:aws_lambda.addPermission, success:aws_bucket.findBucketNotificationConfiguration},
+    {func:aws_bucket.findBucketNotificationConfiguration, success:done, failure:aws_bucket.putBucketNotificationConfiguration},
+    {func:aws_bucket.putBucketNotificationConfiguration, success:done},
+  ],
+  clean: [
+    //{func:deployer.clean, success:aws_bucket.findBucketNotificationConfiguration},
+    //{func:aws_bucket.findBucketNotificationConfiguration, success:aws_bucket.removeBucketNotificationConfiguration, failure:done},
+    //{func:aws_bucket.removeBucketNotificationConfiguration, success:done},
+    {func:done, success:done},
+  ]
+};
+aws_sts.flows = flows[action];
+aws_bucket.flows = flows[action];
+aws_lambda.flows = flows[action];
+
+console.log(input);
+var deployer = new (require('../../lib/lambda_deployer'))();
+deployer[action](input, function(params) {
+  flows[action][0].func(input);
+});
