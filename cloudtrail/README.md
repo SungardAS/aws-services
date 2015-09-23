@@ -3,41 +3,32 @@
 
 AWS Lambda functions to manage the CloudTrail Service
 
-### Environment Variables
 
-  aws_profile : profile name in ~/.aws/credential
-  aws_region : region where the function will be deployed/removed
-  aws_account : AWS account id
+### How To Depoly & Remove Functions
 
-### Deploy Functions
+  > cd build
 
-  > node deploy_cloudtrail deploy -f <func_name> -m <memory_size> -t <timeout>
+  > edit parameter values in 'run_parameters.json'
 
-    where
-    <func_name> is one of 'checker', 'enabler' or 'remover'
-
-### Remove Functions
-
-  > node deploy_cloudtrail remove -f <func_name>
-
-    where <func_name> is one of 'checker', 'enabler' or 'remover'
-
-### Remove Role
-
-  > node deploy_cloudtrail remove_role
-
-
-## How To Run Functions using CLI
-
-  > aws lambda invoke \
-    --invocation-type RequestResponse \
-    --profile $aws_profile \
-    --region $aws_region \
-    --log-type Tail \
-    --function-name <function_full_name> \
-    --payload '{"region":"<region_where_function_run>", "account":"'$aws_account'"}' \
-    outputfile.txt
+  > node run_build \<action\> \<module\>
 
     where
-      <function_full_name> is one of 'cloudtrail-checker', 'cloudtrail-enabler' or 'cloudtrail-remover'
-      <region_where_function_run> is the region where the function will be run
+
+      <action> is one of 'deploy' and 'clean'
+
+      <module> is one of 'checker', 'enabler' and 'remover'
+
+
+## How To Test
+
+  > cd test
+
+  > edit parameter values in 'run_lambda.js'
+
+  > node run_build \<module\> [\<profile\>]
+
+    where
+
+      <module> is one of 'checker', 'enabler' and 'remover'
+
+      <profile> is optional
