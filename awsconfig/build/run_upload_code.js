@@ -1,19 +1,17 @@
 
-//var profile = process.env.aws_profile;
-//var account = process.env.aws_account;
-//var region = process.env.aws_region;
-var profile = 'default';
-var federateAccount = '089476987273';
-var account = '089476987273';
-var federateRoleName = 'federate';
-var roleName = 'sgas_dev_admin';
-var region = 'us-east-1';
-var roles = [
-  {roleArn:'arn:aws:iam::' + federateAccount + ':role/cto_across_accounts'},
-  {roleArn:'arn:aws:iam::' + federateAccount + ':role/' + federateRoleName},
-  {roleArn:'arn:aws:iam::' + account + ':role/' + roleName, externalId:'4939a983-fa81-42d0-a93c-9cb63daa1bd6'},
-];
-var sessionName = 'abcde';
+var fs = require("fs");
+var params = fs.readFileSync(__dirname + '/run_params.json', {encoding:'utf8'});
+var param_json = JSON.parse(params);
+console.log(param_json);
+
+var profile = param_json.profile;
+var federateAccount = param_json.federateAccount;
+var account = param_json.account;
+var externalId = param_json.externalId;
+var federateRoleName = param_json.federateRoleName;
+var roleName = param_json.roleName;
+var region = param_json.region;
+var sessionName = param_json.sessionName;
 
 var argv = require('minimist')(process.argv.slice(2));
 var module = argv._[0];
@@ -27,6 +25,12 @@ console.log('profile = ' + profile);
 console.log('account = ' + account);
 console.log('region = ' + region);
 console.log('module = ' + module);
+
+var roles = [
+  {roleArn:'arn:aws:iam::' + federateAccount + ':role/cto_across_accounts'},
+  {roleArn:'arn:aws:iam::' + federateAccount + ':role/' + federateRoleName},
+  {roleArn:'arn:aws:iam::' + account + ':role/' + roleName, externalId:externalId},
+];
 
 var aws_sts = new (require('../../lib/aws/sts'))();
 var aws_bucket = new (require('../../lib/aws/s3bucket'))();

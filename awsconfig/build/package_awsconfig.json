@@ -7,7 +7,7 @@
   "functionName": "",
   "handler": "",
   "assumeRolePolicyName": "lambda_assume_role_policy",
-  "roleName": "lambda_awsconfig_execution",
+  "roleName": "lambda_awsconfig",
   "inlinePolicyName": "lambda_awsconfig_execution_policy",
   "memorySize": 128,
   "timeout": 30

@@ -1,19 +1,17 @@
 
-//var profile = process.env.aws_profile;
-//var account = process.env.aws_account;
-//var region = process.env.aws_region;
-var profile = 'default';
-var federateAccount = '089476987273';
-var account = '089476987273';
-var federateRoleName = 'federate';
-var roleName = 'sgas_dev_admin';
-var region = 'us-east-1';
-var roles = [
-  {roleArn:'arn:aws:iam::' + federateAccount + ':role/cto_across_accounts'},
-  {roleArn:'arn:aws:iam::' + federateAccount + ':role/' + federateRoleName},
-  {roleArn:'arn:aws:iam::' + account + ':role/' + roleName, externalId:'4939a983-fa81-42d0-a93c-9cb63daa1bd6'},
-];
-var sessionName = 'abcde';
+var fs = require("fs");
+var params = fs.readFileSync(__dirname + '/run_params.json', {encoding:'utf8'});
+var param_json = JSON.parse(params);
+console.log(param_json);
+
+var profile = param_json.profile;
+var federateAccount = param_json.federateAccount;
+var account = param_json.account;
+var externalId = param_json.externalId;
+var federateRoleName = param_json.federateRoleName;
+var roleName = param_json.roleName;
+var region = param_json.region;
+var sessionName = param_json.sessionName;
 
 var argv = require('minimist')(process.argv.slice(2));
 var action = argv._[0];
@@ -31,13 +29,19 @@ console.log('region = ' + region);
 console.log('action = ' + action);
 console.log('module = ' + module);
 
+var roles = [
+  {roleArn:'arn:aws:iam::' + federateAccount + ':role/cto_across_accounts'},
+  {roleArn:'arn:aws:iam::' + federateAccount + ':role/' + federateRoleName},
+  {roleArn:'arn:aws:iam::' + account + ':role/' + roleName, externalId:externalId},
+];
+
 console.log("Current path = " + __dirname);
-var fs = require("fs");
 var data = fs.readFileSync(__dirname + '/package_awsconfig.json', {encoding:'utf8'});
 var package_json = JSON.parse(data);
 console.log(package_json);
 
-var lambdaArn = 'arn:aws:iam::' + account + ':role/' + package_json.roleName;
+var roleName = package_json.roleName + "_" + module;
+var lambdaRoleArn = 'arn:aws:iam::' + account + ':role/' + roleName;
 
 var assumeRolePolicyDocument = fs.readFileSync(__dirname + '/' + package_json.assumeRolePolicyName + '.json', {encoding:'utf8'});
 console.log(assumeRolePolicyDocument);
@@ -65,13 +69,13 @@ input = {
   handler: package_json.handler,
   assumeRolePolicyName: package_json.assumeRolePolicyName,
   assumeRolePolicyDocument: assumeRolePolicyDocument,
-  roleName: package_json.roleName,
+  roleName: roleName,
   inlinePolicyName: package_json.inlinePolicyName,
   inlinePolicyDocument: inlinePolicyDocument,
   memorySize: package_json.memorySize,
   timeout: package_json.timeout,
   federateRoleName: federateRoleName,
-  lambdaArn: lambdaArn
+  lambdaRoleArn: lambdaRoleArn
 };
 console.log(input);
 
