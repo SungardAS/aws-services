@@ -10,7 +10,7 @@ AWS Lambda functions to manage the AWSConfig Service
   
   > edit parameter values in 'run_parameters.json'
   
-  > node run_build <action> <module>
+  > node run_build \<action\> \<module\>
   
     where
     
@@ -22,8 +22,13 @@ AWS Lambda functions to manage the AWSConfig Service
 ## How To Run Functions using CLI
 
   > cd test
+  
   > edit parameter values in 'run_lambda.js'
-  > node run_build <module> [<profile>]
+  
+  > node run_build \<module\> [\<profile\>]
+  
     where
+    
       <module> is one of 'checker', 'enabler' and 'remover'
+      
       <profile> is optional
