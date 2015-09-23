@@ -19,7 +19,7 @@ AWS Lambda functions to manage the AWSConfig Service
       <module> is one of 'checker', 'enabler' and 'remover'
 
 
-## How To Run Functions using CLI
+## How To Test
 
   > cd test
   
