@@ -2,17 +2,10 @@
 var argv = require('minimist')(process.argv.slice(2));
 var value = (argv.v) ? argv.v : 0;
 
-/* // CTO Master Account for billing
-var federateAccount = '054649790173';
-var account = '054649790173';
-var externalId = '';*/
-// Dev Master Account for billing
 var federateAccount = '089476987273';
-var account = '089476987273';
-var externalId = '88df904d-c597-40ef-8b29-b767aba1eaa4';
+var account = '876224653878';
+var externalId = '';
 
-//var profile = process.env.aws_profile;
-//var region = process.env.aws_region;
 var profile = 'default';
 var roleName = 'sgas_dev_admin';
 var region = 'us-east-1';
@@ -27,7 +20,8 @@ var durationSeconds = 900;
 var aws_watch = new (require('../../lib/aws/cloudwatch.js'))();
 var assumeRoleProvider = new (require('../../lib/aws/assume_role_provider.js'))();
 
-var accounts = [{id:'089476987273', max:0}, {id:'290093585298', max:0}, {id:'876224653878', max:0}];
+//var accounts = [{id:'089476987273', max:0}, {id:'290093585298', max:0}, {id:'876224653878', max:0}];
+var accounts = [{id:'290093585298', max:0}, {id:'876224653878', max:0}];
 var current = new Date();
 var startTime = new Date();
 current.setMinutes(current.getMinutes() - 5);

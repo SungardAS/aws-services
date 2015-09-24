@@ -1,0 +1,15 @@
+{
+  "bucketNamePostfix": ".sgas.cto.lambda-files",
+  "keyName": "nodejs/billingalert_notifier.zip",
+  "zipFile" : "billingalert_notifier.zip",
+  "sourceFolder" : "../..",
+  "src" : ["billingalert/index.js", "lib/flow_controller.js", "lib/aws/**/*"],
+  "functionName": "billingalert_notifier",
+  "handler":"billingalert/index.handler",
+  "assumeRolePolicyName": "lambda_assume_role_policy",
+  "roleName": "lambda_billingalert_notifier",
+  "inlinePolicyName": "lambda_billingalert_notifier_policy",
+  "memorySize": 128,
+  "timeout": 30,
+  "topicName": "IncreasedPercentagesTopic"
+}

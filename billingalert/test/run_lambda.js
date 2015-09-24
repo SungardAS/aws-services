@@ -1,4 +1,6 @@
 
+var argv = require('minimist')(process.argv.slice(2));
+var profile = argv._[0];
 
 var fs = require("fs");
 //data = fs.readFileSync('./sns_message_sample.json', {encoding:'utf8'});
@@ -7,8 +9,8 @@ var event = JSON.parse(data);
 var message = JSON.parse(event.Records[0].Sns.Message);
 message.StateChangeTime = new Date();
 event.Records[0].Sns.Message = JSON.stringify(message);
-event.profile = 'default';
+if (profile)  event.profile = profile;
 
-var i = require('./index');
+var i = require('../index');
 var context = {fail:function(a){console.log(a)}, done:function(e, a){console.log(a)}};
 i.handler(event, context);

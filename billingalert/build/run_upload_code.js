@@ -1,42 +1,46 @@
 
-//var profile = process.env.aws_profile;
-//var account = process.env.aws_account;
-//var region = process.env.aws_region;
-var profile = 'default';
-var federateAccount = '089476987273';
-//var account = '054649790173'; // CTO Master Account for billing
-var account = '089476987273';
-var roleName = 'sgas_dev_admin';
-var externalId = '88df904d-c597-40ef-8b29-b767aba1eaa4';
-var region = 'us-east-1';
-var roles = [
-  {roleArn:'arn:aws:iam::' + federateAccount + ':role/cto_across_accounts'},
-  {roleArn:'arn:aws:iam::' + federateAccount + ':role/federate'},
-  {roleArn:'arn:aws:iam::' + account + ':role/' + roleName, externalId:externalId},
-];
-var sessionName = 'abcde';
+var fs = require("fs");
+var params = fs.readFileSync(__dirname + '/run_params.json', {encoding:'utf8'});
+var param_json = JSON.parse(params);
+console.log(param_json);
+
+var federateAccount = param_json.federateAccount;
+var account = param_json.account;
+var externalId = param_json.externalId;
+var federateRoleName = param_json.federateRoleName;
+var roleName = param_json.roleName;
+var region = param_json.region;
+var sessionName = param_json.sessionName;
+var sim = param_json.sim;
 
 var argv = require('minimist')(process.argv.slice(2));
-if (argv.sim === undefined) {
-  console.log("node run_upload_code --sim=true|false");
-  return;
-}
-var sim = (argv.sim == 'true') ? true: false;
+var profile = argv._[0];
 
 console.log('profile = ' + profile);
 console.log('account = ' + account);
 console.log('region = ' + region);
 
+var roles = [];
+if (profile) {
+  roles.push({roleArn:'arn:aws:iam::' + federateAccount + ':role/cto_across_accounts'});
+}
+roles.push({roleArn:'arn:aws:iam::' + federateAccount + ':role/' + federateRoleName});
+roles.push({roleArn:'arn:aws:iam::' + account + ':role/' + roleName, externalId:externalId});
+
 console.log("Current path = " + __dirname);
 var fs = require("fs");
-var data = fs.readFileSync(__dirname + '/package_billingalert.json', {encoding:'utf8'});
+var data = fs.readFileSync(__dirname + '/package_lmdeployer.json', {encoding:'utf8'});
 var package_json = JSON.parse(data);
 console.log(package_json);
 
-var functionName = package_json.functionName;
+var bucketName = account + package_json.bucketNamePostfix;
+var zipFile = package_json.zipFile;
+var sourceFolder = package_json.sourceFolder;
+var src = package_json.src;
+var keyName = package_json.keyName;
 if (sim) {
-  package_json.keyName = package_json.keyName.replace('.zip', '_sim.zip');
-  package_json.zipFile = package_json.zipFile.replace('.zip', '_sim.zip');
+  keyName = keyName.replace('.zip', '_sim.zip');
+  zipFile = zipFile.replace('.zip', '_sim.zip');
 }
 
 input = {
@@ -44,11 +48,11 @@ input = {
   roles: roles,
   sessionName: sessionName,
   region: region,
-  bucketName: account + package_json.bucketNamePostfix,
-  keyName: package_json.keyName,
-  zipFile: package_json.zipFile,
-  sourceFolder: package_json.sourceFolder,
-  src: package_json.src
+  bucketName: bucketName,
+  keyName: keyName,
+  zipFile: zipFile,
+  sourceFolder: sourceFolder,
+  src: src
 };
 console.log(input);
 
