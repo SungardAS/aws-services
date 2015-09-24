@@ -1,7 +1,7 @@
 
-## AWSConfig
+## Lambda Deployer
 
-AWS Lambda functions to manage the AWSConfig Service
+AWS Lambda functions to automatically update lambda function codes whenever they are updated in S3 buckets.
 
 
 ## How To Depoly & Remove Functions
@@ -10,13 +10,11 @@ AWS Lambda functions to manage the AWSConfig Service
 
   > edit parameter values in 'run_params.json'
 
-  > node run_build \<action\> \<module\> [\<profile\>]
+  > node run_build \<action\>
 
     where
 
       <action> is one of 'deploy' and 'clean'
-
-      <module> is one of 'checker', 'enabler' and 'remover'
 
       <profile> is optional
 
@@ -27,10 +25,8 @@ AWS Lambda functions to manage the AWSConfig Service
 
   > edit parameter values in 'run_lambda.js'
 
-  > node run_lambda \<module\> [\<profile\>]
+  > node run_lambda [\<profile\>]
 
     where
-
-      <module> is one of 'checker', 'enabler' and 'remover'
 
       <profile> is optional

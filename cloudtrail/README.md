@@ -8,15 +8,17 @@ AWS Lambda functions to manage the CloudTrail Service
 
   > cd build
 
-  > edit parameter values in 'run_parameters.json'
+  > edit parameter values in 'run_params.json'
 
-  > node run_build \<action\> \<module\>
+  > node run_build \<action\> \<module\> [\<profile\>]
 
     where
 
       <action> is one of 'deploy' and 'clean'
 
       <module> is one of 'checker', 'enabler' and 'remover'
+
+      <profile> is optional
 
 
 ## How To Test
@@ -25,7 +27,7 @@ AWS Lambda functions to manage the CloudTrail Service
 
   > edit parameter values in 'run_lambda.js'
 
-  > node run_build \<module\> [\<profile\>]
+  > node run_lambda \<module\> [\<profile\>]
 
     where
 
