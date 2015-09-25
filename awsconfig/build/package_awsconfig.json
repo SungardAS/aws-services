@@ -2,7 +2,7 @@
   "bucketNamePostfix": ".sgas.cto.lambda-files",
   "keyName": "nodejs/",
   "zipFile" : "",
-  "sourceFolder" : "..",
+  "sourceFolder" : "../..",
   "src" : ["", "awsconfig/json/*", "lib/flow_controller.js", "lib/aws/**/*"],
   "functionName": "",
   "handler": "",

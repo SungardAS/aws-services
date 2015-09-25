@@ -2,7 +2,7 @@
   "bucketNamePostfix": ".sgas.cto.lambda-files",
   "keyName": "nodejs/lmdeployer.zip",
   "zipFile" : "lmdeployer.zip",
-  "sourceFolder" : "..",
+  "sourceFolder" : "../..",
   "src" : ["lmdeployer/index.js", "lmdeployer/json/*.json", "lib/flow_controller.js", "lib/aws/**/*"],
   "assumeRolePolicyName": "lambda_assume_role_policy",
   "roleName": "lambda_lmdeployer_invoke",

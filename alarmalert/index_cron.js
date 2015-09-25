@@ -1,15 +1,20 @@
 
 exports.handler = function (event, context) {
 
+  console.log(JSON.stringify(event));
+  var region = event.Records[0].EventSubscriptionArn.split(":")[3];
+  console.log("region = " + region);
+
   var aws_queue = new (require('../lib/aws/queue.js'))();
 
   var fs = require("fs");
   data = fs.readFileSync(__dirname + '/json/data.json', {encoding:'utf8'});
   data_json = JSON.parse(data);
 
+
   var input = {
     profile: (event.profile === undefined) ? null : event.profile,
-    region: event.region,
+    region: region,
     queueName : data_json.queueName,
     messageBody : data_json.messageBody,
     delaySeconds : data_json.delaySeconds,

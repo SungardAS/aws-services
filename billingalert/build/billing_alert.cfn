@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion" : "2010-09-09",
-  "Description" : "Alarm Alert Setup For Given Billing Account",
+  "Description" : "Billing Account Setup In Billing Alert Notification System",
   "Parameters" : {
       "BillingAccountId" : {
           "Type" : "String",

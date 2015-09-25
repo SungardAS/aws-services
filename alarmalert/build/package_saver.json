@@ -1,0 +1,15 @@
+{
+  "bucketNamePostfix": ".sgas.cto.lambda-files",
+  "keyName": "nodejs/email_saver.zip",
+  "zipFile" : "email_saver.zip",
+  "sourceFolder" : "../..",
+  "src" : ["alarmalert/index_saver.js", "alarmalert/json/*.json", "lib/flow_controller.js", "lib/aws/**/*", "lib/google/**/*"],
+  "assumeRolePolicyName": "lambda_assume_role_policy",
+  "roleName": "lambda_alarmalert_invoke",
+  "inlinePolicyName": "lambda_alarmalert_invoke_policy",
+  "functionName": "email_saver",
+  "handler":"alarmalert/index_saver.handler",
+  "memorySize": 128,
+  "timeout": 60,
+  "topicName": "CTOCronTopic"
+}

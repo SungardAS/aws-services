@@ -24,6 +24,17 @@
             "Effect": "Allow",
             "Action": "sqs:*",
             "Resource": "arn:aws:sqs:*"
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "dynamodb:GetItem",
+                "dynamodb:PutItem",
+                "dynamodb:Query"
+            ],
+            "Resource": [
+                "arn:aws:dynamodb:*"
+            ]
         }
     ]
 }

@@ -2,16 +2,14 @@
   "bucketNamePostfix": ".sgas.cto.lambda-files",
   "keyName": "nodejs/cto_cron_runner.zip",
   "zipFile" : "cto_cron_runner.zip",
-  "sourceFolder" : "/Users/alex.ough/Projects/Node/aws-services",
+  "sourceFolder" : "../..",
   "src" : ["alarmalert/index_cron.js", "alarmalert/json/*.json", "lib/flow_controller.js", "lib/aws/**/*"],
   "assumeRolePolicyName": "lambda_assume_role_policy",
-  "roleName": "lambda_alarmalert_invoke",
-  "inlinePolicyName": "lambda_alarmalert_execution_policy",
+  "roleName": "lambda_cron_invoke",
+  "inlinePolicyName": "lambda_alarmalert_invoke_policy",
   "functionName": "cto_cron_runner",
   "handler":"alarmalert/index_cron.handler",
   "memorySize": 128,
   "timeout": 30,
-  "topicName": "CTOCronTopic",
-  "alarmName": "CTOCronAlarm",
-  "queueName": "CTOCronQueue"
+  "topicName": "CTOCronTopic"
 }
