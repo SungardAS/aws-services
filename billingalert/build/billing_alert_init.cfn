@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion" : "2010-09-09",
-  "Description" : "Alarm Alert Initialization",
+  "Description" : "Billing Alert Notification System Initialization",
   "Parameters" : {
       "IsTest" : {
           "Type" : "String",
