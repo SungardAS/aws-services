@@ -4,7 +4,7 @@
 AWS micro service to send a notification when the increased percentage of 'EstimatedCharges' exceeds the defined threshold.
 
 
-## How To Depoly & Remove Functions
+## How To Depoly & Remove System
 
   > cd build
 
