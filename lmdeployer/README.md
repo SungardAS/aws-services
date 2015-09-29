@@ -1,10 +1,10 @@
 
 ## Lambda Deployer
 
-AWS Lambda functions to automatically update lambda function codes whenever they are updated in S3 buckets.
+AWS Lambda function to automatically update lambda function codes whenever they are updated in S3 buckets.
 
 
-## How To Depoly & Remove Functions
+## How To Depoly & Remove Function
 
   > cd build
 
