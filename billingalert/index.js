@@ -174,7 +174,7 @@ exports.handler = function (event, context) {
     if (sim) metricData = CTOIncreasedPercentagesSimMetricData;
     else metricData = CTOIncreasedPercentagesMetricData;
     console.log(new Date(message.StateChangeTime));
-    metricData.MetricData[0].Timestamp = new Date(message.StateChangeTime);
+    metricData.MetricData[0].Timestamp = new Date();
     metricData.MetricData[0].Value = percentage;
     input.metricData = metricData;
     console.log(JSON.stringify(input));
