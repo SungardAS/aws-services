@@ -8,7 +8,7 @@ AWS micro service to send a notification whenever new alert email is detected.
 
   > cd build
 
-  > create a stack using 'alarm_alert.cfn'
+  > create a CloudFormation stack using 'alarm_alert.cfn'
 
   > edit parameter values in 'run_params.json'
 
