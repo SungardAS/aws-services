@@ -8,7 +8,7 @@ AWS micro service to send a notification when the increased percentage of 'Estim
 
   > cd build
 
-  > create a stack using 'billing_alert_init.cfn'
+  > create a CloudFormation stack using 'billing_alert_init.cfn'
 
   > edit parameter values in 'run_params.json'
 
@@ -20,7 +20,7 @@ AWS micro service to send a notification when the increased percentage of 'Estim
 
       <profile> is optional
 
-  > create a stack using 'billing_alert.cfn' for each account to monitor
+  > create a CloudFormation stack using 'billing_alert.cfn' for each account to monitor
 
 
 ## How To Test
