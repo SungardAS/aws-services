@@ -38,7 +38,7 @@
       <lambdaUploadBuildStepVariables>
         <useInstanceCredentials>true</useInstanceCredentials>
         <awsAccessKeyId></awsAccessKeyId>
-        <awsSecretKey>k8hXf2nc4SXbYoa3eTWtrA==</awsSecretKey>
+        <awsSecretKey></awsSecretKey>
         <awsRegion>us-east-1</awsRegion>
         <artifactLocation>billingalert_notifier.zip</artifactLocation>
         <description>billingalert_notifier</description>
@@ -55,7 +55,7 @@
       <lambdaInvokeBuildStepVariables>
         <useInstanceCredentials>true</useInstanceCredentials>
         <awsAccessKeyId></awsAccessKeyId>
-        <awsSecretKey>k8hXf2nc4SXbYoa3eTWtrA==</awsSecretKey>
+        <awsSecretKey></awsSecretKey>
         <awsRegion>us-east-1</awsRegion>
         <functionName>billingalert_notifier</functionName>
         <payload>{

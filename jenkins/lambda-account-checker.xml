@@ -43,7 +43,7 @@ zip -r awsconfig-remover.zip awsconfig/index_remover.js awsconfig/json lib/flow_
       <lambdaUploadBuildStepVariables>
         <useInstanceCredentials>true</useInstanceCredentials>
         <awsAccessKeyId></awsAccessKeyId>
-        <awsSecretKey>qwn+YYQ4iruslJ95aymt6A==</awsSecretKey>
+        <awsSecretKey></awsSecretKey>
         <awsRegion>us-east-1</awsRegion>
         <artifactLocation>cloudtrail-checker.zip</artifactLocation>
         <description>cloudtrail-checker</description>
@@ -60,7 +60,7 @@ zip -r awsconfig-remover.zip awsconfig/index_remover.js awsconfig/json lib/flow_
       <lambdaInvokeBuildStepVariables>
         <useInstanceCredentials>true</useInstanceCredentials>
         <awsAccessKeyId></awsAccessKeyId>
-        <awsSecretKey>qwn+YYQ4iruslJ95aymt6A==</awsSecretKey>
+        <awsSecretKey></awsSecretKey>
         <awsRegion>us-east-1</awsRegion>
         <functionName>cloudtrail-checker</functionName>
         <payload>{
@@ -78,7 +78,7 @@ zip -r awsconfig-remover.zip awsconfig/index_remover.js awsconfig/json lib/flow_
       <lambdaUploadBuildStepVariables>
         <useInstanceCredentials>true</useInstanceCredentials>
         <awsAccessKeyId></awsAccessKeyId>
-        <awsSecretKey>qwn+YYQ4iruslJ95aymt6A==</awsSecretKey>
+        <awsSecretKey></awsSecretKey>
         <awsRegion>us-east-1</awsRegion>
         <artifactLocation>cloudtrail-remover.zip</artifactLocation>
         <description>cloudtrail-remover</description>
@@ -95,7 +95,7 @@ zip -r awsconfig-remover.zip awsconfig/index_remover.js awsconfig/json lib/flow_
       <lambdaInvokeBuildStepVariables>
         <useInstanceCredentials>true</useInstanceCredentials>
         <awsAccessKeyId></awsAccessKeyId>
-        <awsSecretKey>qwn+YYQ4iruslJ95aymt6A==</awsSecretKey>
+        <awsSecretKey></awsSecretKey>
         <awsRegion>us-east-1</awsRegion>
         <functionName>cloudtrail-remover</functionName>
         <payload>{
@@ -113,7 +113,7 @@ zip -r awsconfig-remover.zip awsconfig/index_remover.js awsconfig/json lib/flow_
       <lambdaUploadBuildStepVariables>
         <useInstanceCredentials>true</useInstanceCredentials>
         <awsAccessKeyId></awsAccessKeyId>
-        <awsSecretKey>qwn+YYQ4iruslJ95aymt6A==</awsSecretKey>
+        <awsSecretKey></awsSecretKey>
         <awsRegion>us-east-1</awsRegion>
         <artifactLocation>cloudtrail-enabler.zip</artifactLocation>
         <description>cloudtrail-enabler</description>
@@ -130,7 +130,7 @@ zip -r awsconfig-remover.zip awsconfig/index_remover.js awsconfig/json lib/flow_
       <lambdaInvokeBuildStepVariables>
         <useInstanceCredentials>true</useInstanceCredentials>
         <awsAccessKeyId></awsAccessKeyId>
-        <awsSecretKey>qwn+YYQ4iruslJ95aymt6A==</awsSecretKey>
+        <awsSecretKey></awsSecretKey>
         <awsRegion>us-east-1</awsRegion>
         <functionName>cloudtrail-enabler</functionName>
         <payload>{
@@ -148,7 +148,7 @@ zip -r awsconfig-remover.zip awsconfig/index_remover.js awsconfig/json lib/flow_
       <lambdaUploadBuildStepVariables>
         <useInstanceCredentials>true</useInstanceCredentials>
         <awsAccessKeyId></awsAccessKeyId>
-        <awsSecretKey>qwn+YYQ4iruslJ95aymt6A==</awsSecretKey>
+        <awsSecretKey></awsSecretKey>
         <awsRegion>us-east-1</awsRegion>
         <artifactLocation>awsconfig-checker.zip</artifactLocation>
         <description>awsconfig-checker</description>
@@ -165,7 +165,7 @@ zip -r awsconfig-remover.zip awsconfig/index_remover.js awsconfig/json lib/flow_
       <lambdaInvokeBuildStepVariables>
         <useInstanceCredentials>true</useInstanceCredentials>
         <awsAccessKeyId></awsAccessKeyId>
-        <awsSecretKey>qwn+YYQ4iruslJ95aymt6A==</awsSecretKey>
+        <awsSecretKey></awsSecretKey>
         <awsRegion>us-east-1</awsRegion>
         <functionName>awsconfig-checker</functionName>
         <payload>{
@@ -183,7 +183,7 @@ zip -r awsconfig-remover.zip awsconfig/index_remover.js awsconfig/json lib/flow_
       <lambdaUploadBuildStepVariables>
         <useInstanceCredentials>true</useInstanceCredentials>
         <awsAccessKeyId></awsAccessKeyId>
-        <awsSecretKey>qwn+YYQ4iruslJ95aymt6A==</awsSecretKey>
+        <awsSecretKey></awsSecretKey>
         <awsRegion>us-east-1</awsRegion>
         <artifactLocation>awsconfig-remover.zip</artifactLocation>
         <description>awsconfig-remover</description>
@@ -200,7 +200,7 @@ zip -r awsconfig-remover.zip awsconfig/index_remover.js awsconfig/json lib/flow_
       <lambdaInvokeBuildStepVariables>
         <useInstanceCredentials>true</useInstanceCredentials>
         <awsAccessKeyId></awsAccessKeyId>
-        <awsSecretKey>qwn+YYQ4iruslJ95aymt6A==</awsSecretKey>
+        <awsSecretKey></awsSecretKey>
         <awsRegion>us-east-1</awsRegion>
         <functionName>awsconfig-remover</functionName>
         <payload>{
@@ -218,7 +218,7 @@ zip -r awsconfig-remover.zip awsconfig/index_remover.js awsconfig/json lib/flow_
       <lambdaUploadBuildStepVariables>
         <useInstanceCredentials>true</useInstanceCredentials>
         <awsAccessKeyId></awsAccessKeyId>
-        <awsSecretKey>qwn+YYQ4iruslJ95aymt6A==</awsSecretKey>
+        <awsSecretKey></awsSecretKey>
         <awsRegion>us-east-1</awsRegion>
         <artifactLocation>awsconfig-enabler.zip</artifactLocation>
         <description>awsconfig-enabler</description>
@@ -235,7 +235,7 @@ zip -r awsconfig-remover.zip awsconfig/index_remover.js awsconfig/json lib/flow_
       <lambdaInvokeBuildStepVariables>
         <useInstanceCredentials>true</useInstanceCredentials>
         <awsAccessKeyId></awsAccessKeyId>
-        <awsSecretKey>qwn+YYQ4iruslJ95aymt6A==</awsSecretKey>
+        <awsSecretKey></awsSecretKey>
         <awsRegion>us-east-1</awsRegion>
         <functionName>awsconfig-enabler</functionName>
         <payload>{

@@ -42,7 +42,7 @@ zip -r email_saver.zip alarmalert/index_saver.js alarmalert/json lib/flow_contro
       <lambdaUploadBuildStepVariables>
         <useInstanceCredentials>true</useInstanceCredentials>
         <awsAccessKeyId></awsAccessKeyId>
-        <awsSecretKey>/HSsR0J9X40jckBcffZFI23+VLXVW+Pn0a6K+aZ9r5VW6w6duee8ooF5xVtS/8fw</awsSecretKey>
+        <awsSecretKey></awsSecretKey>
         <awsRegion>us-east-1</awsRegion>
         <artifactLocation>cto_cron_runner.zip</artifactLocation>
         <description>cto_cron_runner</description>
@@ -59,7 +59,7 @@ zip -r email_saver.zip alarmalert/index_saver.js alarmalert/json lib/flow_contro
       <lambdaInvokeBuildStepVariables>
         <useInstanceCredentials>true</useInstanceCredentials>
         <awsAccessKeyId></awsAccessKeyId>
-        <awsSecretKey>/HSsR0J9X40jckBcffZFI23+VLXVW+Pn0a6K+aZ9r5VW6w6duee8ooF5xVtS/8fw</awsSecretKey>
+        <awsSecretKey></awsSecretKey>
         <awsRegion>us-east-1</awsRegion>
         <functionName>cto_cron_runner</functionName>
         <payload>{
@@ -91,7 +91,7 @@ zip -r email_saver.zip alarmalert/index_saver.js alarmalert/json lib/flow_contro
       <lambdaUploadBuildStepVariables>
         <useInstanceCredentials>true</useInstanceCredentials>
         <awsAccessKeyId></awsAccessKeyId>
-        <awsSecretKey>/HSsR0J9X40jckBcffZFI23+VLXVW+Pn0a6K+aZ9r5VW6w6duee8ooF5xVtS/8fw</awsSecretKey>
+        <awsSecretKey></awsSecretKey>
         <awsRegion>us-east-1</awsRegion>
         <artifactLocation>email_saver.zip</artifactLocation>
         <description>email_saver</description>
@@ -108,7 +108,7 @@ zip -r email_saver.zip alarmalert/index_saver.js alarmalert/json lib/flow_contro
       <lambdaInvokeBuildStepVariables>
         <useInstanceCredentials>true</useInstanceCredentials>
         <awsAccessKeyId></awsAccessKeyId>
-        <awsSecretKey>/HSsR0J9X40jckBcffZFI23+VLXVW+Pn0a6K+aZ9r5VW6w6duee8ooF5xVtS/8fw</awsSecretKey>
+        <awsSecretKey></awsSecretKey>
         <awsRegion>us-east-1</awsRegion>
         <functionName>email_saver</functionName>
         <payload>{
