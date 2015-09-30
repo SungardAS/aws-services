@@ -1,24 +1,24 @@
 # aws-services
 Micro-services to provide various conveniences in managing AWS services
 
-## alarmalert
+## <a href='https://github.com/SungardAS/aws-services/tree/develop/alarmalert'>alarmalert</a>
 AWS micro service to send a notification whenever new alert email is detected.
 
-## awsconfig
+## <a href='https://github.com/SungardAS/aws-services/tree/develop/awsconfig'>awsconfig</a>
 AWS Lambda functions to manage the AWSConfig Service
 
-## billingalert
+## <a href='https://github.com/SungardAS/aws-services/tree/develop/billingalert'>billingalert</a>
 AWS micro service to send a notification when the increased percentage of 'EstimatedCharges' exceeds the defined threshold.
 
-## cloudtrail
+## <a href='https://github.com/SungardAS/aws-services/tree/develop/cloudtrail'>cloudtrail</a>
 AWS Lambda functions to manage the CloudTrail Service
 
-## lib
+## <a href='https://github.com/SungardAS/aws-services/tree/develop/lib'>lib</a>
 Libraries shared by projects
 
-## lmdeployer
+## <a href='https://github.com/SungardAS/aws-services/tree/develop/lmdeployer'>lmdeployer</a>
 AWS Lambda function to automatically update lambda function codes whenever they are updated in S3 buckets.
 
-## sns-message-validator
+## <a href='https://github.com/SungardAS/aws-services/tree/develop/sns-message-validator'>sns-message-validator</a>
 Utility to validate the sns messages that are received through the HTTP subscriptions.
 This is the Node.js implementation of the instructions here, http://docs.aws.amazon.com/sns/latest/dg/SendMessageToHttp.verify.signature.html.
