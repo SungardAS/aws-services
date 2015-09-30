@@ -1,0 +1,255 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<project>
+  <actions/>
+  <description></description>
+  <keepDependencies>false</keepDependencies>
+  <properties/>
+  <scm class="hudson.plugins.git.GitSCM" plugin="git@2.4.0">
+    <configVersion>2</configVersion>
+    <userRemoteConfigs>
+      <hudson.plugins.git.UserRemoteConfig>
+        <url>https://github.com/SungardAS/aws-services</url>
+      </hudson.plugins.git.UserRemoteConfig>
+    </userRemoteConfigs>
+    <branches>
+      <hudson.plugins.git.BranchSpec>
+        <name>*/develop</name>
+      </hudson.plugins.git.BranchSpec>
+    </branches>
+    <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
+    <submoduleCfg class="list"/>
+    <extensions/>
+  </scm>
+  <canRoam>true</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <triggers>
+    <com.cloudbees.jenkins.GitHubPushTrigger plugin="github@1.13.3">
+      <spec></spec>
+    </com.cloudbees.jenkins.GitHubPushTrigger>
+  </triggers>
+  <concurrentBuild>false</concurrentBuild>
+  <builders>
+    <hudson.tasks.Shell>
+      <command>zip -r cloudtrail-checker.zip cloudtrail/index_checker.js cloudtrail/json lib/flow_controller.js lib/aws
+zip -r cloudtrail-enabler.zip cloudtrail/index_enabler.js cloudtrail/json lib/flow_controller.js lib/aws
+zip -r cloudtrail-remover.zip cloudtrail/index_remover.js cloudtrail/json lib/flow_controller.js lib/aws
+zip -r awsconfig-checker.zip awsconfig/index_checker.js awsconfig/json lib/flow_controller.js lib/aws
+zip -r awsconfig-enabler.zip awsconfig/index_enabler.js awsconfig/json lib/flow_controller.js lib/aws
+zip -r awsconfig-remover.zip awsconfig/index_remover.js awsconfig/json lib/flow_controller.js lib/aws</command>
+    </hudson.tasks.Shell>
+    <com.xti.jenkins.plugin.awslambda.upload.LambdaUploadBuildStep plugin="aws-lambda@0.3.0">
+      <lambdaUploadBuildStepVariables>
+        <useInstanceCredentials>true</useInstanceCredentials>
+        <awsAccessKeyId></awsAccessKeyId>
+        <awsSecretKey>qwn+YYQ4iruslJ95aymt6A==</awsSecretKey>
+        <awsRegion>us-east-1</awsRegion>
+        <artifactLocation>cloudtrail-checker.zip</artifactLocation>
+        <description>cloudtrail-checker</description>
+        <functionName>cloudtrail-checker</functionName>
+        <handler>cloudtrail/index_checker.handler</handler>
+        <memorySize>128</memorySize>
+        <role>arn:aws:iam::089476987273:role/lambda_cloudtrail_checker</role>
+        <runtime>nodejs</runtime>
+        <timeout>10</timeout>
+        <updateMode>code</updateMode>
+      </lambdaUploadBuildStepVariables>
+    </com.xti.jenkins.plugin.awslambda.upload.LambdaUploadBuildStep>
+    <com.xti.jenkins.plugin.awslambda.invoke.LambdaInvokeBuildStep plugin="aws-lambda@0.3.0">
+      <lambdaInvokeBuildStepVariables>
+        <useInstanceCredentials>true</useInstanceCredentials>
+        <awsAccessKeyId></awsAccessKeyId>
+        <awsSecretKey>qwn+YYQ4iruslJ95aymt6A==</awsSecretKey>
+        <awsRegion>us-east-1</awsRegion>
+        <functionName>cloudtrail-checker</functionName>
+        <payload>{
+  &quot;federateAccount&quot;: &quot;089476987273&quot;,
+  &quot;account&quot;: &quot;089476987273&quot;,
+  &quot;roleExternalId&quot;: &quot;88df904d-c597-40ef-8b29-b767aba1eaa4&quot;,
+  &quot;roleName&quot;: &quot;sgas_dev_admin&quot;,
+  &quot;sessionName&quot;: &quot;abcde&quot;,
+  &quot;region&quot;: &quot;us-east-1&quot;
+}</payload>
+        <synchronous>true</synchronous>
+      </lambdaInvokeBuildStepVariables>
+    </com.xti.jenkins.plugin.awslambda.invoke.LambdaInvokeBuildStep>
+    <com.xti.jenkins.plugin.awslambda.upload.LambdaUploadBuildStep plugin="aws-lambda@0.3.0">
+      <lambdaUploadBuildStepVariables>
+        <useInstanceCredentials>true</useInstanceCredentials>
+        <awsAccessKeyId></awsAccessKeyId>
+        <awsSecretKey>qwn+YYQ4iruslJ95aymt6A==</awsSecretKey>
+        <awsRegion>us-east-1</awsRegion>
+        <artifactLocation>cloudtrail-remover.zip</artifactLocation>
+        <description>cloudtrail-remover</description>
+        <functionName>cloudtrail-remover</functionName>
+        <handler>cloudtrail/index_remover.handler</handler>
+        <memorySize>128</memorySize>
+        <role>arn:aws:iam::089476987273:role/lambda_cloudtrail_remover</role>
+        <runtime>nodejs</runtime>
+        <timeout>10</timeout>
+        <updateMode>code</updateMode>
+      </lambdaUploadBuildStepVariables>
+    </com.xti.jenkins.plugin.awslambda.upload.LambdaUploadBuildStep>
+    <com.xti.jenkins.plugin.awslambda.invoke.LambdaInvokeBuildStep plugin="aws-lambda@0.3.0">
+      <lambdaInvokeBuildStepVariables>
+        <useInstanceCredentials>true</useInstanceCredentials>
+        <awsAccessKeyId></awsAccessKeyId>
+        <awsSecretKey>qwn+YYQ4iruslJ95aymt6A==</awsSecretKey>
+        <awsRegion>us-east-1</awsRegion>
+        <functionName>cloudtrail-remover</functionName>
+        <payload>{
+  &quot;federateAccount&quot;: &quot;089476987273&quot;,
+  &quot;account&quot;: &quot;089476987273&quot;,
+  &quot;roleExternalId&quot;: &quot;88df904d-c597-40ef-8b29-b767aba1eaa4&quot;,
+  &quot;roleName&quot;: &quot;sgas_dev_admin&quot;,
+  &quot;sessionName&quot;: &quot;abcde&quot;,
+  &quot;region&quot;: &quot;us-east-1&quot;
+}</payload>
+        <synchronous>true</synchronous>
+      </lambdaInvokeBuildStepVariables>
+    </com.xti.jenkins.plugin.awslambda.invoke.LambdaInvokeBuildStep>
+    <com.xti.jenkins.plugin.awslambda.upload.LambdaUploadBuildStep plugin="aws-lambda@0.3.0">
+      <lambdaUploadBuildStepVariables>
+        <useInstanceCredentials>true</useInstanceCredentials>
+        <awsAccessKeyId></awsAccessKeyId>
+        <awsSecretKey>qwn+YYQ4iruslJ95aymt6A==</awsSecretKey>
+        <awsRegion>us-east-1</awsRegion>
+        <artifactLocation>cloudtrail-enabler.zip</artifactLocation>
+        <description>cloudtrail-enabler</description>
+        <functionName>cloudtrail-enabler</functionName>
+        <handler>cloudtrail/index_enabler.handler</handler>
+        <memorySize>128</memorySize>
+        <role>arn:aws:iam::089476987273:role/lambda_cloudtrail_enabler</role>
+        <runtime>nodejs</runtime>
+        <timeout>10</timeout>
+        <updateMode>code</updateMode>
+      </lambdaUploadBuildStepVariables>
+    </com.xti.jenkins.plugin.awslambda.upload.LambdaUploadBuildStep>
+    <com.xti.jenkins.plugin.awslambda.invoke.LambdaInvokeBuildStep plugin="aws-lambda@0.3.0">
+      <lambdaInvokeBuildStepVariables>
+        <useInstanceCredentials>true</useInstanceCredentials>
+        <awsAccessKeyId></awsAccessKeyId>
+        <awsSecretKey>qwn+YYQ4iruslJ95aymt6A==</awsSecretKey>
+        <awsRegion>us-east-1</awsRegion>
+        <functionName>cloudtrail-enabler</functionName>
+        <payload>{
+  &quot;federateAccount&quot;: &quot;089476987273&quot;,
+  &quot;account&quot;: &quot;089476987273&quot;,
+  &quot;roleExternalId&quot;: &quot;88df904d-c597-40ef-8b29-b767aba1eaa4&quot;,
+  &quot;roleName&quot;: &quot;sgas_dev_admin&quot;,
+  &quot;sessionName&quot;: &quot;abcde&quot;,
+  &quot;region&quot;: &quot;us-east-1&quot;
+}</payload>
+        <synchronous>true</synchronous>
+      </lambdaInvokeBuildStepVariables>
+    </com.xti.jenkins.plugin.awslambda.invoke.LambdaInvokeBuildStep>
+    <com.xti.jenkins.plugin.awslambda.upload.LambdaUploadBuildStep plugin="aws-lambda@0.3.0">
+      <lambdaUploadBuildStepVariables>
+        <useInstanceCredentials>true</useInstanceCredentials>
+        <awsAccessKeyId></awsAccessKeyId>
+        <awsSecretKey>qwn+YYQ4iruslJ95aymt6A==</awsSecretKey>
+        <awsRegion>us-east-1</awsRegion>
+        <artifactLocation>awsconfig-checker.zip</artifactLocation>
+        <description>awsconfig-checker</description>
+        <functionName>awsconfig-checker</functionName>
+        <handler>awsconfig/index_checker.handler</handler>
+        <memorySize>128</memorySize>
+        <role>arn:aws:iam::089476987273:role/lambda_awsconfig_checker</role>
+        <runtime>nodejs</runtime>
+        <timeout>30</timeout>
+        <updateMode>code</updateMode>
+      </lambdaUploadBuildStepVariables>
+    </com.xti.jenkins.plugin.awslambda.upload.LambdaUploadBuildStep>
+    <com.xti.jenkins.plugin.awslambda.invoke.LambdaInvokeBuildStep plugin="aws-lambda@0.3.0">
+      <lambdaInvokeBuildStepVariables>
+        <useInstanceCredentials>true</useInstanceCredentials>
+        <awsAccessKeyId></awsAccessKeyId>
+        <awsSecretKey>qwn+YYQ4iruslJ95aymt6A==</awsSecretKey>
+        <awsRegion>us-east-1</awsRegion>
+        <functionName>awsconfig-checker</functionName>
+        <payload>{
+  &quot;federateAccount&quot;: &quot;089476987273&quot;,
+  &quot;account&quot;: &quot;089476987273&quot;,
+  &quot;roleExternalId&quot;: &quot;88df904d-c597-40ef-8b29-b767aba1eaa4&quot;,
+  &quot;roleName&quot;: &quot;sgas_dev_admin&quot;,
+  &quot;sessionName&quot;: &quot;abcde&quot;,
+  &quot;region&quot;: &quot;us-east-1&quot;
+}</payload>
+        <synchronous>true</synchronous>
+      </lambdaInvokeBuildStepVariables>
+    </com.xti.jenkins.plugin.awslambda.invoke.LambdaInvokeBuildStep>
+    <com.xti.jenkins.plugin.awslambda.upload.LambdaUploadBuildStep plugin="aws-lambda@0.3.0">
+      <lambdaUploadBuildStepVariables>
+        <useInstanceCredentials>true</useInstanceCredentials>
+        <awsAccessKeyId></awsAccessKeyId>
+        <awsSecretKey>qwn+YYQ4iruslJ95aymt6A==</awsSecretKey>
+        <awsRegion>us-east-1</awsRegion>
+        <artifactLocation>awsconfig-remover.zip</artifactLocation>
+        <description>awsconfig-remover</description>
+        <functionName>awsconfig-remover</functionName>
+        <handler>awsconfig/index_remover.handler</handler>
+        <memorySize>128</memorySize>
+        <role>arn:aws:iam::089476987273:role/lambda_awsconfig_remover</role>
+        <runtime>nodejs</runtime>
+        <timeout>30</timeout>
+        <updateMode>code</updateMode>
+      </lambdaUploadBuildStepVariables>
+    </com.xti.jenkins.plugin.awslambda.upload.LambdaUploadBuildStep>
+    <com.xti.jenkins.plugin.awslambda.invoke.LambdaInvokeBuildStep plugin="aws-lambda@0.3.0">
+      <lambdaInvokeBuildStepVariables>
+        <useInstanceCredentials>true</useInstanceCredentials>
+        <awsAccessKeyId></awsAccessKeyId>
+        <awsSecretKey>qwn+YYQ4iruslJ95aymt6A==</awsSecretKey>
+        <awsRegion>us-east-1</awsRegion>
+        <functionName>awsconfig-remover</functionName>
+        <payload>{
+  &quot;federateAccount&quot;: &quot;089476987273&quot;,
+  &quot;account&quot;: &quot;089476987273&quot;,
+  &quot;roleExternalId&quot;: &quot;88df904d-c597-40ef-8b29-b767aba1eaa4&quot;,
+  &quot;roleName&quot;: &quot;sgas_dev_admin&quot;,
+  &quot;sessionName&quot;: &quot;abcde&quot;,
+  &quot;region&quot;: &quot;us-east-1&quot;
+}</payload>
+        <synchronous>true</synchronous>
+      </lambdaInvokeBuildStepVariables>
+    </com.xti.jenkins.plugin.awslambda.invoke.LambdaInvokeBuildStep>
+    <com.xti.jenkins.plugin.awslambda.upload.LambdaUploadBuildStep plugin="aws-lambda@0.3.0">
+      <lambdaUploadBuildStepVariables>
+        <useInstanceCredentials>true</useInstanceCredentials>
+        <awsAccessKeyId></awsAccessKeyId>
+        <awsSecretKey>qwn+YYQ4iruslJ95aymt6A==</awsSecretKey>
+        <awsRegion>us-east-1</awsRegion>
+        <artifactLocation>awsconfig-enabler.zip</artifactLocation>
+        <description>awsconfig-enabler</description>
+        <functionName>awsconfig-enabler</functionName>
+        <handler>awsconfig/index_enabler.handler</handler>
+        <memorySize>128</memorySize>
+        <role>arn:aws:iam::089476987273:role/lambda_awsconfig_enabler</role>
+        <runtime>nodejs</runtime>
+        <timeout>30</timeout>
+        <updateMode>code</updateMode>
+      </lambdaUploadBuildStepVariables>
+    </com.xti.jenkins.plugin.awslambda.upload.LambdaUploadBuildStep>
+    <com.xti.jenkins.plugin.awslambda.invoke.LambdaInvokeBuildStep plugin="aws-lambda@0.3.0">
+      <lambdaInvokeBuildStepVariables>
+        <useInstanceCredentials>true</useInstanceCredentials>
+        <awsAccessKeyId></awsAccessKeyId>
+        <awsSecretKey>qwn+YYQ4iruslJ95aymt6A==</awsSecretKey>
+        <awsRegion>us-east-1</awsRegion>
+        <functionName>awsconfig-enabler</functionName>
+        <payload>{
+  &quot;federateAccount&quot;: &quot;089476987273&quot;,
+  &quot;account&quot;: &quot;089476987273&quot;,
+  &quot;roleExternalId&quot;: &quot;88df904d-c597-40ef-8b29-b767aba1eaa4&quot;,
+  &quot;roleName&quot;: &quot;sgas_dev_admin&quot;,
+  &quot;sessionName&quot;: &quot;abcde&quot;,
+  &quot;region&quot;: &quot;us-east-1&quot;
+}</payload>
+        <synchronous>true</synchronous>
+      </lambdaInvokeBuildStepVariables>
+    </com.xti.jenkins.plugin.awslambda.invoke.LambdaInvokeBuildStep>
+  </builders>
+  <publishers/>
+  <buildWrappers/>
+</project>
