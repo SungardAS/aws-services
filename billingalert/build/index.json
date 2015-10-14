@@ -1,0 +1,56 @@
+{
+  "region": "us-east-1",
+  "bucketName": "054649790173.sgas.cto.lambda-files",
+  "keyName": "nodejs/billingalert_notifier.zip",
+  "zipFile" : "billingalert_notifier.zip",
+  "sourceFolder" : "../..",
+  "src" : ["billingalert/index.js", "lib/flow_controller.js", "lib/aws/**/*"],
+  "functionName": "billingalert_notifier",
+  "handler":"billingalert/index.handler",
+  "roleName": "lambda_billingalert_notifier",
+  "assumeRolePolicyDocument":
+    {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Sid": "",
+          "Effect": "Allow",
+          "Principal": {
+            "Service": "lambda.amazonaws.com"
+          },
+          "Action": "sts:AssumeRole"
+        }
+      ]
+    },
+  "inlinePolicyName": "lambda_billingalert_notifier_policy",
+  "inlinePolicyDocument":
+    {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Effect": "Allow",
+          "Action": [
+            "logs:CreateLogGroup",
+            "logs:CreateLogStream",
+            "logs:PutLogEvents"
+          ],
+          "Resource": "arn:aws:logs:*:*:*"
+        },
+        {
+          "Effect": "Allow",
+          "Action": [
+            "cloudwatch:*"
+          ],
+          "Resource": "*"
+        },
+        {
+          "Effect": "Allow",
+          "Action": "sns:Publish",
+          "Resource": "arn:aws:sns:*"
+        }
+      ]
+    },
+  "memorySize": 128,
+  "timeout": 30,
+  "federateRoleName": null
+}

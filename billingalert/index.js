@@ -201,6 +201,7 @@ exports.handler = function (event, context) {
         context.fail(err, null);
       }
       else {
+        input.creds = creds;
         flows[0].func(input);
       }
     });

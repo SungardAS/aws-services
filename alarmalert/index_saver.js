@@ -2,11 +2,10 @@
 exports.handler = function (event, context) {
 
   console.log(JSON.stringify(event));
-  var region = event.Records[0].EventSubscriptionArn.split(":")[3];
+  var region = event.region;
   console.log("region = " + region);
 
-  var message = JSON.parse(event.Records[0].Sns.Message);
-  var awsid = message.AWSAccountId;
+  var awsid = event.account;
   console.log("awsid = " + awsid);
 
   var gmail = new (require('../lib/google/gmail.js'))();
@@ -77,7 +76,7 @@ exports.handler = function (event, context) {
         var decoded = new Buffer(data.payload.parts[0].body.data, 'base64').toString('ascii');
         message = decoded;
       }
- 
+
       var item = {
           "id": {"S": messageId},
           "awsid": {"S": awsid},

@@ -1,11 +1,13 @@
 
 var argv = require('minimist')(process.argv.slice(2));
-var packageName = argv._[0];
-if (!packageName) {
-  console.log(packageName);
-  console.log("node run_upload_code <package json file name without '.json'>");
+var action = argv._[0];
+var packageName = argv._[1];
+if (!action || (action != 'deploy' && action != 'clean') || !packageName) {
+  console.log(action);
+  console.log("node run_build deploy|clean <package json file name without '.json'>");
   return;
 }
+console.log('action = ' + action);
 console.log('package = ' + packageName);
 
 var dirName = __dirname;
@@ -21,5 +23,5 @@ var assumeRoleInfoBeforeDeploy = {
   "sessionName": "abcde"
 }
 
-var uploader = new (require('../../lib/lambda_code_uploader'))();
-uploader.upload(dirName, packageJSONFileName, assumeRoleInfoBeforeDeploy);
+var deployer = new (require('../../lib/lambda_deployer'))();
+deployer.buildPackage(action, dirName, packageJSONFileName, assumeRoleInfoBeforeDeploy);
