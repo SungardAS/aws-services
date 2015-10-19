@@ -4,31 +4,38 @@
 AWS micro service to send a notification when the increased percentage of 'EstimatedCharges' exceeds the defined threshold.
 
 
-## How To Depoly & Remove System
+## How To Process Initial Setup
 
-  > cd build
+  > set the AWS auth keys in environment variables
 
-  > create a CloudFormation stack using 'billing_alert_init.cfn'
+  > change list of 'ACCOUNTS' in 'Makefile' with the accounts whose 'EstimatedCharges' will be monitored & alerted
 
-  > edit parameter values in 'run_params.json'
-
-  > node run_build \<action\> [\<profile\>]
-
-    where
-
-      <action> is one of 'deploy' and 'clean'
-
-      <profile> is optional
-
-  > create a CloudFormation stack using 'billing_alert.cfn' for each account to monitor
+  > $ make
 
 
-## How To Test
+# How To Update Lambda Function Codes
 
-  > cd test
+  > set the AWS auth keys in environment variables
 
-  > node run_lambda [\<profile\>]
+  > $ cd build.f
+
+  > $ node run_upload_code <function_name>
+
+  > $ node run_update_code <function_name>
 
     where
 
-      <profile> is optional
+      <function_name> is one of 'index', 'index_saver' and 'index_populator'
+
+
+## How To Test Lambda Functions
+
+  > set the AWS auth keys in environment variables
+
+  > $ cd test
+
+  > $ node run_lambda <function_name>
+
+    where
+
+      <function_name> is one of 'index', 'index_saver' and 'index_populator'
