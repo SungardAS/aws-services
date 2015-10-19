@@ -1,0 +1,14 @@
+{
+  "name": "particles-populator",
+  "version": "0.0.0",
+  "description": "[Condensation](https://github.com/SungardAS/condensation) particles that build AWS CloudFormation templates.",
+  "license": "Apache-2.0",
+  "keywords": [
+    "condensation-particles"
+  ],
+  "dependencies": {
+    "condensation": "^0.4.9",
+    "config": "^1.16.0",
+    "gulp": "^3.9.0"
+  }
+}

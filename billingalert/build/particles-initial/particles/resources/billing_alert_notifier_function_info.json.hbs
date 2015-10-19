@@ -6,7 +6,11 @@
     "PackageJSON": {
       "region": { "Ref": "AWS::Region" },
       "bucketName": { "Fn::Join" : [ "", [ { "Ref" : "AWS::AccountId" }, { "Ref": "DeployerS3BucketPostfix" } ]]},
-      "keyName": "nodejs/billingalert_notifier.zip",
+      "keyName": {"Fn::If" : [
+        "IsTest",
+        "nodejs/billingalert_notifier_sim.zip",
+        "nodejs/billingalert_notifier.zip"
+      ] },
       "functionName": {"Fn::If" : [
         "IsTest",
         "billingalert_notifier_sim",
