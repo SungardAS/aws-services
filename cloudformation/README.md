@@ -32,7 +32,7 @@ A plugin to support
 
   > $ cd test
 
-  > $ node run_lambda <function_name>
+  > $ node run_lambda \<function_name\>
 
     where
 

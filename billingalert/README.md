@@ -19,9 +19,9 @@ AWS micro service to send a notification when the increased percentage of 'Estim
 
   > $ cd build.f
 
-  > $ node run_upload_code <function_name>
+  > $ node run_upload_code \<function_name\>
 
-  > $ node run_update_code <function_name>
+  > $ node run_update_code \<function_name\>
 
     where
 
@@ -34,7 +34,7 @@ AWS micro service to send a notification when the increased percentage of 'Estim
 
   > $ cd test
 
-  > $ node run_lambda <function_name>
+  > $ node run_lambda \<function_name\>
 
     where
 
