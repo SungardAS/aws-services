@@ -17,11 +17,14 @@ var updator = new (require('../../lib/lambda_code_updator'))();
 updator.update(input, function(err, data) {
   if(err) {
     console.log("Error occurred during updating codes : " + JSON.stringify(err));
+    process.exit(1);
   }
   else if(data) {
     console.log("Successfully updated codes");
+    process.exit(0);
   }
   else {
     console.log("Failed to update codes");
+    process.exit(1);
   }
 });
