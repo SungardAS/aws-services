@@ -1,0 +1,154 @@
+{
+  "AWSTemplateFormatVersion" : "2010-09-09",
+  "Description" : "Billing Alert Notification System Initial Setup",
+  "Parameters" : {
+    "DeployerS3BucketPostfix" : {
+      "Description" : "The postfix of the bucket name that contains the deployer lamdbda function source",
+      "Type" : "String",
+      "Default" : ".sgas.cto.lambda-files"
+    },
+    "DeployerS3Key" : {
+      "Description" : "The name of the deployer ZIP package",
+      "Type" : "String",
+      "Default" : "nodejs/cloudformation_builder.zip"
+    },
+    "DeployerModuleName" : {
+      "Description" : "The name of the deployer JavaScript file",
+      "Type" : "String",
+      "Default" : "index_lambda_deployer"
+    }
+  },
+  "Resources" : {
+    "DeployerLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": { "Fn::Join" : [ "", [ { "Ref" : "AWS::AccountId" }, { "Ref": "DeployerS3BucketPostfix" } ]]},
+          "S3Key": { "Ref": "DeployerS3Key" }
+        },
+        "Handler": { "Fn::Join" : [ "", [{ "Ref": "DeployerModuleName" },".handler"] ] },
+        "Runtime": "nodejs",
+        "Timeout": "60",
+        "Role": { "Fn::GetAtt" : ["DeployerLambdaExecutionRole", "Arn"] }
+      }
+    },
+    "DeployerLambdaExecutionRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [{
+            "Effect": "Allow",
+            "Principal": {"Service": ["lambda.amazonaws.com"]},
+            "Action": ["sts:AssumeRole"]
+          }]
+        },
+        "Path": "/",
+        "Policies": [{
+          "PolicyName": "root",
+          "PolicyDocument": {
+              "Statement": [
+                {
+                  "Resource": "arn:aws:logs:*:*:*",
+                  "Action": [
+                    "logs:CreateLogGroup",
+                    "logs:CreateLogStream",
+                    "logs:PutLogEvents"
+                  ],
+                  "Effect": "Allow"
+                },
+                {
+                  "Resource": "arn:aws:logs:*:*:*",
+                  "Action": [
+                    "logs:CreateLogGroup",
+                    "logs:CreateLogStream",
+                    "logs:PutLogEvents"
+                  ],
+                  "Effect": "Allow"
+                },
+                {
+                  "Resource": "*",
+                  "Action": [
+                    "cloudwatch:*",
+                    "iam:*",
+                    "s3:*",
+                    "lambda:*"
+                  ],
+                  "Effect": "Allow"
+                }
+              ],
+              "Version": "2012-10-17"
+          }
+        }]
+      }
+    },
+    "BillingAlertPopulatorFunctionInfo": {
+      "Type": "Custom::BillingAlertPopulatorFunctionInfo",
+      "Properties": {
+        "ServiceToken": { "Fn::GetAtt" : ["DeployerLambdaFunction", "Arn"] },
+        "AWSAccountId": { "Ref": "AWS::AccountId" },
+        "PackageJSON": {
+          "region": { "Ref": "AWS::Region" },
+          "bucketName": { "Fn::Join" : [ "", [ { "Ref" : "AWS::AccountId" }, { "Ref": "DeployerS3BucketPostfix" } ]]},
+          "keyName": "nodejs/billingalert_populator.zip",
+          "functionName": "billingalert_populator",
+          "handler":"billingalert/index_populator.handler",
+          "memorySize": 128,
+          "timeout": 30
+        },
+        "RoleArn": { "Fn::GetAtt" : [ "BillingAlertPopulatorFunctionRoleInfo", "Arn" ]}
+      }
+    },
+    "BillingAlertPopulatorFunctionRoleInfo": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [ {
+            "Sid": "",
+            "Effect": "Allow",
+            "Principal": {
+              "Service": "lambda.amazonaws.com"
+            },
+            "Action": "sts:AssumeRole"
+          } ]
+        },
+        "Path": "/",
+        "Policies": [ {
+          "PolicyName": "InlinePolicy",
+          "PolicyDocument": {
+            "Version": "2012-10-17",
+            "Statement": [ {
+             "Effect": "Allow",
+             "Action": [
+               "logs:CreateLogGroup",
+               "logs:CreateLogStream",
+               "logs:PutLogEvents"
+             ],
+             "Resource": "arn:aws:logs:*:*:*"
+            },
+            {
+             "Effect": "Allow",
+             "Action": [
+               "cloudwatch:*"
+             ],
+             "Resource": "*"
+            },
+            {
+             "Effect": "Allow",
+             "Action": "sns:Publish",
+             "Resource": "arn:aws:sns:*"
+            } ]
+          }
+        } ]
+      }
+    }
+  },
+  "Outputs" : {
+    "AccountId" : { "Value" : { "Ref" : "AWS::AccountId" } },
+    "StacksRegion" : { "Value" : { "Ref" : "AWS::Region" } },
+    "BillingAlertPopulatorFunctionName" : { "Value" : { "Fn::GetAtt" : [ "BillingAlertPopulatorFunctionInfo", "LambdaFunctionName" ]} },
+    "BillingAlertPopulatorFunctionArn" : { "Value" : { "Fn::GetAtt" : [ "BillingAlertPopulatorFunctionInfo", "LambdaFunctionArn" ]} },
+    "BillingAlertPopulatorFunctionRoleArn" : { "Value" : { "Fn::GetAtt" : [ "BillingAlertPopulatorFunctionRoleInfo", "Arn" ]} }
+  }
+}

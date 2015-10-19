@@ -1,0 +1,44 @@
+{{#layout}}
+
+  {{parameter "deployer_s3_bucket_postfix" logicalId="DeployerS3BucketPostfix"}}
+  {{parameter "deployer_s3_key" logicalId="DeployerS3Key"}}
+  {{parameter "deployer_module_name" logicalId="DeployerModuleName"}}
+  {{parameter "permission_module_name" logicalId="PermissionModuleName"}}
+  {{parameter "read_capacity_units" logicalId="ReadCapacityUnits"}}
+  {{parameter "write_capacity_units" logicalId="WriteCapacityUnits"}}
+  {{parameter "is_test" logicalId="IsTest"}}
+
+  {{condition "is_test" logicalId="IsTest"}}
+
+  {{resource "deployer_lambda_function" logicalId="DeployerLambdaFunction"}}
+  {{resource "deployer_lambda_execution_role" logicalId="DeployerLambdaExecutionRole"}}
+  {{resource "permission_lambda_function" logicalId="PermissionLambdaFunction"}}
+
+  {{resource "billing_alerts" logicalId="BillingAlerts"}}
+
+  {{resource "billing_alert_notifier_function_info" logicalId="BillingAlertNotifierFunctionInfo"}}
+  {{resource "billing_alert_notifier_function_role_info" logicalId="BillingAlertNotifierFunctionRoleInfo"}}
+  {{resource "billing_alert_saver_function_info" logicalId="BillingAlertSaverFunctionInfo"}}
+  {{resource "billing_alert_saver_function_role_info" logicalId="BillingAlertSaverFunctionRoleInfo"}}
+
+  {{resource "increased_percentages_topic" logicalId="IncreasedPercentagesTopic"}}
+  {{resource "over_increased_percentages_topic" logicalId="OverIncreasedPercentagesTopic"}}
+
+  {{resource "billing_alert_notifier_function_permission" logicalId="BillingAlertNotifierFunctionPermission"}}
+  {{resource "billing_alert_saver_function_permission" logicalId="BillingAlertSaverFunctionPermission"}}
+
+  {{output "account_id" logicalId="AccountId"}}
+  {{output "stacks_region" logicalId="StacksRegion"}}
+
+  {{output "billing_alert_notifier_function_name" logicalId="BillingAlertNotifierFunctionName"}}
+  {{output "billing_alert_notifier_function_arn" logicalId="BillingAlertNotifierFunctionArn"}}
+  {{output "billing_alert_notifier_function_role_arn" logicalId="BillingAlertNotifierFunctionRoleArn"}}
+
+  {{output "billing_alert_saver_function_name" logicalId="BillingAlertSaverFunctionName"}}
+  {{output "billing_alert_saver_function_arn" logicalId="BillingAlertSaverFunctionArn"}}
+  {{output "billing_alert_saver_function_role_arn" logicalId="BillingAlertSaverFunctionRoleArn"}}
+
+  {{output "increased_percentages_topic" logicalId="IncreasedPercentagesTopic"}}
+  {{output "over_increased_percentages_topic" logicalId="OverIncreasedPercentagesTopic"}}
+
+{{/layout}}

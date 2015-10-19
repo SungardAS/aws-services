@@ -1,0 +1,14 @@
+{{#resource}}
+  "Type": "Custom::BillingAlertSaverFunctionPermission",
+  "Properties": {
+    "ServiceToken": { "Fn::GetAtt" : ["PermissionLambdaFunction", "Arn"] },
+    "AWSAccountId": { "Ref": "AWS::AccountId" },
+    "PackageJSON": {
+      "region": { "Ref": "AWS::Region" },
+      "functionName":  { "Fn::GetAtt" : [ "BillingAlertSaverFunctionInfo", "LambdaFunctionName" ]},
+      "action": "lambda:invokeFunction",
+      "principal": "sns.amazonaws.com",
+      "statementId": "sns_invoke"
+    }
+  }
+{{/resource}}

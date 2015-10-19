@@ -1,56 +1,8 @@
 {
   "region": "us-east-1",
-  "bucketName": "089476987273.sgas.cto.lambda-files",
+  "bucketName": "290093585298.sgas.cto.lambda-files",
   "keyName": "nodejs/billingalert_saver.zip",
   "zipFile" : "billingalert_saver.zip",
   "sourceFolder" : "../..",
-  "src" : ["billingalert/index_saver.js", "billingalert/json/*.json", "lib/flow_controller.js", "lib/aws/**/*"],
-  "functionName": "billingalert_saver",
-  "handler":"billingalert/index_saver.handler",
-  "roleName": "lambda_billingalert_saver",
-  "assumeRolePolicyDocument":
-    {
-      "Version": "2012-10-17",
-      "Statement": [
-        {
-          "Sid": "",
-          "Effect": "Allow",
-          "Principal": {
-            "Service": "lambda.amazonaws.com"
-          },
-          "Action": "sts:AssumeRole"
-        }
-      ]
-    },
-  "inlinePolicyName": "lambda_billingalert_saver_policy",
-  "inlinePolicyDocument":
-    {
-      "Version": "2012-10-17",
-      "Statement": [
-        {
-          "Effect": "Allow",
-          "Action": [
-            "logs:CreateLogGroup",
-            "logs:CreateLogStream",
-            "logs:PutLogEvents"
-          ],
-          "Resource": "arn:aws:logs:*:*:*"
-        },
-        {
-          "Effect": "Allow",
-          "Action": [
-            "cloudwatch:*"
-          ],
-          "Resource": "*"
-        },
-        {
-          "Effect": "Allow",
-          "Action": "sns:Publish",
-          "Resource": "arn:aws:sns:*"
-        }
-      ]
-    },
-  "memorySize": 128,
-  "timeout": 30,
-  "federateRoleName": "federate"
+  "src" : ["billingalert/index_saver.js", "billingalert/json/*.json", "lib/flow_controller.js", "lib/aws/**/*"]
 }

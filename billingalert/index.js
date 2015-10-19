@@ -28,15 +28,9 @@ exports.handler = function (event, context) {
   } catch(err){}
   console.log("##AccountId = " + accountId);
 
-  var profile = (event.profile === undefined) ? null : event.profile;
-  var roles = (event.roles === undefined) ? null : event.roles;
-  var sessionName = (event.sessionName === undefined) ? null : event.sessionName;
-  var durationSeconds = (event.durationSeconds === undefined) ? null : event.durationSeconds;
-
   var sim = (message.Trigger.Namespace == 'CTOBilling');
 
   var input = {
-    profile: profile,
     region: region
   };
 
@@ -194,19 +188,5 @@ exports.handler = function (event, context) {
   ]
   aws_watch.flows = flows;
 
-  if (roles && roles.length > 0) {
-    provider.getCredential(roles, sessionName, durationSeconds, profile, function(err, creds) {
-      if (err) {
-        console.log(err, err.stack);
-        context.fail(err, null);
-      }
-      else {
-        input.creds = creds;
-        flows[0].func(input);
-      }
-    });
-  }
-  else {
-    flows[0].func(input);
-  }
+  flows[0].func(input);
 }

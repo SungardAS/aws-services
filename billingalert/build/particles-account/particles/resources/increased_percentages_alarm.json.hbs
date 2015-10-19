@@ -1,0 +1,32 @@
+{{#resource}}
+  "Type": "AWS::CloudWatch::Alarm",
+  "Properties": {
+      "AlarmName" : {"Fn::If" : [
+          "IsTest",
+          { "Fn::Join" : [ "", [ { "Ref" : "BillingAccountId" }, "-IncreasedPercentagesSimAlarm-Test" ]]},
+          { "Fn::Join" : [ "", [ { "Ref" : "BillingAccountId" }, "-IncreasedPercentagesAlarm" ]]}
+      ]},
+      "AlarmDescription" : "Alerted whenever the linked account's EstimatedCharges metric has new data.",
+      "ActionsEnabled": true,
+      "AlarmActions" : [{"Fn::If" : [
+          "IsTest",
+          { "Fn::Join" : [ ":", [ "arn:aws:sns", { "Ref" : "AWS::Region" }, { "Ref" : "AWS::AccountId" }, "IncreasedPercentagesSimTopic" ]]},
+          { "Fn::Join" : [ ":", [ "arn:aws:sns", { "Ref" : "AWS::Region" }, { "Ref" : "AWS::AccountId" }, "IncreasedPercentagesTopic" ]]}
+      ]}],
+      "InsufficientDataActions": [],
+      "OKActions": [],
+      "MetricName" : "EstimatedCharges",
+      "Namespace" : {"Fn::If" : [
+          "IsTest",
+          "CTOBilling",
+          "AWS/Billing"
+      ]},
+      "Dimensions": [ {"Name": "LinkedAccount", "Value": { "Ref" : "BillingAccountId" }}, {"Name": "Currency", "Value": "USD"} ],
+      "ComparisonOperator" : "GreaterThanThreshold",
+      "EvaluationPeriods" : "1",
+      "Period" : "60",
+      "Statistic" : "Maximum",
+      "Threshold" : "0",
+      "Unit": "None"
+  }
+{{/resource}}
