@@ -1,5 +1,5 @@
 
-## Billing Alert System
+# Billing Alert System
 
 AWS micro service to send a notification when the increased percentage of 'EstimatedCharges' exceeds the defined threshold.
 
@@ -13,7 +13,7 @@ AWS micro service to send a notification when the increased percentage of 'Estim
   > $ make
 
 
-# How To Update Lambda Function Codes
+## How To Update Lambda Function Codes
 
   > set the AWS auth keys in environment variables
 
