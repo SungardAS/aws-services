@@ -17,11 +17,14 @@ var uploader = new (require('../../lib/file_uploader'))();
 uploader.upload(input, function(err, data) {
   if(err) {
     console.log("Error occurred during uploading codes : " + err);
+    process.exit(1);
   }
   else if(data) {
     console.log("Successfully uploaded codes");
+    process.exit(0);
   }
   else {
     console.log("Failed to upload codes");
+    process.exit(1);
   }
 });
