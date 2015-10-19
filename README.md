@@ -10,6 +10,9 @@ AWS Lambda functions to manage the AWSConfig Service
 ## <a href='https://github.com/SungardAS/aws-services/tree/develop/billingalert'>billingalert</a>
 AWS micro service to send a notification when the increased percentage of 'EstimatedCharges' exceeds the defined threshold.
 
+## <a href='https://github.com/SungardAS/aws-services/tree/develop/cloudformation'>cloudformation</a>
+A plugin to support static names in Lamdba funtions, lambda invoke permission in SNS topics and role federations
+
 ## <a href='https://github.com/SungardAS/aws-services/tree/develop/cloudtrail'>cloudtrail</a>
 AWS Lambda functions to manage the CloudTrail Service
 
