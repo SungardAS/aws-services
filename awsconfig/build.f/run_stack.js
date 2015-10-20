@@ -22,10 +22,10 @@ if (particles) {
 }
 var input = {
   region: region,
-  stackName: name,
-  parameters: (parameters) ? JSON.parse(parameters) : null,
-  templateStr: templateStr
+  stackName: name
 }
+if (parameters) input.parameters = JSON.parse(parameters);
+if (templateStr)  input.templateStr = templateStr;
 console.log(input);
 
 var stack_builder = new (require('../../lib/stack_builder'))();
