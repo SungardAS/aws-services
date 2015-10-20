@@ -1,0 +1,8 @@
+{
+  "region": "us-east-1",
+  "bucketName": ".sgas.cto.lambda-files",
+  "keyName": "nodejs/cloudtrail-remover.zip",
+  "zipFile" : "cloudtrail-remover.zip",
+  "sourceFolder" : "../..",
+  "src" : ["cloudtrail/index_remover.js", "cloudtrail/json/*.json", "lib/flow_controller.js", "lib/aws/**/*"]
+}

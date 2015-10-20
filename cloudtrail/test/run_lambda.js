@@ -1,23 +1,33 @@
 
 var argv = require('minimist')(process.argv.slice(2));
-var module = argv._[0];
-var profile = argv._[1];
-if (!module || (module != 'checker' && module != 'enabler' && module != 'remover')) {
-  console.log(module);
-  console.log("node run_lambda checker|enabler|remover [profile]");
+var handler = argv._[0];
+if (!handler) {
+  console.log(handler);
+  console.log("node run_lambda <handler file name without '.js'>");
   return;
 }
+console.log('handler = ' + handler);
 
-var event = {
-  "federateAccount": "089476987273",
-  "account": "089476987273",
-  "roleExternalId": "",
-  "roleName": "sgas_dev_admin",
-  "sessionName": "abcde",
-  "region": "us-east-1"
+var fs = require("fs");
+var data = fs.readFileSync('./sample_' + handler + '.json', {encoding:'utf8'});
+var event = JSON.parse(data);
+if (event.Records) {
+  var message = JSON.parse(event.Records[0].Sns.Message);
+  message.StateChangeTime = new Date();
+  event.Records[0].Sns.Message = JSON.stringify(message);
 }
-if (profile)  event.profile = profile;
 
-var i = require('../index_' + module);
-var context = {fail:function(a){console.log(a)}, done:function(e, a){console.log(a)}};
-i.handler(event, context);
+var iam = new (require('../../lib/aws/role'))();
+iam.findAccountId({}, function(err, data) {
+  if (err) {
+    console.log('failed to find account id : ' + err);
+  }
+  else {
+    console.log("");
+    console.log('####Currently testing in ACCOUNT [' + data + ']');
+    console.log("");
+    var i = require('../' + handler + ".js");
+    var context = {fail:function(a){console.log(a)}, done:function(e, a){console.log(a)}};
+    i.handler(event, context);
+  }
+});

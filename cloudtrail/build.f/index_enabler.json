@@ -1,0 +1,8 @@
+{
+  "region": "us-east-1",
+  "bucketName": ".sgas.cto.lambda-files",
+  "keyName": "nodejs/cloudtrail-enabler.zip",
+  "zipFile" : "cloudtrail-enabler.zip",
+  "sourceFolder" : "../..",
+  "src" : ["cloudtrail/index_enabler.js", "cloudtrail/json/*.json", "lib/flow_controller.js", "lib/aws/**/*"]
+}
