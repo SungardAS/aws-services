@@ -1,0 +1,8 @@
+{
+  "region": "us-east-1",
+  "bucketName": ".sgas.cto.lambda-files",
+  "keyName": "nodejs/awsconfig-enabler.zip",
+  "zipFile" : "awsconfig-enabler.zip",
+  "sourceFolder" : "../..",
+  "src" : ["awsconfig/index_checker.js", "awsconfig/json/*.json", "lib/flow_controller.js", "lib/aws/**/*"]
+}

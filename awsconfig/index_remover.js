@@ -7,9 +7,6 @@ exports.handler = function (event, context) {
   var aws_role = new (require('../lib/aws/role.js'))();
 
   var roles = [];
-  if (event.profile) {
-    roles.push({roleArn:'arn:aws:iam::' + event.federateAccount + ':role/cto_across_accounts'});
-  }
   roles.push({roleArn:'arn:aws:iam::' + event.federateAccount + ':role/federate'});
   var admin_role = {roleArn:'arn:aws:iam::' + event.account + ':role/' + event.roleName};
   if (event.roleExternalId) {
@@ -23,7 +20,6 @@ exports.handler = function (event, context) {
   data_json = JSON.parse(data);
 
   var input = {
-    profile: (event.profile === undefined) ? null : event.profile,
     sessionName: event.sessionName,
     roles: roles,
     region: event.region,

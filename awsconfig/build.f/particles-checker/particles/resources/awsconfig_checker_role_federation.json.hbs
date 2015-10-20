@@ -1,0 +1,12 @@
+{{#resource}}
+  "Type": "Custom::AWSConfigCheckerRoleFederation",
+  "Properties": {
+    "ServiceToken": { "Fn::GetAtt" : ["FederationLambdaFunction", "Arn"] },
+    "AWSAccountId": { "Ref": "AWS::AccountId" },
+    "PackageJSON": {
+      "region": { "Ref": "AWS::Region" },
+      "roleArn": { "Fn::GetAtt" : [ "AWSConfigCheckerFunctionRoleInfo", "Arn" ]},
+      "federationRoleName": { "Ref": "FederationRoleName" }
+    }
+  }
+{{/resource}}

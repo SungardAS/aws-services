@@ -1,0 +1,17 @@
+{{#resource}}
+  "Type": "Custom::AWSConfigCheckerFunctionInfo",
+  "Properties": {
+    "ServiceToken": { "Fn::GetAtt" : ["DeployerLambdaFunction", "Arn"] },
+    "AWSAccountId": { "Ref": "AWS::AccountId" },
+    "PackageJSON": {
+      "region": { "Ref": "AWS::Region" },
+      "bucketName": { "Fn::Join" : [ "", [ { "Ref" : "AWS::AccountId" }, { "Ref": "DeployerS3BucketPostfix" } ]]},
+      "keyName": "nodejs/awsconfig-checker.zip",
+      "functionName": "awsconfig-checker",
+      "handler":"awsconfig/index_checker.handler",
+      "memorySize": 128,
+      "timeout": 30
+    },
+    "RoleArn": { "Fn::GetAtt" : [ "AWSConfigCheckerFunctionRoleInfo", "Arn" ]}
+  }
+{{/resource}}
