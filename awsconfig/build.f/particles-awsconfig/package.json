@@ -1,5 +1,5 @@
 {
-  "name": "particles-checker",
+  "name": "particles-awsconf",
   "version": "0.0.0",
   "description": "[Condensation](https://github.com/SungardAS/condensation) particles that build AWS CloudFormation templates.",
   "license": "Apache-2.0",

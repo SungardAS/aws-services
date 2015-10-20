@@ -1,0 +1,17 @@
+{{#resource}}
+  "Type": "Custom::AWSConfigRemoverFunctionInfo",
+  "Properties": {
+    "ServiceToken": { "Fn::GetAtt" : ["DeployerLambdaFunction", "Arn"] },
+    "AWSAccountId": { "Ref": "AWS::AccountId" },
+    "PackageJSON": {
+      "region": { "Ref": "AWS::Region" },
+      "bucketName": { "Fn::Join" : [ "", [ { "Ref" : "AWS::AccountId" }, { "Ref": "DeployerS3BucketPostfix" } ]]},
+      "keyName": "nodejs/awsconfig-remover.zip",
+      "functionName": "awsconfig-remover",
+      "handler":"awsconfig/index_remover.handler",
+      "memorySize": 128,
+      "timeout": 60
+    },
+    "RoleArn": { "Fn::GetAtt" : [ "AWSConfigFunctionRoleInfo", "Arn" ]}
+  }
+{{/resource}}

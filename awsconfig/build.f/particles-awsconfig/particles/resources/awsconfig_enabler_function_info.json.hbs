@@ -1,17 +1,17 @@
 {{#resource}}
-  "Type": "Custom::AWSConfigCheckerFunctionInfo",
+  "Type": "Custom::AWSConfigEnablerFunctionInfo",
   "Properties": {
     "ServiceToken": { "Fn::GetAtt" : ["DeployerLambdaFunction", "Arn"] },
     "AWSAccountId": { "Ref": "AWS::AccountId" },
     "PackageJSON": {
       "region": { "Ref": "AWS::Region" },
       "bucketName": { "Fn::Join" : [ "", [ { "Ref" : "AWS::AccountId" }, { "Ref": "DeployerS3BucketPostfix" } ]]},
-      "keyName": "nodejs/awsconfig-checker.zip",
-      "functionName": "awsconfig-checker",
-      "handler":"awsconfig/index_checker.handler",
+      "keyName": "nodejs/awsconfig-enabler.zip",
+      "functionName": "awsconfig-enabler",
+      "handler":"awsconfig/index_enabler.handler",
       "memorySize": 128,
-      "timeout": 30
+      "timeout": 60
     },
-    "RoleArn": { "Fn::GetAtt" : [ "AWSConfigCheckerFunctionRoleInfo", "Arn" ]}
+    "RoleArn": { "Fn::GetAtt" : [ "AWSConfigFunctionRoleInfo", "Arn" ]}
   }
 {{/resource}}

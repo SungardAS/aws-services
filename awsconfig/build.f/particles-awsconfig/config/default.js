@@ -3,7 +3,7 @@ var config = {
     {
       aws: {
         region: 'us-east-1',
-        bucket: ''
+        bucket: 'particles-awsconfig.us-east-1'
       },
       clean: true,
       validate: true,

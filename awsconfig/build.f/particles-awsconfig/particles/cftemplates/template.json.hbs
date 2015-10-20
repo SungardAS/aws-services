@@ -10,13 +10,19 @@
   {{resource "federation_lambda_function" logicalId="FederationLambdaFunction"}}
   {{resource "deployer_lambda_execution_role" logicalId="DeployerLambdaExecutionRole"}}
   {{resource "awsconfig_checker_function_info" logicalId="AWSConfigCheckerFunctionInfo"}}
-  {{resource "awsconfig_checker_function_role_info" logicalId="AWSConfigCheckerFunctionRoleInfo"}}
-  {{resource "awsconfig_checker_role_federation" logicalId="AWSConfigCheckerRoleFederation"}}
+  {{resource "awsconfig_enabler_function_info" logicalId="AWSConfigEnablerFunctionInfo"}}
+  {{resource "awsconfig_remover_function_info" logicalId="AWSConfigRemoverFunctionInfo"}}
+  {{resource "awsconfig_function_role_info" logicalId="AWSConfigFunctionRoleInfo"}}
+  {{resource "awsconfig_role_federation" logicalId="AWSConfigRoleFederation"}}
 
   {{output "account_id" logicalId="AccountId"}}
   {{output "stacks_region" logicalId="StacksRegion"}}
   {{output "awsconfig_checker_function_name" logicalId="AWSConfigCheckerFunctionName"}}
   {{output "awsconfig_checker_function_arn" logicalId="AWSConfigCheckerFunctionArn"}}
-  {{output "awsconfig_checker_function_role_arn" logicalId="AWSConfigCheckerFunctionRoleArn"}}
+  {{output "awsconfig_enabler_function_name" logicalId="AWSConfigEnablerFunctionName"}}
+  {{output "awsconfig_enabler_function_arn" logicalId="AWSConfigEnablerFunctionArn"}}
+  {{output "awsconfig_remover_function_name" logicalId="AWSConfigRemoverFunctionName"}}
+  {{output "awsconfig_remover_function_arn" logicalId="AWSConfigRemoverFunctionArn"}}
+  {{output "awsconfig_function_role_arn" logicalId="AWSConfigFunctionRoleArn"}}
 
 {{/layout}}
