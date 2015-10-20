@@ -1,5 +1,0 @@
-{
-  "queueName": "CTOCronQueue",
-  "messageBody": "cto-cron-message",
-  "delaySeconds": 300
-}

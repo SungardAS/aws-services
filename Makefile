@@ -1,5 +1,5 @@
 
-BUILD_SUBDIRS := lib cloudformation billingalert awsconfig cloudtrail
+BUILD_SUBDIRS := lib cloudformation billingalert awsconfig cloudtrail alarmalert
 
 build:
 	echo $(BUILD_SUBDIRS)
@@ -8,3 +8,7 @@ build:
 buildlambda:
 	echo $(BUILD_SUBDIRS)
 	$(foreach dir,$(BUILD_SUBDIRS), make buildlambda -C $(dir);)
+
+clean:
+	echo $(BUILD_SUBDIRS)
+	$(foreach dir,$(BUILD_SUBDIRS), make clean -C $(dir);)

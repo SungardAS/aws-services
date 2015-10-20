@@ -5,24 +5,6 @@ exports.handler = function (event, context) {
 
   console.log(event.Records[0].Sns);
 
-  /*var fs = require("fs");
-  var data = fs.readFileSync(__dirname + '/json/data.json', {encoding:'utf8'});
-  var data_json = JSON.parse(data);
-
-  var roles = [];
-  if (data_json.profile) {
-    roles.push({roleArn:'arn:aws:iam::' + data_json.federateAccount + ':role/cto_across_accounts'});
-  }
-  roles.push({roleArn:'arn:aws:iam::' + data_json.federateAccount + ':role/federate'});
-  var admin_role = {roleArn:'arn:aws:iam::' + data_json.dynamodbAccount + ':role/' + data_json.roleName};
-  if (data_json.roleExternalId) {
-    admin_role.externalId = data_json.roleExternalId;
-  }
-  roles.push(admin_role);
-  console.log(roles);
-  var sessionName = data_json.sessionName;
-  var region = data_json.region;*/
-
   // find a given region
   var regionArray = [
     {id:'us-east-1', name:'US - N. Virginia'},
@@ -67,30 +49,10 @@ exports.handler = function (event, context) {
     item: item
   };
 
-  /*if (roles && roles.length > 0) {
-    var assume_role_provider = new (require('../lib/aws/assume_role_provider.js'))();
-    assume_role_provider.getCredential(roles, sessionName, 0, null, function(err, data) {
-      if (err) {
-        console.log("Failed to assume roles : " + err);
-        context.fail("Failed to assume roles : " + err);
-      }
-      else {
-        input.creds = data;
-        dynamodb.save(input, function(err, data) {
-          if (err)  context.fail(err, null);
-          else {
-            context.done(null, true);
-          }
-        });
-      }
-    });
-  }
-  else {*/
-    dynamodb.save(input, function(err, data) {
-      if (err)  context.fail(err, null);
-      else {
-        context.done(null, true);
-      }
-    });
-  //}
+  dynamodb.save(input, function(err, data) {
+    if (err)  context.fail(err, null);
+    else {
+      context.done(null, true);
+    }
+  });
 }

@@ -5,3 +5,6 @@ build:
 	cd build.f; node run_upload_code index
 
 buildlambda: build
+
+clean:
+	# nothing to do

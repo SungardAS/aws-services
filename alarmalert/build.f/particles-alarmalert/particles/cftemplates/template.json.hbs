@@ -1,0 +1,30 @@
+{{#layout}}
+
+  {{parameter "deployer_s3_bucket_postfix" logicalId="DeployerS3BucketPostfix"}}
+  {{parameter "deployer_s3_key" logicalId="DeployerS3Key"}}
+  {{parameter "deployer_module_name" logicalId="DeployerModuleName"}}
+  {{parameter "read_capacity_units" logicalId="ReadCapacityUnits"}}
+  {{parameter "write_capacity_units" logicalId="WriteCapacityUnits"}}
+
+  {{resource "deployer_lambda_function" logicalId="DeployerLambdaFunction"}}
+  {{resource "deployer_lambda_execution_role" logicalId="DeployerLambdaExecutionRole"}}
+
+  {{resource "alarm_alerts" logicalId="AlarmAlerts"}}
+
+  {{resource "alarm_alert_saver_function_info" logicalId="AlarmAlertSaverFunctionInfo"}}
+  {{resource "alarm_alert_saver_function_role_info" logicalId="AlarmAlertSaverFunctionRoleInfo"}}
+
+  {{resource "alert_email_topic" logicalId="AlertEmailTopic"}}
+  {{resource "alert_email_alarm" logicalId="AlertEmailAlarm"}}
+
+  {{output "account_id" logicalId="AccountId"}}
+  {{output "stacks_region" logicalId="StacksRegion"}}
+
+  {{output "alarm_alert_saver_function_name" logicalId="AlarmAlertSaverFunctionName"}}
+  {{output "alarm_alert_saver_function_arn" logicalId="AlarmAlertSaverFunctionArn"}}
+  {{output "alarm_alert_saver_function_role_arn" logicalId="AlarmAlertSaverFunctionRoleArn"}}
+
+  {{output "alert_email_topic" logicalId="AlertEmailTopic"}}
+  {{output "alert_email_alarm" logicalId="AlertEmailAlarm"}}
+
+{{/layout}}

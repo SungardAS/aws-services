@@ -5,3 +5,6 @@ build:
 	cd zipper; npm install;
 
 buildlambda: build
+
+clean:
+	# nothing to do

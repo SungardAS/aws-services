@@ -12,13 +12,8 @@ exports.handler = function (event, context) {
   var dynamodb = new (require('../lib/aws/dynamodb.js'))();
   var aws_watch = new (require('../lib/aws/cloudwatch.js'))();
 
-  var fs = require("fs");
-  data = fs.readFileSync(__dirname + '/json/data.json', {encoding:'utf8'});
-  data_json = JSON.parse(data);
-
   var current = new Date();
   var input = {
-    profile: (event.profile === undefined) ? null : event.profile,
     region: region,
     labelId: 'INBOX',
     userId: 'me',
@@ -26,7 +21,7 @@ exports.handler = function (event, context) {
     messages: [],
     labelsToAdd: [],
     labelsToRemove: ['UNREAD'],
-    tableName: 'alertmessages',
+    tableName: 'alarmalerts',
     item: null
   };
 
@@ -152,20 +147,5 @@ exports.handler = function (event, context) {
   gmail.flows = flows;
   dynamodb.flows = flows;
 
-  if (event.roles) {
-    var assume_role_provider = new (require('../lib/aws/assume_role_provider.js'))();
-    assume_role_provider.getCredential(event.roles, event.sessionName, 0, 'default', function(err, data) {
-      if (err) {
-        console.log("Failed to assume roles : " + err);
-        errored(input);
-      }
-      else {
-        input.creds = data;
-        flows[0].func(input);
-      }
-    });
-  }
-  else {
-    flows[0].func(input);
-  }
+  flows[0].func(input);
 };
