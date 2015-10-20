@@ -11,8 +11,10 @@ endif
 ACCOUNTS:=290093585298 876224653878
 
 build: upload setup
+	# no more tasks
 
 buildlambda: upload update
+	# no more tasks
 
 upload:
 	echo $(ROOT_DIR)
@@ -30,15 +32,11 @@ update:
 setup:
 	cd build.f/particles-initial; npm install; ./node_modules/.bin/gulp condensation:build;
 	cd build.f/particles-account; npm install; ./node_modules/.bin/gulp condensation:build;
-	aws cloudformation create-stack --stack-name BillingAlertInitialSetup --template-body file://$(ROOT_DIR)/build.f/particles-initial/dist/0/particles/cftemplates/template.json --region us-east-1 --capabilities CAPABILITY_IAM --parameters ParameterKey=IsTest,ParameterValue=$(TEST);
-	aws cloudformation describe-stacks --stack-name BillingAlertInitialSetup --region us-east-1;
+	cd build.f; node run_stack launch --region us-east-1 --name BillingAlertInitialSetup --parameters '[{"ParameterKey":"IsTest","ParameterValue":"$(TEST)"}]' --particles initial;
 	$(foreach ACCOUNT,$(ACCOUNTS), \
-		aws cloudformation create-stack --stack-name BillingAlert-$(ACCOUNT) --template-body file://$(ROOT_DIR)/build.f/particles-account/dist/0/particles/cftemplates/template.json --region us-east-1 --capabilities CAPABILITY_IAM --parameters ParameterKey=BillingAccountId,ParameterValue=$(ACCOUNT) ParameterKey=IsTest,ParameterValue=$(TEST); \
-		aws cloudformation describe-stacks --stack-name BillingAlert-$(ACCOUNT) --region us-east-1;)
+		cd build.f; node run_stack launch --region us-east-1 --name BillingAlert-$(ACCOUNT) --parameters '[{"ParameterKey":"BillingAccountId","ParameterValue":"$(ACCOUNT)"},{"ParameterKey":"IsTest","ParameterValue":"$(TEST)"}]' --particles account;)
 
 clean:
 	$(foreach ACCOUNT,$(ACCOUNTS), \
-		aws cloudformation delete-stack --stack-name BillingAlert-$(ACCOUNT) --region us-east-1; \
-		aws cloudformation describe-stacks --stack-name BillingAlert-$(ACCOUNT) --region us-east-1;)
-	aws cloudformation delete-stack --stack-name BillingAlertInitialSetup --region us-east-1;
-	aws cloudformation describe-stacks --stack-name BillingAlertInitialSetup --region us-east-1;
+		cd build.f; node run_stack drop --region us-east-1 --name BillingAlert-$(ACCOUNT) --particles account;)
+	cd build.f; node run_stack drop --region us-east-1 --name BillingAlertInitialSetup;
