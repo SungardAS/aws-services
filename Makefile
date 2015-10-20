@@ -1,5 +1,5 @@
 
-BUILD_SUBDIRS := lib cloudformation billingalert awsconfig
+BUILD_SUBDIRS := lib cloudformation billingalert awsconfig cloudtrail
 
 build:
 	echo $(BUILD_SUBDIRS)
