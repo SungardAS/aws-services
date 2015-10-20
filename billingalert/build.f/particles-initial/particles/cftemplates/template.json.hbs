@@ -27,6 +27,9 @@
   {{resource "billing_alert_notifier_function_permission" logicalId="BillingAlertNotifierFunctionPermission"}}
   {{resource "billing_alert_saver_function_permission" logicalId="BillingAlertSaverFunctionPermission"}}
 
+  {{resource "billing_alert_populator_function_info" logicalId="BillingAlertPopulatorFunctionInfo"}}
+  {{resource "billing_alert_populator_function_role_info" logicalId="BillingAlertPopulatorFunctionRoleInfo"}}
+
   {{output "account_id" logicalId="AccountId"}}
   {{output "stacks_region" logicalId="StacksRegion"}}
 
@@ -37,6 +40,10 @@
   {{output "billing_alert_saver_function_name" logicalId="BillingAlertSaverFunctionName"}}
   {{output "billing_alert_saver_function_arn" logicalId="BillingAlertSaverFunctionArn"}}
   {{output "billing_alert_saver_function_role_arn" logicalId="BillingAlertSaverFunctionRoleArn"}}
+
+  {{output "billing_alert_populator_function_name" logicalId="BillingAlertPopulatorFunctionName"}}
+  {{output "billing_alert_populator_function_arn" logicalId="BillingAlertPopulatorFunctionArn"}}
+  {{output "billing_alert_populator_function_role_arn" logicalId="BillingAlertPopulatorFunctionRoleArn"}}
 
   {{output "increased_percentages_topic" logicalId="IncreasedPercentagesTopic"}}
   {{output "over_increased_percentages_topic" logicalId="OverIncreasedPercentagesTopic"}}

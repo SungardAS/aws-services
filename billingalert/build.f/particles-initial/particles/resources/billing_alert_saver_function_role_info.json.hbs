@@ -38,6 +38,17 @@
             "Effect": "Allow",
             "Action": "sns:Publish",
             "Resource": "arn:aws:sns:*"
+          },
+          {
+              "Effect": "Allow",
+              "Action": [
+                  "dynamodb:GetItem",
+                  "dynamodb:PutItem",
+                  "dynamodb:Query"
+              ],
+              "Resource": [
+                  "arn:aws:dynamodb:*"
+              ]
           }
         ]
       }
