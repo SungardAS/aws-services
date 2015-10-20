@@ -4,5 +4,5 @@
   "keyName": "nodejs/awsconfig-enabler.zip",
   "zipFile" : "awsconfig-enabler.zip",
   "sourceFolder" : "../..",
-  "src" : ["awsconfig/index_checker.js", "awsconfig/json/*.json", "lib/flow_controller.js", "lib/aws/**/*"]
+  "src" : ["awsconfig/index_enabler.js", "awsconfig/json/*.json", "lib/flow_controller.js", "lib/aws/**/*"]
 }
