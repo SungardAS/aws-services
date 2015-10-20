@@ -5,5 +5,4 @@ build:
 	cd google; npm install;
 	cd zipper; npm install;
 
-buildlambda:
-	## nothing to do
+buildlambda: build

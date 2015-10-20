@@ -4,5 +4,4 @@ build:
 	npm install
 	cd build.f; node run_upload_code index
 
-buildlambda:
-	## nothing to do
+buildlambda: build
