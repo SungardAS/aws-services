@@ -18,9 +18,9 @@ build:
 	cd build.f/particles-initial; npm install; ./node_modules/.bin/gulp condensation:build;
 	cd build.f/particles-account; npm install; ./node_modules/.bin/gulp condensation:build;
 	cd build.f/particles-populator; npm install; ./node_modules/.bin/gulp condensation:build;
-	node build.f/run_upload_code $(INDEX);
-	node build.f/run_upload_code index_saver;
-	node build.f/run_upload_code index_populator;
+	cd build.f; node run_upload_code $(INDEX);
+	cd build.f; node run_upload_code index_saver;
+	cd build.f; node run_upload_code index_populator;
 
 	aws cloudformation create-stack --stack-name BillingAlertInitialSetup --template-body file://$(ROOT_DIR)/build.f/particles-initial/dist/0/particles/cftemplates/template.json --region us-east-1 --capabilities CAPABILITY_IAM --parameters ParameterKey=IsTest,ParameterValue=$(TEST);
 	aws cloudformation describe-stacks --stack-name BillingAlertInitialSetup --region us-east-1;

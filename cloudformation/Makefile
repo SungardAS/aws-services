@@ -2,4 +2,4 @@
 build:
 	## cloudformation custome resource plugins
 	npm install
-	node build.f/run_upload_code index
+	cd build.f; node run_upload_code index
