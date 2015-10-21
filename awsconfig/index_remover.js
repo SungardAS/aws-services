@@ -24,7 +24,7 @@ exports.handler = function (event, context) {
     roles: roles,
     region: event.region,
     topicName : data_json.topicName,
-    roleName : data_json.roleName,
+    roleName : data_json.roleName + "-" + event.region,
     inlinePolicyName : data_json.inlinePolicyName,
   };
 
@@ -39,15 +39,12 @@ exports.handler = function (event, context) {
     {func:aws_config.stopRecorder, success:aws_config.findChannels, failure:failed, error:errored},
     {func:aws_config.findChannels, success:aws_config.deleteChannel, failure:aws_topic.findTopic, error:errored},
     {func:aws_config.deleteChannel, success:aws_topic.findTopic, failure:failed, error:errored},
-    {func:aws_topic.findTopic, success:aws_topic.deleteTopic, failure:succeeded, error:errored},
-    {func:aws_topic.deleteTopic, success:succeeded, failure:failed, error:errored},
-    /***** commented out because the role is shared by all regions!
-    {func:aws_topic.findTopic, success:aws_topic.deleteTopic, failure:aws_role.findInlinePolicy, error:errored},
-    {func:aws_topic.deleteTopic, success:aws_role.findInlinePolicy, failure:failed, error:errored},
-    {func:aws_role.findInlinePolicy, success:aws_role.deleteInlinePolicy, failure:aws_role.findRole},
-    {func:aws_role.deleteInlinePolicy, success:aws_role.findRole},
-    {func:aws_role.findRole, success:aws_role.deleteRole, failure:succeeded},
-    {func:aws_role.deleteRole, success:succeeded},*/
+    {func:aws_topic.findTopic, success:aws_topic.deleteTopic, failure:aws_role.findRoleByPrefix, error:errored},
+    {func:aws_topic.deleteTopic, success:aws_role.findRoleByPrefix, failure:failed, error:errored},
+    {func:aws_role.findRoleByPrefix, success:aws_role.findInlinePolicy, failure:succeeded, error:errored},
+    {func:aws_role.findInlinePolicy, success:aws_role.deleteInlinePolicy, failure:aws_role.findRole, error:errored},
+    {func:aws_role.deleteInlinePolicy, success:aws_role.deleteRole, failure:failed, error:errored},
+    {func:aws_role.deleteRole, success:succeeded, failure:failed, error:errored},
   ];
   aws_sts.flows = flows;
   aws_topic.flows = flows;

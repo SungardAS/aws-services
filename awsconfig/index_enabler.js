@@ -36,7 +36,8 @@ exports.handler = function (event, context) {
     topicName : data_json.topicName,
     assumeRolePolicyName: data_json.assumeRolePolicyName,
     assumeRolePolicyDocument: assumeRolePolicyDocument,
-    roleName : data_json.roleName,
+    roleName : data_json.roleName + "-" + event.region,
+    roleNamePostfix: (new Date()).getTime(),
     inlinePolicyName : data_json.inlinePolicyName,
     inlinePolicyDocument: inlinePolicyDocument,
     roleArn : null,
@@ -49,8 +50,8 @@ exports.handler = function (event, context) {
   function errored(err) { context.fail(err, null); }
 
   var flows = [
-    {func:aws_sts.assumeRoles, success:aws_role.findRole, failure:failed, error:errored},
-    {func:aws_role.findRole, success:aws_role.findInlinePolicy, failure:aws_role.createRole, error:errored},
+    {func:aws_sts.assumeRoles, success:aws_role.findRoleByPrefix, failure:failed, error:errored},
+    {func:aws_role.findRoleByPrefix, success:aws_role.findInlinePolicy, failure:aws_role.createRole, error:errored},
     {func:aws_role.createRole, success:aws_role.findInlinePolicy, failure:failed, error:errored},
     {func:aws_role.findInlinePolicy, success:aws_bucket.findBucket, failure:aws_role.createInlinePolicy, error:errored},
     {func:aws_role.createInlinePolicy, success:aws_role.wait, failure:failed, error:errored},
