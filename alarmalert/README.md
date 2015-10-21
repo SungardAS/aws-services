@@ -4,7 +4,7 @@
 AWS micro service to send a notification whenever new alert email is detected.
 
 
-## How To Process Initial Setup
+## How To Setup
 
   > set the AWS auth keys in environment variables
 
@@ -15,9 +15,14 @@ AWS micro service to send a notification whenever new alert email is detected.
 
   > set the AWS auth keys in environment variables
 
-  > $ cd build.f
+  > $ make buildlambda
 
-  > $ node run_upload_code index_saver
+
+## How To Remove Service
+
+  > set the AWS auth keys in environment variables
+
+  > $ make clean
 
 
 ## How To Test Lambda Functions

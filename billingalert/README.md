@@ -4,7 +4,7 @@
 AWS micro service to send a notification when the increased percentage of 'EstimatedCharges' exceeds the defined threshold.
 
 
-## How To Process Initial Setup
+## How To Setup
 
   > set the AWS auth keys in environment variables
 
@@ -18,6 +18,13 @@ AWS micro service to send a notification when the increased percentage of 'Estim
   > set the AWS auth keys in environment variables
 
   > $ make buildlambda
+
+
+## How To Remove Service
+
+  > set the AWS auth keys in environment variables
+
+  > $ make clean
 
 
 ## How To Test Lambda Functions

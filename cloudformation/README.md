@@ -10,7 +10,7 @@ A plugin to support
   - role federations
 
 
-## How To Process Initial Setup
+## How To Setup
 
   > set the AWS auth keys in environment variables
 
