@@ -7,5 +7,8 @@ build:
 buildlambda: build
 	# no more tasks
 
+buildnpm:
+	npm install;
+
 clean:
 	# nothing to do

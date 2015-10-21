@@ -16,6 +16,11 @@ build: upload setup
 buildlambda: upload update
 	# no more tasks
 
+buildnpm:
+	npm install
+	cd build.f/particles-initial; npm install
+	cd build.f/particles-account; npm install
+
 upload:
 	echo $(ROOT_DIR)
 	echo $(TEST)

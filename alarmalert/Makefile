@@ -7,6 +7,10 @@ build: upload setup
 buildlambda: upload update
 	# no more tasks
 
+buildnpm:
+	npm install;
+	cd build.f/particles-alarmalert; npm install;
+
 upload:
 	echo $(ROOT_DIR)
 	npm install
