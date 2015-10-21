@@ -4,33 +4,28 @@
 AWS Lambda functions to manage the CloudTrail Service
 
 
-### How To Depoly & Remove Functions
+## How To Process Initial Setup
 
-  > cd build
+  > set the AWS auth keys in environment variables
 
-  > edit parameter values in 'run_params.json'
-
-  > node run_build \<action\> \<module\> [\<profile\>]
-
-    where
-
-      <action> is one of 'deploy' and 'clean'
-
-      <module> is one of 'checker', 'enabler' and 'remover'
-
-      <profile> is optional
+  > $ make
 
 
-## How To Test
+## How To Update Lambda Function Codes
 
-  > cd test
+  > set the AWS auth keys in environment variables
 
-  > edit parameter values in 'run_lambda.js'
+  > $ make buildlambda
 
-  > node run_lambda \<module\> [\<profile\>]
+
+## How To Test Lambda Functions
+
+  > set the AWS auth keys in environment variables
+
+  > $ cd test
+
+  > $ node run_lambda \<function_name\>
 
     where
 
-      <module> is one of 'checker', 'enabler' and 'remover'
-
-      <profile> is optional
+      <function_name> is 'one of 'index_checker', 'index_enabler' or 'index_remover'

@@ -19,11 +19,7 @@ A plugin to support
 
 ## How To Update Lambda Function Codes
 
-  > set the AWS auth keys in environment variables
-
-  > $ cd build.f
-
-  > $ node run_upload_code index
+  > $ make buildlambda
 
 
 ## How To Test Lambda Functions

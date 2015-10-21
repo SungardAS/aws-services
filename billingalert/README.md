@@ -17,15 +17,7 @@ AWS micro service to send a notification when the increased percentage of 'Estim
 
   > set the AWS auth keys in environment variables
 
-  > $ cd build.f
-
-  > $ node run_upload_code \<function_name\>
-
-  > $ node run_update_code \<function_name\>
-
-    where
-
-      <function_name> is one of 'index', 'index_saver' and 'index_populator'
+  > $ make buildlambda
 
 
 ## How To Test Lambda Functions
