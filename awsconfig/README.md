@@ -6,25 +6,30 @@ AWS Lambda functions to manage the AWSConfig Service
 
 ## How To Setup
 
-    > set the AWS auth keys in environment variables
+    $ make -e AWS_REGION=<region>
+      or
+    $ export AWS_REGION=<region>
     $ make
 
 
 ## How To Update Lambda Function Codes
 
-    > set the AWS auth keys in environment variables
+    $ make buildlambda -e AWS_REGION=<region>
+      or
+    $ export AWS_REGION=<region>
     $ make buildlambda
 
 
 ## How To Remove Service
 
-    > set the AWS auth keys in environment variables
+    $ make clean -e AWS_REGION=<region>
+      or
+    $ export AWS_REGION=<region>
     $ make clean
 
 
 ## How To Test Lambda Functions
 
-    > set the AWS auth keys in environment variables
     $ cd test
     $ node run_lambda <function_name>
       where

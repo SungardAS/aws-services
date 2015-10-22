@@ -4,19 +4,25 @@ Micro-services to provide various conveniences in managing AWS services
 
 ## How To Setup All Services
 
-    > set the AWS auth keys in environment variables
+    $ make -e AWS_REGION=<region>
+      or
+    $ export AWS_REGION=<region>
     $ make
 
 
 ## How To Update Lambda Function Codes of All Services
 
-    > set the AWS auth keys in environment variables
+    $ make buildlambda -e AWS_REGION=<region>
+      or
+    $ export AWS_REGION=<region>
     $ make buildlambda
 
 
 ## How To Remove All Services
 
-    > set the AWS auth keys in environment variables
+    $ make clean -e AWS_REGION=<region>
+      or
+    $ export AWS_REGION=<region>
     $ make clean
 
 
@@ -39,6 +45,9 @@ AWS Lambda functions to manage the CloudTrail Service
 
 ## <a href='https://github.com/SungardAS/aws-services/tree/develop/lib'>lib</a>
 Libraries shared by projects
+
+## <a href='https://github.com/SungardAS/aws-services/tree/develop/jenkins'>jenkins</a>
+CI/CD build jenkins server of this project
 
 ## <a href='https://github.com/SungardAS/aws-services/tree/develop/lmdeployer'>lmdeployer</a>
 AWS Lambda function to automatically update lambda function codes whenever they are updated in S3 buckets.
