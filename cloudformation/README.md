@@ -4,9 +4,7 @@
 A plugin to support
 
   - static names in Lamdba funtions
-
   - lambda invoke permission in SNS topics
-
   - role federations
 
 
@@ -26,6 +24,6 @@ A plugin to support
 
     > set the AWS auth keys in environment variables
     $ cd test
-    $ node run_lambda \<function_name\>
+    $ node run_lambda <function_name>
       where
         <function_name> is one of 'index', 'index_iam_federation' and 'index_lambda_permission'
