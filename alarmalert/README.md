@@ -1,5 +1,5 @@
 
-## Alarm Alert System
+# Alarm Alert System
 
 AWS micro service to send a notification whenever new alert email is detected.
 

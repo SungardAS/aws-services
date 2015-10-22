@@ -1,5 +1,5 @@
 
-## AWSConfig
+# AWSConfig
 
 AWS Lambda functions to manage the AWSConfig Service
 

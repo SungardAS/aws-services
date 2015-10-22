@@ -1,5 +1,5 @@
 
-## CloudTrail
+# CloudTrail
 
 AWS Lambda functions to manage the CloudTrail Service
 

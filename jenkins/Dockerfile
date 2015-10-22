@@ -20,4 +20,7 @@ RUN cd / && \
     rm node-v0.12.7.tar.gz && \
     rm -drf node-v0.12.7
 
+COPY plugins.txt /usr/share/jenkins/plugins.txt
+RUN /usr/local/bin/plugins.sh /usr/share/jenkins/plugins.txt
+
 USER jenkins
