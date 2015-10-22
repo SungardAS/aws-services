@@ -4,18 +4,9 @@ var dynamodb = new (require('../lib/aws/dynamodb.js'))();
 exports.handler = function (event, context) {
 
   console.log(event.Records[0].Sns);
-
-  // find a given region
-  var regionArray = [
-    {id:'us-east-1', name:'US - N. Virginia'},
-    {id:'us-west-1', name:'US - N. California'},
-    {id:'us-west-2', name:'US - Oregon'},
-  ];
   var message_json = JSON.parse(event.Records[0].Sns.Message);
-  var regions = regionArray.filter(function(region) {
-    return region.name == message_json.Region;
-  });
-  var region = (regions[0]) ? regions[0].id : regionArray[0].id;
+
+  var region = message_json.Region.toLowerCase();
 
   var messageId = event.Records[0].Sns.MessageId;
   var subject = event.Records[0].Sns.Subject;

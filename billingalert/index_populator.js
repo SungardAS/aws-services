@@ -42,9 +42,8 @@ var metricData = {
 };
 
 var input = {
-  region: "us-east-1",
   metricQuery: metricQuery,
-  metricData: metricData,
+  metricData: metricData
 };
 
 function findMetricsStatistics(accounts, idx, callback) {

@@ -8,17 +8,7 @@ exports.handler = function (event, context) {
   var message = JSON.parse(event.Records[0].Sns.Message);
   console.log(message.Trigger.Dimensions);
 
-  var regionArray = [
-    {id:'us-east-1', name:'US - N. Virginia'},
-    {id:'us-west-1', name:'US - N. California'},
-    {id:'us-west-2', name:'US - Oregon'},
-  ];
-
-  // find a given region
-  var regions = regionArray.filter(function(region) {
-    return region.name == message.Region;
-  });
-  var region = (regions[0]) ? regions[0].id : regionArray[0].id;
+  var region = message.Region.toLowerCase();
 
   var accountId = null;
   try {
