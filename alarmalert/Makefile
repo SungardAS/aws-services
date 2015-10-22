@@ -1,6 +1,11 @@
 
 ROOT_DIR:=$(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 
+ifdef AWS_REGION
+else
+	AWS_REGION := us-east-1
+endif
+
 build: upload setup
 	# no more tasks
 
@@ -21,7 +26,7 @@ update:
 
 setup:
 	cd build.f/particles-alarmalert; npm install; ./node_modules/.bin/gulp condensation:build;
-	cd build.f; node run_stack launch --region us-east-1 --name AlarmAlertSetup --particles alarmalert;
+	cd build.f; node run_stack launch --region $(AWS_REGION) --name AlarmAlertSetup --particles alarmalert;
 
 clean:
-	cd build.f; node run_stack drop --region us-east-1 --name AlarmAlertSetup;
+	cd build.f; node run_stack drop --region $(AWS_REGION) --name AlarmAlertSetup;

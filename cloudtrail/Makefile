@@ -1,6 +1,11 @@
 
 ROOT_DIR:=$(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 
+ifdef AWS_REGION
+else
+	AWS_REGION := us-east-1
+endif
+
 build: upload setup
 	# no more tasks
 
@@ -26,7 +31,7 @@ update:
 
 setup:
 	cd build.f/particles-cloudtrail; npm install; ./node_modules/.bin/gulp condensation:build;
-	cd build.f; node run_stack launch --region us-east-1 --name CloudTrail --particles cloudtrail;
+	cd build.f; node run_stack launch --region $(AWS_REGION) --name CloudTrail --particles cloudtrail;
 
 clean:
-	cd build.f; node run_stack drop --region us-east-1 --name CloudTrail;
+	cd build.f; node run_stack drop --region $(AWS_REGION) --name CloudTrail;

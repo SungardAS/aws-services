@@ -1,6 +1,12 @@
 
 BUILD_SUBDIRS := lib cloudformation billingalert awsconfig cloudtrail alarmalert
 
+ifdef AWS_REGION
+else
+	AWS_REGION := us-east-1
+	export
+endif
+
 build:
 	echo $(BUILD_SUBDIRS)
 	$(foreach dir,$(BUILD_SUBDIRS), make build -C $(dir);)
@@ -15,4 +21,5 @@ buildnpm:
 
 clean:
 	echo $(BUILD_SUBDIRS)
+	echo $(AWS_REGION)
 	$(foreach dir,$(BUILD_SUBDIRS), make clean -C $(dir);)

@@ -10,6 +10,11 @@ endif
 
 ACCOUNTS:=290093585298 876224653878
 
+ifdef AWS_REGION
+else
+	AWS_REGION := us-east-1
+endif
+
 build: upload setup
 	# no more tasks
 
@@ -37,11 +42,11 @@ update:
 setup:
 	cd build.f/particles-initial; npm install; ./node_modules/.bin/gulp condensation:build;
 	cd build.f/particles-account; npm install; ./node_modules/.bin/gulp condensation:build;
-	cd build.f; node run_stack launch --region us-east-1 --name BillingAlertInitialSetup --parameters '[{"ParameterKey":"IsTest","ParameterValue":"$(TEST)"}]' --particles initial;
+	cd build.f; node run_stack launch --region $(AWS_REGION) --name BillingAlertInitialSetup --parameters '[{"ParameterKey":"IsTest","ParameterValue":"$(TEST)"}]' --particles initial;
 	$(foreach ACCOUNT,$(ACCOUNTS), \
-		cd build.f; node run_stack launch --region us-east-1 --name BillingAlert-$(ACCOUNT) --parameters '[{"ParameterKey":"BillingAccountId","ParameterValue":"$(ACCOUNT)"},{"ParameterKey":"IsTest","ParameterValue":"$(TEST)"}]' --particles account;)
+		cd build.f; node run_stack launch --region $(AWS_REGION) --name BillingAlert-$(ACCOUNT) --parameters '[{"ParameterKey":"BillingAccountId","ParameterValue":"$(ACCOUNT)"},{"ParameterKey":"IsTest","ParameterValue":"$(TEST)"}]' --particles account;)
 
 clean:
 	$(foreach ACCOUNT,$(ACCOUNTS), \
-		cd build.f; node run_stack drop --region us-east-1 --name BillingAlert-$(ACCOUNT) --particles account;)
-	cd build.f; node run_stack drop --region us-east-1 --name BillingAlertInitialSetup;
+		cd build.f; node run_stack drop --region $(AWS_REGION) --name BillingAlert-$(ACCOUNT) --particles account;)
+	cd build.f; node run_stack drop --region $(AWS_REGION) --name BillingAlertInitialSetup;
