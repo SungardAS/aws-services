@@ -27,6 +27,6 @@ AWS micro service to send a notification when the increased percentage of 'Estim
 
     > set the AWS auth keys in environment variables
     $ cd test
-    $ node run_lambda \<function_name\>
+    $ node run_lambda <function_name>
       where
         <function_name> is one of 'index', 'index_saver' and 'index_populator'
