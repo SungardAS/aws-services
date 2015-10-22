@@ -12,5 +12,6 @@ Jenkins server for aws-services CI/CD
     $ docker run -d -p <port in this host>:8080 --volumes-from as-jenkins-dv --name as-jenkins alexough/asjenkins
 
   > Go to the GitHub repository settings page,
+  
       - Select 'Webhooks and services' and add a service hook for Jenkins (GitHub plugin)
       - Add the Jenkins hook url: http://<jenkins server:port>/github-webhook/
