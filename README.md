@@ -4,23 +4,20 @@ Micro-services to provide various conveniences in managing AWS services
 
 ## How To Setup All Services
 
-  > set the AWS auth keys in environment variables
-
-  > $ make
+    > set the AWS auth keys in environment variables
+    $ make
 
 
 ## How To Update Lambda Function Codes of All Services
 
-  > set the AWS auth keys in environment variables
-
-  > $ make buildlambda
+    > set the AWS auth keys in environment variables
+    $ make buildlambda
 
 
 ## How To Remove All Services
 
-  > set the AWS auth keys in environment variables
-
-  > $ make clean
+    > set the AWS auth keys in environment variables
+    $ make clean
 
 
 # Service List

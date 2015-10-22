@@ -12,24 +12,20 @@ A plugin to support
 
 ## How To Setup
 
-  > set the AWS auth keys in environment variables
-
-  > $ make
+    > set the AWS auth keys in environment variables
+    $ make
 
 
 ## How To Update Lambda Function Codes
 
-  > $ make buildlambda
+    > set the AWS auth keys in environment variables
+    $ make buildlambda
 
 
 ## How To Test Lambda Functions
 
-  > set the AWS auth keys in environment variables
-
-  > $ cd test
-
-  > $ node run_lambda \<function_name\>
-
-    where
-
-      <function_name> is one of 'index', 'index_iam_federation' and 'index_lambda_permission'
+    > set the AWS auth keys in environment variables
+    $ cd test
+    $ node run_lambda \<function_name\>
+      where
+        <function_name> is one of 'index', 'index_iam_federation' and 'index_lambda_permission'
