@@ -11,6 +11,12 @@ console.log('input = ' + inputFile);
 var fs = require("fs");
 var data = fs.readFileSync(__dirname + '/' + inputFile + ".json", {encoding:'utf8'});
 var input = JSON.parse(data);
+
+// change the region with the env value if defined
+// and add region name to the bucket -- this is needed because lambda code bucket must be in the same region
+console.log('process.env.AWS_REGION : ' + process.env.AWS_REGION)
+if (process.env.AWS_REGION)  input.region = process.env.AWS_REGION;
+input.bucketName += input.region;
 console.log(input);
 
 var uploader = new (require('../../lib/file_uploader'))();

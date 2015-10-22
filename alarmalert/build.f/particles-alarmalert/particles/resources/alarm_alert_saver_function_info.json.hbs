@@ -5,7 +5,7 @@
     "AWSAccountId": { "Ref": "AWS::AccountId" },
     "PackageJSON": {
       "region": { "Ref": "AWS::Region" },
-      "bucketName": { "Fn::Join" : [ "", [ { "Ref" : "AWS::AccountId" }, { "Ref": "DeployerS3BucketPostfix" } ]]},
+      "bucketName": { "Fn::Join" : [ "", [ { "Ref" : "AWS::AccountId" }, { "Ref": "DeployerS3BucketPostfix" }, { "Ref" : "AWS::Region" } ]]},
       "keyName": "nodejs/alarmalert_saver.zip",
       "functionName": "alarmalert_saver",
       "handler":"alarmalert/index_saver.handler",
