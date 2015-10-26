@@ -36,7 +36,8 @@
   <concurrentBuild>false</concurrentBuild>
   <builders>
     <hudson.tasks.Shell>
-      <command>make buildlambda</command>
+      <command>export AWS_REGION=us-west-2;
+make buildlambda</command>
     </hudson.tasks.Shell>
   </builders>
   <publishers/>
