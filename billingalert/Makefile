@@ -48,5 +48,5 @@ setup:
 
 clean:
 	$(foreach ACCOUNT,$(ACCOUNTS), \
-		cd build.f; node run_stack drop --region $(AWS_REGION) --name BillingAlert-$(ACCOUNT) --particles account;)
+		cd build.f; node run_stack drop --region $(AWS_REGION) --name BillingAlert-$(ACCOUNT))
 	cd build.f; node run_stack drop --region $(AWS_REGION) --name BillingAlertInitialSetup;
