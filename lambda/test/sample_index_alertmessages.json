@@ -1,0 +1,42 @@
+{
+  "Records": [
+    {
+      "eventID": "b657b823393269907680f3ca2a126a9c",
+      "eventName": "INSERT",
+      "eventVersion": "1.0",
+      "eventSource": "aws:dynamodb",
+      "awsRegion": "us-west-2",
+      "dynamodb": {
+        "Keys": {
+          "id": {
+            "S": "b0f93cd4-bdd1-5d2e-ba68-727cef9adb03"
+          }
+        },
+        "NewImage": {
+          "awsid": {
+            "S": "876224653878"
+          },
+          "subject": {
+            "S": "ALARM: \"876224653878-OverIncreasedPercentagesSimAlarm-Test\" in US-West-2"
+          },
+          "id": {
+            "S": "b0f93cd4-bdd1-5d2e-ba68-727cef9adb03"
+          },
+          "sentAt": {
+            "S": "2015-10-26T16:08:43.671Z"
+          },
+          "message": {
+            "S": "{\"AlarmName\":\"876224653878-OverIncreasedPercentagesSimAlarm-Test\",\"AlarmDescription\":\"Alerted whenever the linked account's IncreasedPercentages[Sim] metric has new data.\",\"AWSAccountId\":\"089476987273\",\"NewStateValue\":\"ALARM\",\"NewStateReason\":\"Threshold Crossed: 1 datapoint (14.545454545454545) was greater than the threshold (10.0).\",\"StateChangeTime\":\"2015-10-26T16:08:43.544+0000\",\"Region\":\"US-West-2\",\"OldStateValue\":\"INSUFFICIENT_DATA\",\"Trigger\":{\"MetricName\":\"IncreasedPercentagesSim\",\"Namespace\":\"CTOBilling\",\"Statistic\":\"MAXIMUM\",\"Unit\":\"Percent\",\"Dimensions\":[{\"name\":\"LinkedAccount\",\"value\":\"876224653878\"},{\"name\":\"None\",\"value\":\"Percent\"}],\"Period\":60,\"EvaluationPeriods\":1,\"ComparisonOperator\":\"GreaterThanThreshold\",\"Threshold\":10.0}}"
+          },
+          "sentBy": {
+            "S": "arn:aws:sns:us-west-2:089476987273:OverIncreasedPercentagesSimTopic"
+          }
+        },
+        "SequenceNumber": "29700000000000440956180",
+        "SizeBytes": 1031,
+        "StreamViewType": "NEW_IMAGE"
+      },
+      "eventSourceARN": "arn:aws:dynamodb:us-west-2:089476987273:table/billingalerts/stream/2015-10-26T14:08:12.562"
+    }
+  ]
+}

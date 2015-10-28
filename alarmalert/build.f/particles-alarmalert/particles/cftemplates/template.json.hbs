@@ -3,13 +3,19 @@
   {{parameter "deployer_s3_bucket_postfix" logicalId="DeployerS3BucketPostfix"}}
   {{parameter "deployer_s3_key" logicalId="DeployerS3Key"}}
   {{parameter "deployer_module_name" logicalId="DeployerModuleName"}}
+  {{parameter "streams_module_name" logicalId="StreamsModuleName"}}
   {{parameter "read_capacity_units" logicalId="ReadCapacityUnits"}}
   {{parameter "write_capacity_units" logicalId="WriteCapacityUnits"}}
+  {{parameter "dynamodb_table_name_for_streams" logicalId="DynamoDBTableNameForStreams"}}
 
   {{resource "deployer_lambda_function" logicalId="DeployerLambdaFunction"}}
   {{resource "deployer_lambda_execution_role" logicalId="DeployerLambdaExecutionRole"}}
+  {{resource "dynamodbstreams_lambda_function" logicalId="DynamoDBStreamsLambdaFunction"}}
 
   {{resource "alarm_alerts" logicalId="AlarmAlerts"}}
+  {{resource "alarm_alert_streams_trigger" logicalId="AlarmAlertStreamsTrigger"}}
+  {{resource "alert_messages_function_role_info" logicalId="AlertMessagesFunctionRoleInfo"}}
+  {{resource "alert_messages_function_info" logicalId="AlertMessagesFunctionInfo"}}
 
   {{resource "alarm_alert_saver_function_info" logicalId="AlarmAlertSaverFunctionInfo"}}
   {{resource "alarm_alert_saver_function_role_info" logicalId="AlarmAlertSaverFunctionRoleInfo"}}
@@ -26,5 +32,10 @@
 
   {{output "alert_email_topic" logicalId="AlertEmailTopic"}}
   {{output "alert_email_alarm" logicalId="AlertEmailAlarm"}}
+
+  {{output "alarm_alert_event_source_arn" logicalId="AlarmAlertEventSourceArn"}}
+  {{output "alert_messages_function_name" logicalId="AlertMessagesFunctionName"}}
+  {{output "alert_messages_function_arn" logicalId="AlertMessagesFunctionArn"}}
+  {{output "alert_messages_function_role_arn" logicalId="AlertMessagesFunctionRoleArn"}}
 
 {{/layout}}

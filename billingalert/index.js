@@ -8,7 +8,7 @@ exports.handler = function (event, context) {
   var message = JSON.parse(event.Records[0].Sns.Message);
   console.log(message.Trigger.Dimensions);
 
-  var region = message.Region.toLowerCase();
+  var region = event.Records[0].EventSubscriptionArn.split(":")[3];
 
   var accountId = null;
   try {

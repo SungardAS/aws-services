@@ -1,0 +1,8 @@
+{
+  "region": "us-west-2",
+  "bucketName": ".sgas.cto.lambda-files.",
+  "keyName": "nodejs/index_alertmessages.zip",
+  "zipFile" : "index_alertmessages.zip",
+  "sourceFolder" : "../..",
+  "src" : ["lambda/index_alertmessages.js", "lib/flow_controller.js", "lib/aws/**/*"]
+}

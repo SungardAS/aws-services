@@ -6,11 +6,11 @@ exports.handler = function (event, context) {
   console.log(event.Records[0].Sns);
   var message_json = JSON.parse(event.Records[0].Sns.Message);
 
-  var region = message_json.Region.toLowerCase();
+  var region = event.Records[0].EventSubscriptionArn.split(":")[3];
 
   var messageId = event.Records[0].Sns.MessageId;
   var subject = event.Records[0].Sns.Subject;
-  var message = event.Records[0].Sns.Message;
+  var message = message_json.NewStateReason;
   var sentBy = event.Records[0].Sns.TopicArn;
   var sentAt = event.Records[0].Sns.Timestamp;
   var awsid = null;
