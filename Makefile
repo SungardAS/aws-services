@@ -7,6 +7,12 @@ else
 	export
 endif
 
+ifdef ENV
+else
+	ENV := prod
+	export
+endif
+
 build:
 	echo $(BUILD_SUBDIRS)
 	$(foreach dir,$(BUILD_SUBDIRS), make build -C $(dir);)
