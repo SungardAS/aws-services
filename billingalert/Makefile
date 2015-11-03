@@ -9,10 +9,10 @@ else
 endif
 
 ifdef ENV
-	ifeq ($(ENV), prod)
-		ACCOUNTS:=$(PROD_ACCOUNTS)
-	else
+	ifeq ($(ENV), dev)
 		ACCOUNTS:=$(DEV_ACCOUNTS)
+	else
+		ACCOUNTS:=$(PROD_ACCOUNTS)
 	endif
 else
 	ACCOUNTS:=$(PROD_ACCOUNTS)
