@@ -11,11 +11,6 @@ console.log('handler = ' + handler);
 var fs = require("fs");
 var data = fs.readFileSync('./sample_' + handler + '.json', {encoding:'utf8'});
 var event = JSON.parse(data);
-if (event.Records) {
-  var message = JSON.parse(event.Records[0].Sns.Message);
-  message.StateChangeTime = new Date();
-  event.Records[0].Sns.Message = JSON.stringify(message);
-}
 
 var iam = new (require('../../lib/aws/role'))();
 iam.findAccountId({}, function(err, data) {
