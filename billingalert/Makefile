@@ -35,12 +35,10 @@ upload:
 	npm install
 	cd build.f; node run_upload_code index;
 	cd build.f; node run_upload_code index_saver;
-	cd build.f; node run_upload_code index_populator;
 
 update:
 	cd build.f; node run_update_code index;
 	cd build.f; node run_update_code index_saver;
-	cd build.f; node run_update_code index_populator;
 
 setup:
 	cd build.f/particles-initial; npm install; ./node_modules/.bin/gulp condensation:build;
