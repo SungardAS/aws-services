@@ -1,8 +1,0 @@
-{
-  "region": "us-east-1",
-  "bucketName": ".sgas.cto.lambda-files.",
-  "keyName": "nodejs/billingalert_notifier_sim.zip",
-  "zipFile" : "billingalert_notifier_sim.zip",
-  "sourceFolder" : "../..",
-  "src" : ["billingalert/index.js", "lib/flow_controller.js", "lib/aws/**/*"]
-}

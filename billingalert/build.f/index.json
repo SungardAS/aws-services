@@ -4,5 +4,5 @@
   "keyName": "nodejs/billingalert_notifier.zip",
   "zipFile" : "billingalert_notifier.zip",
   "sourceFolder" : "../..",
-  "src" : ["billingalert/index.js", "lib/flow_controller.js", "lib/aws/**/*"]
+  "src" : ["billingalert/index.js", "billingalert/metrics.js", "billingalert/json/data.json", "lib/flow_controller.js", "lib/aws/**/*"]
 }
