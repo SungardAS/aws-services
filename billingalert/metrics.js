@@ -137,7 +137,7 @@ function Metrics() {
     if (me.simulated) metricQuery = buildCTOEstimatedChargesMetricQuery();
     else metricQuery = buildAWSEstimatedChargesMetricQuery();
     me.remoteInput.metricQuery = metricQuery;
-    console.log(JSON.stringify(me.remoteInput));
+    //console.log(JSON.stringify(me.remoteInput));
     console.log('>>>...completed buildEstimatedChargesMetricsData');
     aws_watch_remote.findMetricsStatistics(me.remoteInput);
   }
@@ -152,7 +152,7 @@ function Metrics() {
     me.IncreasedPercentagesMetricQuery.EndTime = current;
     me.IncreasedPercentagesMetricQuery.Dimensions[0].Value = me.accountId;
     me.localInput.metricQuery = me.IncreasedPercentagesMetricQuery;
-    console.log(JSON.stringify(me.localInput));
+    //console.log(JSON.stringify(me.localInput));
     console.log('>>>...completed buildIncreasedPercentagesMetricQuery');
     aws_watch_local.findMetricsStatistics(me.localInput);
   }
@@ -160,20 +160,20 @@ function Metrics() {
   function buildIncreasedPercentagesMetricsData() {
 
     console.log('<<<Starting buildIncreasedPercentagesMetricsData...');
-    console.log(JSON.stringify(me.remoteInput));
+    //console.log(JSON.stringify(me.remoteInput));
     var metrics = me.remoteInput.metrics.sort(function(a, b){return b.Timestamp - a.Timestamp}).splice(0,2);
-    console.log(JSON.stringify(metrics));
+    console.log("***EST CHARGE METRICS : " + JSON.stringify(metrics));
 
     // check if the new metric data has been generated in remoteRegion
     var percentageMetrics = me.localInput.metrics;
     if (me.localInput.metrics && me.localInput.metrics.length >= 2) {
       percentageMetrics = me.localInput.metrics.sort(function(a, b){return b.Timestamp - a.Timestamp}).splice(0,2);
     }
-    console.log(JSON.stringify(percentageMetrics));
+    console.log("***PERCENTAGE METRICS : " + JSON.stringify(percentageMetrics));
     if (percentageMetrics && percentageMetrics[0] && metrics[0]) {
-      console.log(percentageMetrics[0].Timestamp);
-      console.log(metrics[0].Timestamp);
-      if (percentageMetrics[0].Timestamp.getTime() == metrics[0].Timestamp.getTime()) {
+      console.log("percentage metrics time : " + percentageMetrics[0].Timestamp);
+      console.log("est charge metrics time : " + metrics[0].Timestamp);
+      if (percentageMetrics[0].Timestamp.getTime() >= metrics[0].Timestamp.getTime()) {
         console.log("no new EstimatedChargeds metric data, so just return");
         me.callback(null, true);
         return;
@@ -185,11 +185,11 @@ function Metrics() {
     }
     console.log(percentage);
     metricData = me.CTOIncreasedPercentagesMetricData;
-    metricData.MetricData[0].Timestamp = metrics[0].Timestamp;
+    metricData.MetricData[0].Timestamp = new Date();
     metricData.MetricData[0].Value = percentage;
     metricData.MetricData[0].Dimensions[0].Value = me.accountId;
     me.localInput.metricData = metricData;
-    console.log(JSON.stringify(me.localInput));
+    //console.log(JSON.stringify(me.localInput));
     console.log('>>>...completed buildIncreasedPercentagesMetricsData');
     aws_watch_local.addMetricData(me.localInput);
   }
@@ -230,35 +230,3 @@ function Metrics() {
 
 module.exports = Metrics
 
-/*
-var federateAccount = '089476987273';
-var account = '290093585298';
-var roleName = 'sgas_dev_admin';
-var roleExternalId = 'ccb6cfce-057c-4fbc-84b9-1ee10e8b6560';
-var sessionName = 'abcde';
-var durationSeconds = 0;
-
-var roles = [];
-roles.push({roleArn:'arn:aws:iam::' + federateAccount + ':role/federate'});
-var admin_role = {roleArn:'arn:aws:iam::' + account + ':role/' + roleName};
-if (roleExternalId) {
-  admin_role.externalId = roleExternalId;
-}
-roles.push(admin_role);
-console.log(roles);
-
-var localRegion = 'us-east-1';
-var emoteRegion = 'us-east-1';
-var billingAccountId = '876224653878';
-var simulated = true;
-
-var metrics = new (require('./metrics'))();
-metrics.addMetricData(billingAccountId, roles, sessionName, durationSeconds, localRegion, remoteRegion, simulated, function(err, data) {
-  if(err) {
-    console.log("failed to add metrics : " + err);
-  }
-  else {
-    console.log(data);
-  }
-});
-*/
