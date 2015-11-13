@@ -49,9 +49,6 @@ Libraries shared by projects
 ## <a href='https://github.com/SungardAS/aws-services/tree/develop/jenkins'>jenkins</a>
 CI/CD build jenkins server of this project
 
-## <a href='https://github.com/SungardAS/aws-services/tree/develop/lmdeployer'>lmdeployer</a>
-AWS Lambda function to automatically update lambda function codes whenever they are updated in S3 buckets.
-
 ## <a href='https://github.com/SungardAS/aws-services/tree/develop/sns-message-validator'>sns-message-validator</a>
 Utility to validate the sns messages that are received through the HTTP subscriptions.
 This is the Node.js implementation of the instructions here, http://docs.aws.amazon.com/sns/latest/dg/SendMessageToHttp.verify.signature.html.
