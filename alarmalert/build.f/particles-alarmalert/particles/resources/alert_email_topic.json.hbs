@@ -1,0 +1,9 @@
+{{#resource}}
+  "Type" : "AWS::SNS::Topic",
+  "Properties" : {
+    "Subscription" : [
+      { "Endpoint" : "http://ec2-52-88-42-74.us-west-2.compute.amazonaws.com:1337/notification/alert", "Protocol" : "http" }
+    ],
+    "TopicName" : "AlertEmailTopic"
+  }
+{{/resource}}

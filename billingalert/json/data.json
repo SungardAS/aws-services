@@ -1,0 +1,10 @@
+{
+  "federateAccount": "089476987273",
+  "masterBillingAccount": "290093585298",
+  "roleName": "sgas_dev_admin",
+  "roleExternalId": "ccb6cfce-057c-4fbc-84b9-1ee10e8b6560",
+  "sessionName": "abcde",
+  "durationSeconds": 0,
+  "billingAccounts": ["876224653878", "290093585298"],
+  "simulated": true
+}

@@ -1,0 +1,8 @@
+{
+  "region": "us-east-1",
+  "bucketName": ".sgas.cto.lambda-files.",
+  "keyName": "nodejs/cloudformation_builder.zip",
+  "zipFile" : "cloudformation_builder.zip",
+  "sourceFolder" : "..",
+  "src" : ["*.js"]
+}

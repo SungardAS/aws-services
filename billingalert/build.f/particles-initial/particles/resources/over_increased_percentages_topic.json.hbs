@@ -1,0 +1,13 @@
+{{#resource}}
+  "Type" : "AWS::SNS::Topic",
+  "Properties" : {
+     "Subscription" : [
+       { "Endpoint" : { "Fn::GetAtt" : [ "BillingAlertSaverFunctionInfo", "LambdaFunctionArn" ]}, "Protocol" : "lambda" }
+     ],
+     "TopicName" : {"Fn::If" : [
+       "IsTest",
+       "OverIncreasedPercentagesSimTopic",
+       "OverIncreasedPercentagesTopic"
+     ] }
+  }
+{{/resource}}

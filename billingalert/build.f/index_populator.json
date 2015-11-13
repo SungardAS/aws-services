@@ -1,0 +1,8 @@
+{
+  "region": "us-east-1",
+  "bucketName": ".sgas.cto.lambda-files.",
+  "keyName": "nodejs/billingalert_populator.zip",
+  "zipFile" : "billingalert_populator.zip",
+  "sourceFolder" : "../..",
+  "src" : ["billingalert/index_populator.js", "lib/flow_controller.js", "lib/aws/**/*"]
+}

@@ -1,0 +1,8 @@
+{
+  "region": "us-east-1",
+  "bucketName": ".sgas.cto.lambda-files.",
+  "keyName": "nodejs/cloudtrail-checker.zip",
+  "zipFile" : "cloudtrail-checker.zip",
+  "sourceFolder" : "../..",
+  "src" : ["cloudtrail/index_checker.js", "lib/flow_controller.js", "lib/aws/**/*"]
+}

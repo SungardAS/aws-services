@@ -1,0 +1,27 @@
+{
+  "event": {
+    "RequestType": "Delete",
+    "ServiceToken": "arn:aws:lambda:us-east-1:089476987273:function:billing-notifier-3-DeployerLambdaFunction-LTQ8KJK6QOG4",
+    "ResponseURL": "https://cloudformation-custom-resource-response-useast1.s3.amazonaws.com/arn%3Aaws%3Acloudformation%3Aus-east-1%3A089476987273%3Astack/billing-notifier-3/76cfb800-72c0-11e5-871c-50d5017c76e0%7CAMIInfo%7C9f868b5e-8ab6-4280-a841-bb890ec40c91?AWSAccessKeyId=AKIAJNXHFR7P7YGKLDPQ&Expires=1444871884&Signature=8mtaSEvHNCvl%2BsM8sYd8lYH%2F2UE%3D",
+    "StackId": "arn:aws:cloudformation:us-east-1:089476987273:stack/billing-notifier-3/76cfb800-72c0-11e5-871c-50d5017c76e0",
+    "RequestId": "9f868b5e-8ab6-4280-a841-bb890ec40c91",
+    "LogicalResourceId": "AMIInfo",
+    "PhysicalResourceId": "billing-notifier-3-AMIInfo-C6Q2UGRP3H0A",
+    "ResourceType": "Custom::AMIInfo",
+    "ResourceProperties": {
+      "ServiceToken": "arn:aws:lambda:us-east-1:089476987273:function:billing-notifier-3-DeployerLambdaFunction-LTQ8KJK6QOG4",
+      "AWSAccountId": "089476987273",
+      "PackageJSON": { "region": "us-east-1", "roleArn": "arn:aws:iam::089476987273:role/BillingAlertInitialSetup-BillingAlertSaverFunction-ABV05BCYR0J1", "federateRoleName": "federate" }
+    }
+  },
+  "context": {
+    "awsRequestId": "d22ebf07-72c9-11e5-8ab0-1d8806d55bd7",
+    "invokeid": "d22ebf07-72c9-11e5-8ab0-1d8806d55bd7",
+    "logGroupName": "/aws/lambda/billing-notifier-3-DeployerLambdaFunction-LTQ8KJK6QOG4",
+    "logStreamName": "2015/10/14/[$LATEST]7cc982b3371b4127bafca4a976934941",
+    "functionName": "billing-notifier-3-DeployerLambdaFunction-LTQ8KJK6QOG4",
+    "memoryLimitInMB": "128",
+    "functionVersion": "$LATEST",
+    "invokedFunctionArn": "arn:aws:lambda:us-east-1:089476987273:function:billing-notifier-3-DeployerLambdaFunction-LTQ8KJK6QOG4"
+  }
+}

@@ -1,0 +1,25 @@
+{{#resource}}
+  "Type": "Custom::BillingAlertNotifierFunctionInfo",
+  "Properties": {
+    "ServiceToken": { "Fn::GetAtt" : ["DeployerLambdaFunction", "Arn"] },
+    "AWSAccountId": { "Ref": "AWS::AccountId" },
+    "PackageJSON": {
+      "region": { "Ref": "AWS::Region" },
+      "bucketName": { "Fn::Join" : [ "", [ { "Ref" : "AWS::AccountId" }, { "Ref": "DeployerS3BucketPostfix" }, { "Ref" : "AWS::Region" } ]]},
+      "keyName": {"Fn::If" : [
+        "IsTest",
+        "nodejs/billingalert_notifier_sim.zip",
+        "nodejs/billingalert_notifier.zip"
+      ] },
+      "functionName": {"Fn::If" : [
+        "IsTest",
+        "billingalert_notifier_sim",
+        "billingalert_notifier"
+      ] },
+      "handler":"billingalert/index.handler",
+      "memorySize": 128,
+      "timeout": 60
+    },
+    "RoleArn": { "Fn::GetAtt" : [ "BillingAlertNotifierFunctionRoleInfo", "Arn" ]}
+  }
+{{/resource}}

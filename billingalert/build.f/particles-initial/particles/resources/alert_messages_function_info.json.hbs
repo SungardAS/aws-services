@@ -1,0 +1,13 @@
+{{#resource}}
+  "Type": "AWS::Lambda::Function",
+  "Properties": {
+    "Handler": "lambda/index_alertmessages.handler",
+    "Role": { "Fn::GetAtt" : ["AlertMessagesFunctionRoleInfo", "Arn"] },
+    "Code": {
+      "S3Bucket": { "Fn::Join" : [ "", [ { "Ref" : "AWS::AccountId" }, { "Ref": "DeployerS3BucketPostfix" }, { "Ref" : "AWS::Region" } ]]},
+      "S3Key": "nodejs/index_alertmessages.zip"
+    },
+    "Runtime": "nodejs",
+    "Timeout": "30"
+  }
+{{/resource}}

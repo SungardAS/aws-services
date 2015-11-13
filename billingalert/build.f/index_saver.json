@@ -1,0 +1,8 @@
+{
+  "region": "us-east-1",
+  "bucketName": ".sgas.cto.lambda-files.",
+  "keyName": "nodejs/billingalert_saver.zip",
+  "zipFile" : "billingalert_saver.zip",
+  "sourceFolder" : "../..",
+  "src" : ["billingalert/index_saver.js", "billingalert/json/*.json", "lib/flow_controller.js", "lib/aws/**/*"]
+}
