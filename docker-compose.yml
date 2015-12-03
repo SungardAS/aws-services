@@ -1,5 +1,5 @@
 us-east-1:
-  build: .
+  image: alexough/aws-service
   command: make
   environment:
     - AWS_REGION=us-east-1
@@ -10,7 +10,7 @@ us-east-1:
     awslogs-group: "dev-aws-services"
 
 us-west-2:
-  build: .
+  image: alexough/aws-service
   command: make
   environment:
     - AWS_REGION=us-west-2
@@ -19,11 +19,3 @@ us-west-2:
   log_opt:
     awslogs-region: "us-west-2"
     awslogs-group: "dev-aws-services"
-
-jenkins:
-  image: alexough/asjenkins
-  ports:
-    - "8080:8080"
-  volumes:
-    - /home/ec2-user/ebs_volume/jenkins:/var/jenkins_home
-
