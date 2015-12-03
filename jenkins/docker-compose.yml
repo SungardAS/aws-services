@@ -1,0 +1,6 @@
+jenkins:
+  image: alexough/asjenkins
+  ports:
+    - "8080:8080"
+  volumes:
+    - /home/ec2-user/ebs_volume/jenkins:/var/jenkins_home
