@@ -1,5 +1,5 @@
 jenkins:
-  image: alexough/asjenkins
+  image: alexough/aws-services-jenkins
   ports:
     - "8080:8080"
   volumes:

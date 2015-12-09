@@ -1,5 +1,5 @@
 us-east-1:
-  image: alexough/aws-service
+  image: alexough/aws-services
   command: make
   environment:
     - AWS_REGION=us-east-1
@@ -10,7 +10,7 @@ us-east-1:
     awslogs-group: "dev-aws-services"
 
 us-west-2:
-  image: alexough/aws-service
+  image: alexough/aws-services
   command: make
   environment:
     - AWS_REGION=us-west-2
