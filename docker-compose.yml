@@ -1,0 +1,21 @@
+us-east-1:
+  image: alexough/aws-services
+  command: make
+  environment:
+    - AWS_REGION=us-east-1
+    - ENV=dev
+  log_driver: "awslogs"
+  log_opt:
+    awslogs-region: "us-east-1"
+    awslogs-group: "dev-aws-services"
+
+us-west-2:
+  image: alexough/aws-services
+  command: make
+  environment:
+    - AWS_REGION=us-west-2
+    - ENV=dev
+  log_driver: "awslogs"
+  log_opt:
+    awslogs-region: "us-west-2"
+    awslogs-group: "dev-aws-services"
