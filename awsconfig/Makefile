@@ -1,6 +1,4 @@
 
-ROOT_DIR:=$(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
-
 ifdef AWS_REGION
 else
 	AWS_REGION := us-east-1
@@ -17,7 +15,6 @@ buildnpm:
 	cd build.f/particles-awsconfig; npm install;
 
 upload:
-	echo $(ROOT_DIR)
 	npm install
 	cd build.f; node run_upload_code index_checker;
 	cd build.f; node run_upload_code index_enabler;
