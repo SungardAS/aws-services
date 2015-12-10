@@ -6,27 +6,30 @@ AWS micro service to send a notification when the increased percentage of 'Estim
 
 ## How To Setup
 
-    > change list of 'ACCOUNTS' in 'Makefile' with the accounts whose 'EstimatedCharges' will be monitored & alerted
-    $ make -e AWS_REGION=<region>
-      or
-    $ export AWS_REGION=<region>
-    $ make
+    $ make \
+      -e AWS_ACCESS_KEY_ID=<access_key> \
+      -e AWS_SECRET_ACCESS_KEY=<secret_key> \
+      -e AWS_SESSION_TOKEN=<session_token> \
+      -e AWS_REGION=<region> \
+      -e ACCOUNTS="<accounts whose billing charges will be monitored separated by spaces>"
 
 
 ## How To Update Lambda Function Codes
 
-    $ make buildlambda -e AWS_REGION=<region>
-      or
-    $ export AWS_REGION=<region>
-    $ make buildlambda
+    $ make buildlambda \
+      -e AWS_ACCESS_KEY_ID=<access_key> \
+      -e AWS_SECRET_ACCESS_KEY=<secret_key> \
+      -e AWS_SESSION_TOKEN=<session_token> \
+      -e AWS_REGION=<region>
 
 
 ## How To Remove Service
 
-    $ make clean -e AWS_REGION=<region>
-      or
-    $ export AWS_REGION=<region>
-    $ make clean
+    $ make clean \
+      -e AWS_ACCESS_KEY_ID=<access_key> \
+      -e AWS_SECRET_ACCESS_KEY=<secret_key> \
+      -e AWS_SESSION_TOKEN=<session_token> \
+      -e AWS_REGION=<region>
 
 
 ## How To Test Lambda Functions

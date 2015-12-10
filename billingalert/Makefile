@@ -1,21 +1,7 @@
 
-ROOT_DIR:=$(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
-PROD_ACCOUNTS:=876224653878 714270045944 622821376834 509168795332 442294194136 445750067739 404016702201
-DEV_ACCOUNTS:=876224653878 290093585298
-
 ifdef AWS_REGION
 else
 	AWS_REGION := us-east-1
-endif
-
-ifdef ENV
-	ifeq ($(ENV), dev)
-		ACCOUNTS:=$(DEV_ACCOUNTS)
-	else
-		ACCOUNTS:=$(PROD_ACCOUNTS)
-	endif
-else
-	ACCOUNTS:=$(PROD_ACCOUNTS)
 endif
 
 build: upload setup
@@ -30,8 +16,6 @@ buildnpm:
 	cd build.f/particles-account; npm install
 
 upload:
-	echo $(ROOT_DIR)
-	echo $(ACCOUNTS)
 	npm install
 	cd build.f; node run_upload_code index;
 	cd build.f; node run_upload_code index_saver;
