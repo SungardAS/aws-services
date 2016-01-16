@@ -1,10 +1,10 @@
 {
   "federateAccount": "089476987273",
-  "masterBillingAccount": "290093585298",
+  "masterBillingAccount": "054649790173",
   "roleName": "sgas_dev_admin",
-  "roleExternalId": "ccb6cfce-057c-4fbc-84b9-1ee10e8b6560",
+  "roleExternalId": "0b6318ce-41ac-4774-87ae-2b6da44a78d1",
   "sessionName": "abcde",
   "durationSeconds": 0,
-  "billingAccounts": ["876224653878", "290093585298"],
-  "simulated": true
+  "billingAccounts": ["876224653878", "714270045944", "622821376834", "509168795332", "442294194136", "445750067739", "404016702201"],
+  "simulated": false
 }
