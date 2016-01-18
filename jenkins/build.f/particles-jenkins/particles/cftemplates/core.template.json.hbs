@@ -1,0 +1,15 @@
+---
+vpcCidr: "10.1.0.0/16"
+createVpcSecurityGroup: "false"
+createInternetGateway: "true"
+openVpcCommunication: "false"
+subnets:
+-
+  name: Subnet1Cidr
+  short: Subnet1
+  default: "10.1.0.0/20"
+---
+
+{{#layout}}
+  {{{partial 'module:particles-vpc' 'simple/vpc_with_subnets'}}}
+{{/layout}}
