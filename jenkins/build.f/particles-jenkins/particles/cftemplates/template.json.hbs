@@ -31,7 +31,7 @@
     parameter "module:particles-common-core" "base"
     logicalId="KeyName"
     type="String"
-    default="jenkins"
+    default="jenkinskey_dev"
   }}
 
   {{#condition logicalId="HasKeyName"}}
@@ -100,10 +100,12 @@
             "001": {
               "command": { "Fn::Join" : ["", [
                 "# Set up and start the Application\n",
+                "mkdir /home/jenkins_home", "\n",
+                "chmod a+rwx /home/jenkins_home", "\n",
                 "/usr/bin/docker pull ", { "Ref": "AppDockerImage" }, "\n",
                 "/usr/bin/docker run -d ",
                 "   --restart=on-failure",
-                "   -p 80:8080",
+                "   -p 80:8080 -v /home/jenkins_home:/var/jenkins_home",
                 "   -e 'NODE_ENV=", {"Ref": "Environment"}, "'",
                 "   ", { "Ref": "AppDockerImage" }, "\n"
               ]]}
