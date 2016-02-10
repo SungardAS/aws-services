@@ -22,7 +22,7 @@ exports.handler = function (event, context) {
   else awsid = message_json.AWSAccountId;
   var current = new Date();
 
-  metrics.compareIncreasedUsages(awsid, region, current, function(err, data) {
+  metrics.isIncreasedUsagesOver(awsid, region, current, function(err, data) {
     if (err) {
       context.fail(err, null);
     }
