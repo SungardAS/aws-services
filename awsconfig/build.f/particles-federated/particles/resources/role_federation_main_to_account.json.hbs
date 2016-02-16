@@ -1,0 +1,16 @@
+{{#resource}}
+  "Type": "Custom::AWSConfigRoleFederation",
+  "Properties": {
+    "ServiceToken": { "Fn::GetAtt" : ["CustomLambdaFederationFunction", "Arn"] },
+    "AWSAccountId": { "Ref": "AWS::AccountId" },
+    "Region": { "Ref": "AWS::Region" },
+    "RoleArn": {
+      "Fn::If" : [
+        "IsFederationAccount",
+        { "Fn::GetAtt" : [ "FederationMainRole", "Arn" ]},
+        { "Ref" : "FederationMainRoleArn"}
+      ]
+    },
+    "FederationRoleName": { "Ref" : "FederationAccountRole" }
+  }
+{{/resource}}

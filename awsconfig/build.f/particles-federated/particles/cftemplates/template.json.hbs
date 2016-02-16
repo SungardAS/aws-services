@@ -1,0 +1,81 @@
+{{#layout}}
+
+  {{parameter "environment" logicalId="Environment"}}
+  {{parameter "federation_main_role_arn" logicalId="FederationMainRoleArn"}}
+
+  {{#condition logicalId="IsFederationAccount"}}
+      "Fn::Equals" : [{ "Ref" : "FederationMainRoleArn" }, ""]
+  {{/condition}}
+
+  {{resource "custom_lambda_deployer_function" logicalId="CustomLambdaDeployerFunction"}}
+  {{resource "custom_lambda_deployer_role" logicalId="CustomLambdaDeployerRole"}}
+  {{resource "custom_lambda_federation_function" logicalId="CustomLambdaFederationFunction"}}
+  {{resource "awsconfig_function_checker" logicalId="AWSConfigFunctionChecker"}}
+  {{resource "awsconfig_function_enabler" logicalId="AWSConfigFunctionEnabler"}}
+  {{resource "awsconfig_function_remover" logicalId="AWSConfigFunctionRemover"}}
+  {{resource "awsconfig_role" logicalId="AWSConfigRole"}}
+  {{resource "federation_main_role" logicalId="FederationMainRole"}}
+  {{resource "federation_account_role" logicalId="FederationAccountRole"}}
+  {{resource "role_federation_awsconfig_to_main" logicalId="RoleFederationAWSConfigToMain"}}
+  {{resource "role_federation_main_to_account" logicalId="RoleFederationMainToAccount"}}
+
+  {{#output logicalId="AccountId"}}
+    "Value": { "Ref" : "AWS::AccountId" }
+  {{/output}}
+
+  {{#output logicalId="StacksRegion"}}
+    "Value" : { "Ref" : "AWS::Region" }
+  {{/output}}
+
+  {{#output logicalId="AWSConfigCheckerFunctionName"}}
+    "Condition": "IsFederationAccount",
+    "Value": {"Fn::GetAtt": [ "AWSConfigFunctionChecker", "Name" ]}
+  {{/output}}
+  {{#output logicalId="AWSConfigCheckerFunctionArn"}}
+    "Condition": "IsFederationAccount",
+    "Value": {"Fn::GetAtt": [ "AWSConfigFunctionChecker", "Arn" ]}
+  {{/output}}
+
+  {{#output logicalId="AWSConfigEnablerFunctionName"}}
+    "Condition": "IsFederationAccount",
+    "Value": {"Fn::GetAtt": [ "AWSConfigFunctionEnabler", "Name" ]}
+  {{/output}}
+  {{#output logicalId="AWSConfigEnablerFunctionArn"}}
+    "Condition": "IsFederationAccount",
+    "Value": {"Fn::GetAtt": [ "AWSConfigFunctionEnabler", "Arn" ]}
+  {{/output}}
+
+  {{#output logicalId="AWSConfigRemoverFunctionName"}}
+    "Condition": "IsFederationAccount",
+    "Value": {"Fn::GetAtt": [ "AWSConfigFunctionRemover", "Name" ]}
+  {{/output}}
+  {{#output logicalId="AWSConfigRemoverFunctionArn"}}
+    "Condition": "IsFederationAccount",
+    "Value": {"Fn::GetAtt": [ "AWSConfigFunctionRemover", "Arn" ]}
+  {{/output}}
+
+  {{#output logicalId="AWSConfigFunctionRoleName"}}
+    "Condition": "IsFederationAccount",
+    "Value": {"Ref": "AWSConfigRole"}
+  {{/output}}
+
+  {{#output logicalId="AWSConfigFunctionRoleArn"}}
+    "Condition": "IsFederationAccount",
+    "Value": {"Fn::GetAtt": [ "AWSConfigRole", "Arn" ]}
+  {{/output}}
+
+  {{#output logicalId="FederationMainRoleArn"}}
+    "Value": {
+      "Fn::If" : [
+        "IsFederationAccount",
+        { "Fn::GetAtt" : [ "FederationMainRole", "Arn" ]},
+        { "Ref" : "FederationMainRoleArn"}
+      ]
+    }
+  {{/output}}
+
+  {{#output logicalId="FederationAccountRoleArn"}}
+    "Value": {"Fn::GetAtt": [ "FederationAccountRole", "Arn" ]}
+  {{/output}}
+
+{{/layout}}

@@ -9,10 +9,15 @@
     "PhysicalResourceId": "billing-notifier-3-AMIInfo-C6Q2UGRP3H0A",
     "ResourceType": "Custom::AMIInfo",
     "ResourceProperties": {
-      "ServiceToken": "arn:aws:lambda:us-east-1:089476987273:function:billing-notifier-3-DeployerLambdaFunction-LTQ8KJK6QOG4",
-      "AWSAccountId": "089476987273",
-      "PackageJSON": { "region": "us-east-1", "keyName": "nodejs/billingalert_notifier.zip", "memorySize": "128", "functionName": "billingalert_notifier_sim", "bucketName": ".sgas.cto.lambda-files.us-east-1", "timeout": "30", "handler": "billingalert/index.handler" },
-      "RoleArn": "arn:aws:iam::089476987273:role/billingalert-notifier-2-BillingAlertNotifierFuncti-10FRVEQPGPUH0"
+      "Code": {
+        "S3Bucket": { "Fn::Join" : [ ".", [ "sgas.particles-awsconfig", {"Ref" : "AppEnvironment"}, { "Ref" : "AWS::AccountId" }, { "Ref" : "AWS::Region" } ]]},
+        "S3Key": "particles/assets/awsconfig.zip"
+      },
+      "Handler": "awsconfig/index_checker.handler",
+      "Runtime": "nodejs",
+      "Timeout": "60",
+      "MemorySize": "128",
+      "Role": { "Fn::GetAtt" : ["AWSConfigFunctionRoleInfo", "Arn"] }
     }
   },
   "context": {

@@ -7,20 +7,27 @@ exports.handler = function (event, context) {
   var aws_role = new (require('../lib/aws/role.js'))();
 
   var roles = [];
-  roles.push({roleArn:'arn:aws:iam::' + event.federateAccount + ':role/federate'});
-  var admin_role = {roleArn:'arn:aws:iam::' + event.account + ':role/' + event.roleName};
-  if (event.roleExternalId) {
-    admin_role.externalId = event.roleExternalId;
+  if (event.federateAccount) {
+    roles.push({roleArn:'arn:aws:iam::' + event.federateAccount + ':role/' + event.federateRoleName});
+    var admin_role = {roleArn:'arn:aws:iam::' + event.account + ':role/' + event.roleName};
+    if (event.roleExternalId) {
+      admin_role.externalId = event.roleExternalId;
+    }
+    roles.push(admin_role);
   }
-  roles.push(admin_role);
   console.log(roles);
+
+  var sessionName = event.sessionName;
+  if (sessionName == null || sessionName == "") {
+    sessionName = "session";
+  }
 
   var fs = require("fs");
   data = fs.readFileSync(__dirname + '/json/data.json', {encoding:'utf8'});
   data_json = JSON.parse(data);
 
   var input = {
-    sessionName: event.sessionName,
+    sessionName: sessionName,
     roles: roles,
     region: event.region,
     topicName : data_json.topicName,
