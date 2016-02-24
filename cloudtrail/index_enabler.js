@@ -14,18 +14,39 @@ exports.handler = function (event, context) {
   roles.push(admin_role);
   console.log(roles);
 
+  // http://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-supported-regions.html
+  var rootAccounts = {
+    "ap-southeast-1": "arn:aws:iam::903692715234:root",
+    "eu-west-1": "arn:aws:iam::859597730677:root",
+    "sa-east-1": "arn:aws:iam::814480443879:root",
+    "ap-northeast-1": "arn:aws:iam::216624486486:root",
+    "us-east-1": "arn:aws:iam::086441151436:root",
+    "us-west-1": "arn:aws:iam::388731089494:root",
+    "ap-southeast-2": "arn:aws:iam::284668455005:root",
+    "us-west-2": "arn:aws:iam::113285607260:root",
+    "eu-central-1": "arn:aws:iam::035351147821:root",
+    "ap-northeast-2": "arn:aws:iam::492519147666:root"
+  };
+
+  // find root account id for that region
+  var rootAccount = rootAccounts[event.region];
+  console.log('root account = ' + rootAccount);
+  if (!rootAccount) {
+    context.fail("cannot enable the service because no root account is found in region " + event.region, null);
+  }
 
   var fs = require("fs");
   var data = fs.readFileSync(__dirname + '/json/data.json', {encoding:'utf8'});
   var data_json = JSON.parse(data);
 
-  var bucketName = event.account + data_json.bucketNamePostfix;
+  var bucketName = event.account + data_json.bucketNamePostfix + "." + event.region;
   var resources = [
     'arn:aws:s3:::' + bucketName,
     'arn:aws:s3:::' + bucketName + '/AWSLogs/' + event.account + '/*'];
   data = fs.readFileSync(__dirname + '/json/' + data_json.bucketPolicyName + '.json', {encoding:'utf8'});
   var policyDoc = JSON.parse(data);
   for(var i = 0; i < resources.length; i++) {
+    policyDoc.Statement[i].Principal.AWS.push(rootAccount);
     policyDoc.Statement[i].Resource = resources[i];
   }
   policyDoc = JSON.stringify(policyDoc);
@@ -38,6 +59,7 @@ exports.handler = function (event, context) {
     bucketName: bucketName,
     policyDocument: policyDoc
   };
+  if (event.multiRegion)  input.multiRegion = event.multiRegion;
 
   function succeeded(input) { context.done(null, true); }
   function failed(input) { context.done(null, false); }
