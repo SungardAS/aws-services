@@ -1,4 +1,5 @@
 
+var metrics = new (require('./metrics'))();
 var dynamodb = new (require('../lib/aws/dynamodb.js'))();
 
 exports.handler = function (event, context) {
@@ -20,30 +21,44 @@ exports.handler = function (event, context) {
   if (awsids[0])  awsid = awsids[0].value;
   else awsid = message_json.AWSAccountId;
   var current = new Date();
-  var item = {
-      "id": {"S": messageId},
-      "awsid": {"S": awsid},
-      "subject": {"S": subject},
-      "message": {"S": message},
-      "sentBy": {"S": sentBy},
-      "sentAt": {"S": sentAt},
-      //"createdAt": {"S": current.toISOString()},
-      //"updatedAt": {"S": current.toISOString()},
-      //"account": {"N": '0'},
-      //"archivedBy": {"S": "none"}
-  }
-  console.log(item);
 
-  var input = {
-    region: region,
-    tableName: 'billingalerts',
-    item: item
-  };
-
-  dynamodb.save(input, function(err, data) {
-    if (err)  context.fail(err, null);
+  metrics.isIncreasedUsagesOver(awsid, region, current, function(err, data) {
+    if (err) {
+      context.fail(err, null);
+    }
     else {
-      context.done(null, true);
+      if (!data) {
+        // the increased usage is not what should be alerted
+        context.done(null, true);
+      }
+      else {
+        var item = {
+            "id": {"S": messageId},
+            "awsid": {"S": awsid},
+            "subject": {"S": subject},
+            "message": {"S": message},
+            "sentBy": {"S": sentBy},
+            "sentAt": {"S": sentAt},
+            //"createdAt": {"S": current.toISOString()},
+            //"updatedAt": {"S": current.toISOString()},
+            //"account": {"N": '0'},
+            //"archivedBy": {"S": "none"}
+        }
+        console.log(item);
+
+        var input = {
+          region: region,
+          tableName: 'billingalerts',
+          item: item
+        };
+
+        dynamodb.save(input, function(err, data) {
+          if (err)  context.fail(err, null);
+          else {
+            context.done(null, true);
+          }
+        });
+      }
     }
   });
 }

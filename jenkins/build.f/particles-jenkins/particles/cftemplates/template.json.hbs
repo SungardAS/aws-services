@@ -1,0 +1,167 @@
+
+{{#layout}}
+
+  {{
+    parameter "name_tag"
+    logicalId="NameTag"
+    type="String"
+    default="jenkins"
+  }}
+
+  {{#resource logicalId="VpcStack"}}
+    "Type": "AWS::CloudFormation::Stack",
+     "Properties": {
+      "TemplateURL": "{{templateS3Url 'core.template.json'}}",
+      "Parameters": {
+        "NameTag": {"Fn::Join": [".", [{ "Ref": "AWS::StackName" }, "vpc"]]}
+      }
+    }
+  {{/resource}}
+
+  {{parameter "iam_instance_profile" logicalId="IamInstanceProfile"}}
+  {{parameter "instance_type" logicalId="AppInstanceType"}}
+  {{parameter "docker_image" logicalId="AppDockerImage"}}
+  {{parameter "environment" logicalId="Environment"}}
+
+  {{#condition logicalId="IsProduction"}}
+      "Fn::Equals" : [{"Ref" : "Environment"}, "production"]
+  {{/condition}}
+
+  {{
+    parameter "module:particles-common-core" "base"
+    logicalId="KeyName"
+    type="String"
+    default="jenkinskey_dev"
+  }}
+
+  {{#condition logicalId="HasKeyName"}}
+    "Fn::Not" : [{
+      "Fn::Equals" : [{"Ref" : "KeyName"}, ""]
+    }]
+  {{/condition}}
+
+  {{#resource logicalId="AppSecurityGroup"}}
+    "Type": "AWS::EC2::SecurityGroup",
+    "Properties": {
+      "GroupDescription": "jenkins security group",
+      "VpcId": {"Fn::GetAtt": [ "VpcStack", "Outputs.VpcId" ]},
+      "Tags": [
+        {
+          "Key": "Name",
+          "Value": {"Fn::Join": [".", [{ "Ref": "AWS::StackName" }, "sg"]]}
+        }
+      ]
+    }
+  {{/resource}}
+
+  {{#resource logicalId="AppSecurityGroupIngress"}}
+    "Type": "AWS::EC2::SecurityGroupIngress",
+    "Properties": {
+      "CidrIp": "0.0.0.0/0",
+      "FromPort": 80,
+      "ToPort": 80,
+      "IpProtocol": "tcp",
+      "GroupId": {"Ref": "AppSecurityGroup"}
+    },
+    "DependsOn": "AppSecurityGroup"
+  {{/resource}}
+
+  {{#resource logicalId="EC2Instance"}}
+    "Type" : "AWS::EC2::Instance",
+    "Metadata" : {
+      "AWS::CloudFormation::Init" : {
+        "configSets": {
+          "default": ["enableEpel","basePackages","runApp"]
+        },
+        "enableEpel": {
+          "commands": {
+            "001": {
+              "command": "yum-config-manager --enable epel"
+            }
+          }
+        },
+        "basePackages": {
+          "packages": {
+            "yum": {
+              "docker": []
+            }
+          },
+          "services": {
+            "sysvinit" : {
+              "docker" : {
+                "enabled" : "true",
+                "ensureRunning" : "true"
+              }
+            }
+          }
+        },
+        "runApp": {
+          "commands": {
+            "001": {
+              "command": { "Fn::Join" : ["", [
+                "# Set up and start the Application\n",
+                "mkdir /home/jenkins_home", "\n",
+                "chmod a+rwx /home/jenkins_home", "\n",
+                "/usr/bin/docker pull ", { "Ref": "AppDockerImage" }, "\n",
+                "/usr/bin/docker run -d ",
+                "   --restart=on-failure",
+                "   -p 80:8080 -v /home/jenkins_home:/var/jenkins_home",
+                "   -e 'NODE_ENV=", {"Ref": "Environment"}, "'",
+                "   ", { "Ref": "AppDockerImage" }, "\n"
+              ]]}
+            }
+          }
+        }
+      }
+    },
+    "Properties": {
+      "ImageId": "{{{ helper 'module:particles-ec2' 'amazon-region-ami' 'amzn-ami-hvm-2015.03.0.x86_64-ebs' }}}",
+      "IamInstanceProfile": {"Ref": "IamInstanceProfile"},
+      "Tags" : [ {"Key" : "Name", "Value" : {"Fn::Join": [".", [{ "Ref": "AWS::StackName" }, "instance"]]}}],
+      "KeyName": {
+        "Fn::If" : [
+          "HasKeyName",
+          {"Ref" : "KeyName"},
+          {"Ref" : "AWS::NoValue"}
+        ]
+      },
+      "NetworkInterfaces" : [ {
+        "SubnetId" : { "Fn::GetAtt": [ "VpcStack", "Outputs.Subnet1Id" ] },
+        "Description" :"Network Interface",
+        "GroupSet" : [ {"Ref" : "AppSecurityGroup"} ],
+        "DeviceIndex" : "0",
+        "AssociatePublicIpAddress": "true"
+      } ],
+      "InstanceType": {"Ref": "AppInstanceType" },
+      "BlockDeviceMappings": [ { "DeviceName": "/dev/xvda", "Ebs": { "VolumeSize": "8" } } ],
+      "UserData": { "Fn::Base64": { "Fn::Join": ["", [
+        "#!/bin/bash -ex\n",
+
+        "# Helper function\n",
+        "function error_exit\n",
+        "{\n",
+        "  /opt/aws/bin/cfn-signal -e 1 -r \"$1\" ",
+        "  --stack ", { "Ref": "AWS::StackName" },
+        "  --region ", { "Ref" : "AWS::Region" }, "\n",
+        "  exit 1\n",
+        "}\n",
+
+        "# Process CloudFormation init definitions\n",
+        "/opt/aws/bin/cfn-init -s ", { "Ref" : "AWS::StackName" }, " -r EC2Instance ", " -c default ",
+        "    --region ", { "Ref": "AWS::Region" }, " || error_exit 'Failed to run cfn-init'\n",
+
+        "# All is well so signal success\n",
+        "/opt/aws/bin/cfn-signal -e 0 -r \"Stack setup complete\" ",
+        "  --stack ", {"Ref": "AWS::StackName"},
+        "  --region ", {"Ref": "AWS::Region"}, "\n",
+
+        "#EOF"
+      ]]}}
+    }
+  {{/resource}}
+
+  {{#output logicalId="AppSecurityGroupId"}}
+    "Value": {"Ref": "AppSecurityGroup"}
+  {{/output}}
+
+{{/layout}}

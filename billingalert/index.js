@@ -29,7 +29,8 @@ exports.handler = function (event, context) {
   roles.push(admin_role);
   console.log(roles);
 
-  addMetricData(0, billingAccounts, roles, sessionName, durationSeconds, localRegion, remoteRegion, simulated, function(err, data) {
+  var current = new Date();
+  addMetricData(0, billingAccounts, roles, sessionName, durationSeconds, localRegion, remoteRegion, simulated, current, function(err, data) {
     if(err) {
       context.fail(err, null);
     }
@@ -40,9 +41,9 @@ exports.handler = function (event, context) {
   });
 }
 
-function addMetricData(idx, billingAccounts, roles, sessionName, durationSeconds, localRegion, remoteRegion, simulated, callback) {
+function addMetricData(idx, billingAccounts, roles, sessionName, durationSeconds, localRegion, remoteRegion, simulated, current, callback) {
   var billingAccount = billingAccounts[idx];
-  metrics.addMetricData(billingAccount, roles, sessionName, durationSeconds, localRegion, remoteRegion, simulated, function(err, data) {
+  metrics.addMetricData(billingAccount, roles, sessionName, durationSeconds, localRegion, remoteRegion, simulated, current, function(err, data) {
     if(err) {
       console.log("failed to add metrics in account[" + billingAccount + "] : " + err);
       callback(err, null);
@@ -58,7 +59,7 @@ function addMetricData(idx, billingAccounts, roles, sessionName, durationSeconds
         callback(null, true);
       }
       else {
-        addMetricData(idx, billingAccounts, roles, sessionName, durationSeconds, localRegion, remoteRegion, simulated, callback);
+        addMetricData(idx, billingAccounts, roles, sessionName, durationSeconds, localRegion, remoteRegion, simulated, current, callback);
       }
     }
   });

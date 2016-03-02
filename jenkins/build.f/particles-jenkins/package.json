@@ -1,0 +1,19 @@
+{
+  "name": "particles-jenkins",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Alex Ough",
+  "license": "ISC",
+  "dependencies": {
+    "condensation": "^0.4.9",
+    "config": "^1.19.0",
+    "gulp": "^3.9.0",
+    "particles-common-core": "^0.3.5",
+    "particles-ec2": "^0.2.9",
+    "particles-vpc": "^0.4.1"
+  }
+}
