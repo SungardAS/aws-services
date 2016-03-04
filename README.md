@@ -1,4 +1,7 @@
 # aws-services
+
+![aws-services][aws-services-image]
+
 Micro-services to provide various conveniences in managing AWS services
 
 
@@ -56,3 +59,15 @@ CI/CD build jenkins server of this project
 ## <a href='https://github.com/SungardAS/aws-services/tree/develop/sns-message-validator'>sns-message-validator</a>
 Utility to validate the sns messages that are received through the HTTP subscriptions.
 This is the Node.js implementation of the instructions here, http://docs.aws.amazon.com/sns/latest/dg/SendMessageToHttp.verify.signature.html.
+
+## [![Sungard Availability Services | Labs][labs-logo]][labs-github-url]
+
+This project is maintained by the Labs group at [Sungard Availability
+Services](http://sungardas.com)
+
+GitHub: [https://sungardas.github.io](https://sungardas.github.io)
+
+Blog:
+[http://blog.sungardas.com/CTOLabs/](http://blog.sungardas.com/CTOLabs/)
+
+[aws-services-logo]: ./docs/images/logo.png?raw=true
