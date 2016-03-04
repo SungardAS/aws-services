@@ -1,9 +1,8 @@
 # aws-services
 
-![aws-services][aws-services-image]
-
 Micro-services to provide various conveniences in managing AWS services
 
+![aws-services][aws-services-image]
 
 ## How To Setup All Services
 
