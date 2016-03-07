@@ -1,11 +1,5 @@
 {{#layout}}
 
-  {{parameter "deployer_s3_bucket_postfix" logicalId="DeployerS3BucketPostfix"}}
-  {{parameter "deployer_s3_key" logicalId="DeployerS3Key"}}
-  {{parameter "deployer_module_name" logicalId="DeployerModuleName"}}
-  {{parameter "federation_module_name" logicalId="FederationModuleName"}}
-  {{parameter "federation_role_name" logicalId="FederationRoleName"}}
-
   {{resource "deployer_lambda_function" logicalId="DeployerLambdaFunction"}}
   {{resource "federation_lambda_function" logicalId="FederationLambdaFunction"}}
   {{resource "deployer_lambda_execution_role" logicalId="DeployerLambdaExecutionRole"}}

@@ -3,10 +3,8 @@
   "Properties": {
     "ServiceToken": { "Fn::GetAtt" : ["FederationLambdaFunction", "Arn"] },
     "AWSAccountId": { "Ref": "AWS::AccountId" },
-    "PackageJSON": {
-      "region": { "Ref": "AWS::Region" },
-      "roleArn": { "Fn::GetAtt" : [ "CloudTrailFunctionRoleInfo", "Arn" ]},
-      "federationRoleName": { "Ref": "FederationRoleName" }
-    }
+    "Region": { "Ref": "AWS::Region" },
+    "RoleArn": { "Fn::GetAtt" : [ "CloudTrailFunctionRoleInfo", "Arn" ]},
+    "FederationRoleName": "federate"
   }
 {{/resource}}
