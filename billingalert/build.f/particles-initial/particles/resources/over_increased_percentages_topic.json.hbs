@@ -2,7 +2,7 @@
   "Type" : "AWS::SNS::Topic",
   "Properties" : {
      "Subscription" : [
-       { "Endpoint" : { "Fn::GetAtt" : [ "BillingAlertSaverFunctionInfo", "LambdaFunctionArn" ]}, "Protocol" : "lambda" }
+       { "Endpoint" : { "Fn::GetAtt" : [ "BillingAlertSaverFunctionInfo", "Arn" ]}, "Protocol" : "lambda" }
      ],
      "TopicName" : {"Fn::If" : [
        "IsTest",
