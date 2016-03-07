@@ -10,24 +10,16 @@ build: upload setup
 buildlambda: upload update
 	# no more tasks
 
-buildnpm:
-	npm install;
-	cd build.f/particles-awsconfig; npm install;
-
 upload:
 	npm install
-	cd build.f; node run_upload_code index_checker;
-	cd build.f; node run_upload_code index_enabler;
-	cd build.f; node run_upload_code index_remover;
+	cd build.f; node run_upload_code;
 
 update:
 	npm install
-	cd build.f; node run_update_code index_checker;
-	cd build.f; node run_update_code index_enabler;
-	cd build.f; node run_update_code index_remover;
+	cd build.f; node run_update_code;
 
 setup:
-	cd build.f/particles-awsconfig; npm install; ./node_modules/.bin/gulp condensation:build;
+	cd build.f/particles-awsconfig; npm install; ./node_modules/.bin/gulp condensation:build; ./node_modules/.bin/gulp condensation:deploy;
 	cd build.f; node run_stack launch --region $(AWS_REGION) --name AWSConfig --particles awsconfig;
 
 clean:
