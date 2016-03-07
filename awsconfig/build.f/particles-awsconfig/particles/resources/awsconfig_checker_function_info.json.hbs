@@ -5,8 +5,8 @@
   "Region": { "Ref": "AWS::Region" },
   "FunctionName": "awsconfig-checker",
   "Code": {
-    "S3Bucket": { "Fn::Join" : [ ".", [ "sgas.particles-awsconfig", { "Ref": "AWS::AccountId" }, { "Ref" : "AWS::Region" } ]]},
-    "S3Key": "particles/assets/awsconfig.zip"
+    "S3Bucket": "{{s3.bucket}}",
+    "S3Key": "{{assetPath 'awsconfig.zip'}}"
   },
   "Handler": "awsconfig/index_checker.handler",
   "Runtime": "nodejs",

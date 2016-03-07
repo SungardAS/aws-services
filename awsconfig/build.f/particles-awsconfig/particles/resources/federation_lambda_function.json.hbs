@@ -2,8 +2,8 @@
   "Type": "AWS::Lambda::Function",
   "Properties": {
     "Code": {
-      "S3Bucket": { "Fn::Join" : [ ".", [ "sgas.particles-awsconfig", { "Ref": "AWS::AccountId" }, { "Ref" : "AWS::Region" } ]]},
-      "S3Key": "particles/assets/cloudformation_builder.zip"
+      "S3Bucket": "{{s3.bucket}}",
+      "S3Key": "{{assetPath 'cloudformation_builder.zip'}}"
     },
     "Handler": "cloudformation/index_iam_federation.handler",
     "Runtime": "nodejs",

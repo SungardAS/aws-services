@@ -4,11 +4,9 @@ else
 	AWS_REGION := us-east-1
 endif
 
-build: upload setup
-	# no more tasks
+build: setup
 
 buildlambda: upload update
-	# no more tasks
 
 upload:
 	npm install
@@ -23,4 +21,5 @@ setup:
 	cd build.f; node run_stack launch --region $(AWS_REGION) --name AWSConfig --particles awsconfig;
 
 clean:
+	npm install;
 	cd build.f; node run_stack drop --region $(AWS_REGION) --name AWSConfig;
