@@ -5,3 +5,4 @@ node_modules
 __*
 README.md.local
 *.tar
+dist

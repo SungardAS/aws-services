@@ -39,7 +39,7 @@ exports.handler = function (event, context) {
     region: event.region,
     deliveryChannelName : data_json.deliveryChannelName,
     configRecorderName : data_json.configRecorderName,
-    bucketName : event.account + data_json.bucketNamePostfix,
+    bucketName : event.account + data_json.bucketNamePostfix + "." + event.region,
     topicName : data_json.topicName,
     assumeRolePolicyName: data_json.assumeRolePolicyName,
     assumeRolePolicyDocument: assumeRolePolicyDocument,
