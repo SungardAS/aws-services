@@ -7,29 +7,18 @@ Micro-services to provide various conveniences in managing AWS services
 ## How To Setup All Services
 
     $ make \
-      -e AWS_ACCESS_KEY_ID=<access_key> \
-      -e AWS_SECRET_ACCESS_KEY=<secret_key> \
-      -e AWS_SESSION_TOKEN=<session_token> \
       -e AWS_REGION=<region> \
       -e ACCOUNTS="<accounts whose billing charges will be monitored separated by spaces>"
 
 
 ## How To Update Lambda Function Codes of All Services
 
-    $ make buildlambda \
-      -e AWS_ACCESS_KEY_ID=<access_key> \
-      -e AWS_SECRET_ACCESS_KEY=<secret_key> \
-      -e AWS_SESSION_TOKEN=<session_token> \
-      -e AWS_REGION=<region>
+    $ make buildlambda
 
 
 ## How To Remove All Services
 
-    $ make clean \
-      -e AWS_ACCESS_KEY_ID=<access_key> \
-      -e AWS_SECRET_ACCESS_KEY=<secret_key> \
-      -e AWS_SESSION_TOKEN=<session_token> \
-      -e AWS_REGION=<region>
+    $ make clean -e AWS_REGION=<region>
 
 
 # Service List
