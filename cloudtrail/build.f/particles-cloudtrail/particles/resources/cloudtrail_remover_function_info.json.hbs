@@ -2,16 +2,16 @@
   "Type": "Custom::CloudTrailRemoverFunctionInfo",
   "Properties": {
     "ServiceToken": { "Fn::GetAtt" : ["DeployerLambdaFunction", "Arn"] },
-    "AWSAccountId": { "Ref": "AWS::AccountId" },
-    "PackageJSON": {
-      "region": { "Ref": "AWS::Region" },
-      "bucketName": { "Fn::Join" : [ "", [ { "Ref" : "AWS::AccountId" }, { "Ref": "DeployerS3BucketPostfix" }, { "Ref" : "AWS::Region" } ]]},
-      "keyName": "nodejs/cloudtrail-remover.zip",
-      "functionName": "cloudtrail-remover",
-      "handler":"cloudtrail/index_remover.handler",
-      "memorySize": 128,
-      "timeout": 60
+    "Region": { "Ref": "AWS::Region" },
+    "FunctionName": "cloudtrail-remover",
+    "Code": {
+      "S3Bucket": "{{s3.bucket}}",
+      "S3Key": "{{assetPath 'cloudtrail.zip'}}"
     },
-    "RoleArn": { "Fn::GetAtt" : [ "CloudTrailFunctionRoleInfo", "Arn" ]}
+    "Handler":"cloudtrail/index_remover.handler",
+    "Runtime": "nodejs",
+    "Timeout": "60",
+    "MemorySize": "128",
+    "Role": { "Fn::GetAtt" : [ "CloudTrailFunctionRoleInfo", "Arn" ]}
   }
 {{/resource}}

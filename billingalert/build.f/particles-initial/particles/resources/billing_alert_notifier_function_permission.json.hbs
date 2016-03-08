@@ -5,7 +5,7 @@
     "AWSAccountId": { "Ref": "AWS::AccountId" },
     "PackageJSON": {
       "region": { "Ref": "AWS::Region" },
-      "functionName":  { "Fn::GetAtt" : [ "BillingAlertNotifierFunctionInfo", "LambdaFunctionName" ]},
+      "functionName":  { "Fn::GetAtt" : [ "BillingAlertNotifierFunctionInfo", "Name" ]},
       "action": "lambda:invokeFunction",
       "principal": "sns.amazonaws.com",
       "statementId": "sns_invoke"

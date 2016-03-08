@@ -1,0 +1,29 @@
+{{#resource}}
+  "Type": "AWS::IAM::Role",
+  "Condition": "IsFederationAccount",
+  "Properties": {
+    "AssumeRolePolicyDocument": {
+      "Version": "2012-10-17",
+      "Statement": [ {
+        "Sid": "",
+        "Effect": "Allow",
+        "Principal": {
+          "Service": "lambda.amazonaws.com"
+        },
+        "Action": "sts:AssumeRole"
+      } ]
+    },
+    "Path": "/",
+    "Policies": [ {
+      "PolicyName": "AssumePolicy",
+      "PolicyDocument": {
+        "Version": "2012-10-17",
+        "Statement": [ {
+          "Effect": "Allow",
+          "Action": "sts:AssumeRole",
+          "Resource": "*"
+        } ]
+      }
+    } ]
+  }
+{{/resource}}

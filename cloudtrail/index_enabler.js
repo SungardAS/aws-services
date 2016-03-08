@@ -6,13 +6,20 @@ exports.handler = function (event, context) {
   var aws_trail = new (require('../lib/aws/cloudtrail.js'))();
 
   var roles = [];
-  roles.push({roleArn:'arn:aws:iam::' + event.federateAccount + ':role/federate'});
-  var admin_role = {roleArn:'arn:aws:iam::' + event.account + ':role/' + event.roleName};
-  if (event.roleExternalId) {
-    admin_role.externalId = event.roleExternalId;
+  if (event.federateAccount) {
+    roles.push({roleArn:'arn:aws:iam::' + event.federateAccount + ':role/' + event.federateRoleName});
+    var admin_role = {roleArn:'arn:aws:iam::' + event.account + ':role/' + event.roleName};
+    if (event.roleExternalId) {
+      admin_role.externalId = event.roleExternalId;
+    }
+    roles.push(admin_role);
   }
-  roles.push(admin_role);
   console.log(roles);
+
+  var sessionName = event.sessionName;
+  if (sessionName == null || sessionName == "") {
+    sessionName = "session";
+  }
 
   // http://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-supported-regions.html
   var rootAccounts = {
@@ -52,7 +59,7 @@ exports.handler = function (event, context) {
   policyDoc = JSON.stringify(policyDoc);
 
   var input = {
-    sessionName: event.sessionName,
+    sessionName: sessionName,
     roles: roles,
     region: event.region,
     trailName: data_json.trailName,

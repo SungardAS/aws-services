@@ -9,6 +9,11 @@
   "dependencies": {
     "condensation": "^0.4.9",
     "config": "^1.16.0",
-    "gulp": "^3.9.0"
+    "git-rev-sync": "^1.4.0",
+    "gulp": "^3.9.0",
+    "gulp-git": "^1.7.0",
+    "gulp-zip": "^3.2.0",
+    "particles-common-core": "^0.3.6",
+    "vinyl-fs": "^2.3.1"
   }
 }

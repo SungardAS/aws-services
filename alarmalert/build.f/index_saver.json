@@ -1,8 +1,0 @@
-{
-  "region": "us-east-1",
-  "bucketName": ".sgas.cto.lambda-files.",
-  "keyName": "nodejs/alarmalert_saver.zip",
-  "zipFile" : "alarmalert_saver.zip",
-  "sourceFolder" : "../..",
-  "src" : ["alarmalert/index_saver.js", "lib/flow_controller.js", "lib/aws/**/*", "lib/google/**/*"]
-}

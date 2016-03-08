@@ -2,16 +2,16 @@
   "Type": "Custom::BillingAlertSaverFunctionInfo",
   "Properties": {
     "ServiceToken": { "Fn::GetAtt" : ["DeployerLambdaFunction", "Arn"] },
-    "AWSAccountId": { "Ref": "AWS::AccountId" },
-    "PackageJSON": {
-      "region": { "Ref": "AWS::Region" },
-      "bucketName": { "Fn::Join" : [ "", [ { "Ref" : "AWS::AccountId" }, { "Ref": "DeployerS3BucketPostfix" }, { "Ref" : "AWS::Region" } ]]},
-      "keyName": "nodejs/billingalert_saver.zip",
-      "functionName": "billingalert_saver",
-      "handler":"billingalert/index_saver.handler",
-      "memorySize": 128,
-      "timeout": 30
+    "Region": { "Ref": "AWS::Region" },
+    "FunctionName": "billingalert_saver",
+    "Code": {
+      "S3Bucket": "{{s3.bucket}}",
+      "S3Key": "{{assetPath 'billingalert.zip'}}"
     },
-    "RoleArn": { "Fn::GetAtt" : [ "BillingAlertSaverFunctionRoleInfo", "Arn" ]}
+    "Handler":"billingalert/index_saver.handler",
+    "Runtime": "nodejs",
+    "Timeout": "60",
+    "MemorySize": "128",
+    "Role": { "Fn::GetAtt" : [ "BillingAlertSaverFunctionRoleInfo", "Arn" ]}
   }
 {{/resource}}

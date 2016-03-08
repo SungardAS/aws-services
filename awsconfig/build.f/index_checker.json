@@ -1,8 +1,0 @@
-{
-  "region": "us-east-1",
-  "bucketName": ".sgas.cto.lambda-files.",
-  "keyName": "nodejs/awsconfig-checker.zip",
-  "zipFile" : "awsconfig-checker.zip",
-  "sourceFolder" : "../..",
-  "src" : ["awsconfig/index_checker.js", "lib/flow_controller.js", "lib/aws/**/*"]
-}

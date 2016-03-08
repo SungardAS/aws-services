@@ -25,10 +25,9 @@ function IAMFederation() {
 
   me.build = function(action, packageJSON, callback) {
     var input = {
-      region: packageJSON.region,
-      roleArn: packageJSON.roleArn,
-      federationRoleName: packageJSON.federationRoleName,
-      creds: packageJSON.creds
+      region: packageJSON.Region,
+      roleArn: packageJSON.RoleArn,
+      federationRoleName: packageJSON.FederationRoleName
     };
     console.log(input);
     me[action](input, callback);

@@ -1,0 +1,49 @@
+{{#layout}}
+
+  {{parameter "environment" logicalId="Environment"}}
+
+  {{resource "custom_lambda_deployer_function" logicalId="CustomLambdaDeployerFunction"}}
+  {{resource "custom_lambda_deployer_role" logicalId="CustomLambdaDeployerRole"}}
+  {{resource "awsconfig_function_checker" logicalId="AWSConfigFunctionChecker"}}
+  {{resource "awsconfig_function_enabler" logicalId="AWSConfigFunctionEnabler"}}
+  {{resource "awsconfig_function_remover" logicalId="AWSConfigFunctionRemover"}}
+  {{resource "awsconfig_role" logicalId="AWSConfigRole"}}
+
+  {{#output logicalId="AccountId"}}
+    "Value": { "Ref" : "AWS::AccountId" }
+  {{/output}}
+
+  {{#output logicalId="StacksRegion"}}
+    "Value" : { "Ref" : "AWS::Region" }
+  {{/output}}
+
+  {{#output logicalId="AWSConfigCheckerFunctionName"}}
+    "Value": {"Fn::GetAtt": [ "AWSConfigFunctionChecker", "Name" ]}
+  {{/output}}
+  {{#output logicalId="AWSConfigCheckerFunctionArn"}}
+    "Value": {"Fn::GetAtt": [ "AWSConfigFunctionChecker", "Arn" ]}
+  {{/output}}
+
+  {{#output logicalId="AWSConfigEnablerFunctionName"}}
+    "Value": {"Fn::GetAtt": [ "AWSConfigFunctionEnabler", "Name" ]}
+  {{/output}}
+  {{#output logicalId="AWSConfigEnablerFunctionArn"}}
+    "Value": {"Fn::GetAtt": [ "AWSConfigFunctionEnabler", "Arn" ]}
+  {{/output}}
+
+  {{#output logicalId="AWSConfigRemoverFunctionName"}}
+    "Value": {"Fn::GetAtt": [ "AWSConfigFunctionRemover", "Name" ]}
+  {{/output}}
+  {{#output logicalId="AWSConfigRemoverFunctionArn"}}
+    "Value": {"Fn::GetAtt": [ "AWSConfigFunctionRemover", "Arn" ]}
+  {{/output}}
+
+  {{#output logicalId="AWSConfigFunctionRoleName"}}
+    "Value": {"Ref": "AWSConfigRole"}
+  {{/output}}
+
+  {{#output logicalId="AWSConfigFunctionRoleArn"}}
+    "Value": {"Fn::GetAtt": [ "AWSConfigRole", "Arn" ]}
+  {{/output}}
+
+{{/layout}}
