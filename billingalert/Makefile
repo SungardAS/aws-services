@@ -15,6 +15,7 @@ upload:
 	cd build.f; node run_upload_code;
 
 update:
+	npm install
 	cd build.f; node run_update_code;
 
 setup:
