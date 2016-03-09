@@ -71,6 +71,9 @@ exports.handler = function (event, context) {
         var decoded = new Buffer(data.payload.parts[0].body.data, 'base64').toString('ascii');
         message = decoded;
       }
+      else {
+        message = "Unable to read message. Please see the original email for message content."
+      }
 
       var item = {
           "id": {"S": messageId},
