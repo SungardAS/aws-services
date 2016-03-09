@@ -89,17 +89,17 @@ exports.handler = function (event, context) {
       dynamodb.save(input, function(err, data) {
         if (err) {
           console.log('failed to save a message : ' + err);
-          errored(err);
+          //errored(err);
         }
         else {
           console.log('successfully saved a message : ' + JSON.stringify(item, null, '  '));
-          if (--idx < 0) {
-            console.log('all messages were successfully saved');
-            callback(input);
-          }
-          else {
-            saveMessage(input, idx, callback);
-          }
+        }
+        if (--idx < 0) {
+          console.log('all messages were processed');
+          callback(input);
+        }
+        else {
+          saveMessage(input, idx, callback);
         }
       });
     });
