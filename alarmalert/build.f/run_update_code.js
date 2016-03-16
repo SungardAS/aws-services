@@ -8,7 +8,7 @@ if (environment)  configFile = environment;
 var config = require('./particles-alarmalert/config/' + configFile);
 console.log(config.s3[0].aws.bucket);
 
-var functionNames = ['alarmalert-saver'];
+var functionNames = ['alarmalert_saver'];
 
 var input = {
   "region": null,
