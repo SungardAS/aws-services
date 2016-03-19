@@ -4,6 +4,8 @@ exports.handler = function (event, context) {
   var aws_sts = new (require('../lib/aws/sts'))();
   var aws_config = new (require('../lib/aws/awsconfig.js'))();
 
+  if (!event.federateRoleName)  event.federateRoleName = "federate";
+
   var roles = [];
   if (event.federateAccount) {
     roles.push({roleArn:'arn:aws:iam::' + event.federateAccount + ':role/' + event.federateRoleName});
