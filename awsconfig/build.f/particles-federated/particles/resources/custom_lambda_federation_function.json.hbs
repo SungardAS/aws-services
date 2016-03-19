@@ -1,0 +1,13 @@
+{{#resource}}
+  "Type": "AWS::Lambda::Function",
+  "Properties": {
+    "Code": {
+      "S3Bucket": { "Fn::Join" : [ ".", [ "sgas.particles-awsconfig.blog", { "Ref" : "Environment" }, { "Ref" : "AWS::Region" } ]]},
+      "S3Key": "particles/assets/cloudformation_builder.zip"
+    },
+    "Handler": "cloudformation/index_iam_federation.handler",
+    "Runtime": "nodejs",
+    "Timeout": "60",
+    "Role": { "Fn::GetAtt" : ["CustomLambdaDeployerRole", "Arn"] }
+  }
+{{/resource}}

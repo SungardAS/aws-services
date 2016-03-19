@@ -87,17 +87,16 @@ function LambdaFunctionDeployer() {
     });
   }
 
-  me.build = function(action, packageJSON, roleArn, callback) {
+  me.build = function(action, packageJSON, callback) {
     var input = {
-      region: packageJSON.region,
-      bucketName: packageJSON.bucketName,
-      keyName: packageJSON.keyName,
-      functionName: packageJSON.functionName,
-      handler: packageJSON.handler,
-      roleArn: roleArn,
-      memorySize: packageJSON.memorySize,
-      timeout: packageJSON.timeout,
-      creds: packageJSON.creds
+      region: packageJSON.Region,
+      functionName: packageJSON.FunctionName,
+      bucketName: packageJSON.Code.S3Bucket,
+      keyName: packageJSON.Code.S3Key,
+      handler: packageJSON.Handler,
+      roleArn: packageJSON.Role,
+      memorySize: packageJSON.MemorySize,
+      timeout: packageJSON.Timeout
     };
     console.log(input);
     me[action](input, callback);

@@ -1,0 +1,76 @@
+{{#resource}}
+  "Type": "AWS::IAM::Role",
+  "Condition": "IsFederationAccount",
+  "Properties": {
+    "AssumeRolePolicyDocument": {
+      "Version": "2012-10-17",
+      "Statement": [ {
+        "Sid": "",
+        "Effect": "Allow",
+        "Principal": {
+          "Service": "lambda.amazonaws.com"
+        },
+        "Action": "sts:AssumeRole"
+      } ]
+    },
+    "Path": "/",
+    "Policies": [ {
+      "PolicyName": "InlinePolicy",
+      "PolicyDocument": {
+        "Version": "2012-10-17",
+        "Statement": [ {
+          "Effect": "Allow",
+          "Action": [
+            "config:*",
+            "iam:*",
+            "sns:Create*",
+            "sns:Publish*",
+            "sns:Get*",
+            "sns:List*",
+            "sns:Delete*",
+            "tag:Get*"
+          ],
+          "Resource": "*"
+        },
+        {
+          "Effect": "Allow",
+          "Action": [
+            "logs:CreateLogGroup",
+            "logs:CreateLogStream",
+            "logs:PutLogEvents"
+          ],
+          "Resource": "arn:aws:logs:*:*:*"
+        },
+        {
+          "Effect": "Allow",
+          "Action": [
+            "s3:PutObject*"
+          ],
+          "Resource": [
+            "arn:aws:s3:::*.awsconfig/AWSLogs/*/*"
+          ],
+          "Condition": {
+            "StringLike": {
+              "s3:x-amz-acl": "bucket-owner-full-control"
+            }
+          }
+        },
+        {
+          "Effect": "Allow",
+          "Action": [
+            "s3:GetBucketAcl"
+          ],
+          "Resource": "arn:aws:s3:::*.awsconfig"
+        },
+        {
+          "Effect": "Allow",
+          "Action": [
+            "s3:ListAllMyBuckets",
+            "s3:CreateBucket"
+          ],
+          "Resource": "*"
+        } ]
+      }
+    } ]
+  }
+{{/resource}}

@@ -1,0 +1,18 @@
+{{#resource}}
+  "Type": "Custom::AWSConfigFunction",
+  "Condition": "IsFederationAccount",
+  "Properties": {
+    "ServiceToken": { "Fn::GetAtt" : ["CustomLambdaDeployerFunction", "Arn"] },
+    "Region": { "Ref": "AWS::Region" },
+    "FunctionName": "awsconfig-remover-with-federation",
+    "Code": {
+      "S3Bucket": { "Fn::Join" : [ ".", [ "sgas.particles-awsconfig.blog", { "Ref" : "Environment" }, { "Ref" : "AWS::Region" } ]]},
+      "S3Key": "particles/assets/awsconfig.zip"
+    },
+    "Handler": "awsconfig/index_remover.handler",
+    "Runtime": "nodejs",
+    "Timeout": "60",
+    "MemorySize": "128",
+    "Role": { "Fn::GetAtt" : ["AWSConfigRole", "Arn"] }
+  }
+{{/resource}}

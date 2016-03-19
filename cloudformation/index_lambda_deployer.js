@@ -7,21 +7,18 @@ exports.handler = function(event, context) {
   var responseStatus = "FAILED";
   var responseData = {};
 
-  var packageJSON = event.ResourceProperties.PackageJSON;
+  var packageJSON = event.ResourceProperties;
   if (typeof(packageJSON) === 'string') {
     packageJSON = JSON.parse(packageJSON);
   }
-
-  if (event.creds)  packageJSON.creds = event.creds;
 
   var action = 'deploy';
   if (event.RequestType == "Delete") {
     action = 'clean';
   }
-  var roleArn = event.ResourceProperties.RoleArn;
 
   var deployer = new (require('./lambda_deployer'))();
-  deployer.build(action, packageJSON, roleArn, function(err, data) {
+  deployer.build(action, packageJSON, function(err, data) {
     if (err) {
       console.log(err);
       sendResponse(event, context, responseStatus, responseData);
@@ -29,8 +26,8 @@ exports.handler = function(event, context) {
     else {
       console.log(data);
       responseStatus = "SUCCESS";
-      responseData.LambdaFunctionName = packageJSON.functionName;
-      responseData.LambdaFunctionArn = data;
+      responseData.Name = packageJSON.FunctionName;
+      responseData.Arn = data;
       sendResponse(event, context, responseStatus, responseData);
     }
   });

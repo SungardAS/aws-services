@@ -8,22 +8,6 @@ A plugin to support
   - role federations
 
 
-## How To Setup
-
-    $ make -e AWS_REGION=<region>
-      or
-    $ export AWS_REGION=<region>
-    $ make
-
-
-## How To Update Lambda Function Codes
-
-    $ make buildlambda -e AWS_REGION=<region>
-      or
-    $ export AWS_REGION=<region>
-    $ make buildlambda
-
-
 ## How To Test Lambda Functions
 
     $ cd test

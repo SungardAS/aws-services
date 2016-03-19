@@ -71,6 +71,9 @@ exports.handler = function (event, context) {
         var decoded = new Buffer(data.payload.parts[0].body.data, 'base64').toString('ascii');
         message = decoded;
       }
+      else {
+        message = "Unable to read message. Please see the original email for message content."
+      }
 
       var item = {
           "id": {"S": messageId},
@@ -89,17 +92,17 @@ exports.handler = function (event, context) {
       dynamodb.save(input, function(err, data) {
         if (err) {
           console.log('failed to save a message : ' + err);
-          errored(err);
+          //errored(err);
         }
         else {
           console.log('successfully saved a message : ' + JSON.stringify(item, null, '  '));
-          if (--idx < 0) {
-            console.log('all messages were successfully saved');
-            callback(input);
-          }
-          else {
-            saveMessage(input, idx, callback);
-          }
+        }
+        if (--idx < 0) {
+          console.log('all messages were processed');
+          callback(input);
+        }
+        else {
+          saveMessage(input, idx, callback);
         }
       });
     });

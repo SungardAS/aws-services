@@ -9,7 +9,7 @@ exports.handler = function (event, context) {
   var remoteRegion = 'us-east-1';
 
   var fs = require("fs");
-  data = fs.readFileSync(__dirname + '/json/data.json', {encoding:'utf8'});
+  data = fs.readFileSync(__dirname + '/json/data_' + event.account + '.json', {encoding:'utf8'});
   data_json = JSON.parse(data);
   var federateAccount = data_json.federateAccount;
   var masterBillingAccount = data_json.masterBillingAccount;

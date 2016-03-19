@@ -2,16 +2,16 @@
   "Type": "Custom::AlarmAlertSaverFunctionInfo",
   "Properties": {
     "ServiceToken": { "Fn::GetAtt" : ["DeployerLambdaFunction", "Arn"] },
-    "AWSAccountId": { "Ref": "AWS::AccountId" },
-    "PackageJSON": {
-      "region": { "Ref": "AWS::Region" },
-      "bucketName": { "Fn::Join" : [ "", [ { "Ref" : "AWS::AccountId" }, { "Ref": "DeployerS3BucketPostfix" }, { "Ref" : "AWS::Region" } ]]},
-      "keyName": "nodejs/alarmalert_saver.zip",
-      "functionName": "alarmalert_saver",
-      "handler":"alarmalert/index_saver.handler",
-      "memorySize": 128,
-      "timeout": 60
+    "Region": { "Ref": "AWS::Region" },
+    "FunctionName": "alarmalert_saver",
+    "Code": {
+      "S3Bucket": "{{s3.bucket}}",
+      "S3Key": "{{assetPath 'alarmalert.zip'}}"
     },
-    "RoleArn": { "Fn::GetAtt" : [ "AlarmAlertSaverFunctionRoleInfo", "Arn" ]}
+    "Handler":"alarmalert/index_saver.handler",
+    "Runtime": "nodejs",
+    "Timeout": "60",
+    "MemorySize": "128",
+    "Role": { "Fn::GetAtt" : [ "AlarmAlertSaverFunctionRoleInfo", "Arn" ]}
   }
 {{/resource}}

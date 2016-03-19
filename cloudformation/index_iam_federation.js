@@ -7,12 +7,10 @@ exports.handler = function(event, context) {
   var responseStatus = "FAILED";
   var responseData = {};
 
-  var packageJSON = event.ResourceProperties.PackageJSON;
+  var packageJSON = event.ResourceProperties;
   if (typeof(packageJSON) === 'string') {
     packageJSON = JSON.parse(packageJSON);
   }
-
-  if (event.creds)  packageJSON.creds = event.creds;
 
   var action = 'deploy';
   if (event.RequestType == "Delete") {

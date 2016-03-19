@@ -8,13 +8,20 @@ exports.handler = function (event, context) {
   var aws_config = new (require('../lib/aws/awsconfig.js'))();
 
   var roles = [];
-  roles.push({roleArn:'arn:aws:iam::' + event.federateAccount + ':role/federate'});
-  var admin_role = {roleArn:'arn:aws:iam::' + event.account + ':role/' + event.roleName};
-  if (event.roleExternalId) {
-    admin_role.externalId = event.roleExternalId;
+  if (event.federateAccount) {
+    roles.push({roleArn:'arn:aws:iam::' + event.federateAccount + ':role/' + event.federateRoleName});
+    var admin_role = {roleArn:'arn:aws:iam::' + event.account + ':role/' + event.roleName};
+    if (event.roleExternalId) {
+      admin_role.externalId = event.roleExternalId;
+    }
+    roles.push(admin_role);
   }
-  roles.push(admin_role);
   console.log(roles);
+
+  var sessionName = event.sessionName;
+  if (sessionName == null || sessionName == "") {
+    sessionName = "session";
+  }
 
   var fs = require("fs");
   data = fs.readFileSync(__dirname + '/json/data.json', {encoding:'utf8'});
@@ -27,12 +34,12 @@ exports.handler = function (event, context) {
   console.log(inlinePolicyDocument);
 
   var input = {
-    sessionName: event.sessionName,
+    sessionName: sessionName,
     roles: roles,
     region: event.region,
     deliveryChannelName : data_json.deliveryChannelName,
     configRecorderName : data_json.configRecorderName,
-    bucketName : event.account + data_json.bucketNamePostfix,
+    bucketName : event.account + data_json.bucketNamePostfix + "." + event.region,
     topicName : data_json.topicName,
     assumeRolePolicyName: data_json.assumeRolePolicyName,
     assumeRolePolicyDocument: assumeRolePolicyDocument,
