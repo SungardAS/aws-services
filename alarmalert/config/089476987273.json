@@ -1,0 +1,6 @@
+{
+  "s3bucket": {
+    "us-east-1": "sgas.particles-alarmalert.089476987273.us-east-1",
+    "us-west-2": "sgas.particles-alarmalert.089476987273.us-west-2"
+  }
+}

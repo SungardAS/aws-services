@@ -6,3 +6,4 @@ __*
 README.md.local
 *.tar
 dist
+alarmalert/google_auth.json
