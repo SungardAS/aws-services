@@ -165,10 +165,11 @@ exports.handler = function (event, context) {
     {func:buildMetricsData, success:aws_watch.addMetricData, failure:failed, error:errored},
     {func:aws_watch.addMetricData, success:done, failure:failed, error:errored},
   ];
-  input.flows = flows;
+
   s3.flows = flows;
   gmail.flows = flows;
   dynamodb.flows = flows;
+  aws_watch.flows = flows;
 
   flows[0].func(input);
 };
