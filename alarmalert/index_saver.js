@@ -8,7 +8,7 @@ exports.handler = function (event, context) {
   var awsid = event.account;
   console.log("awsid = " + awsid);
 
-  var s3 = new (require('../lib/aws/s3bucket.js'))();
+  var kms = new (require('../lib/aws/kms.js'))();
   var gmail = new (require('../lib/google/gmail.js'))();
   var dynamodb = new (require('../lib/aws/dynamodb.js'))();
   var aws_watch = new (require('../lib/aws/cloudwatch.js'))();
@@ -16,13 +16,13 @@ exports.handler = function (event, context) {
   var fs = require("fs");
   var config = fs.readFileSync(__dirname + '/config/' + event.account + '.json', {encoding:'utf8'});
   var config_json = JSON.parse(config);
-  var configBucket = config_json['s3bucket'][region];
+  console.log(config_json['googleAuth']);
 
   var current = new Date();
   var input = {
     region: region,
-    bucket: configBucket,
-    key: 'google_auth.json',
+    key: config_json['key'],
+    encryptedStr: config_json['googleAuth'],
     labelId: 'INBOX',
     userId: 'me',
     queryForMessageList: 'is:unread',
@@ -52,11 +52,12 @@ exports.handler = function (event, context) {
   function done(input) { context.done(null, true); }
 
   function addAuthInfo(input) {
-    var config = JSON.parse(input.content);
-    input.clientId = config.client_id;
-    input.clientSecret = config.client_secret;
-    input.redirectUrl = config.redirect_uris;
-    input.token = config.token;
+    var auth = JSON.parse(input.decryptedStr);
+    input.clientId = auth.client_id;
+    input.clientSecret = auth.client_secret;
+    input.redirectUrl = auth.redirect_uris;
+    input.token = auth.token;
+    input.decryptedStr = null;  // remove the decrypted str from input params
     gmail.listMessages(input);
   }
 
@@ -156,7 +157,7 @@ exports.handler = function (event, context) {
   }
 
   var flows = [
-    {func:s3.readObject, success:addAuthInfo, failure:failed, error:errored},
+    {func:kms.decrypt, success:addAuthInfo, failure:failed, error:errored},
     {func:addAuthInfo, success:gmail.listMessages, failure:failed, error:errored},
     {func:gmail.listMessages, success:saveMessages, failure:done, error:errored},
     {func:saveMessages, success:changeMessageLabels, failure:failed, error:errored},
@@ -166,7 +167,7 @@ exports.handler = function (event, context) {
     {func:aws_watch.addMetricData, success:done, failure:failed, error:errored},
   ];
 
-  s3.flows = flows;
+  kms.flows = flows;
   gmail.flows = flows;
   dynamodb.flows = flows;
   aws_watch.flows = flows;
