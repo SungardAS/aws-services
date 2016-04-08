@@ -14,7 +14,7 @@ var input = {
   "keyName": "particles/assets/alarmalert.zip",
   "zipFile" : "alarmalert.zip",
   "sourceFolder" : "../..",
-  "src" : ['alarmalert/index_saver.js', 'lib/flow_controller.js', 'lib/aws/*.js', 'lib/google/**/*']
+  "src" : ['alarmalert/index_saver.js', 'alarmalert/config/*', 'lib/flow_controller.js', 'lib/aws/*.js', 'lib/google/**/*']
 }
 console.log(input);
 

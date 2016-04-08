@@ -8,13 +8,21 @@ exports.handler = function (event, context) {
   var awsid = event.account;
   console.log("awsid = " + awsid);
 
+  var kms = new (require('../lib/aws/kms.js'))();
   var gmail = new (require('../lib/google/gmail.js'))();
   var dynamodb = new (require('../lib/aws/dynamodb.js'))();
   var aws_watch = new (require('../lib/aws/cloudwatch.js'))();
 
+  var fs = require("fs");
+  var config = fs.readFileSync(__dirname + '/config/' + event.account + '.json', {encoding:'utf8'});
+  var config_json = JSON.parse(config);
+  console.log(config_json['googleAuth']);
+
   var current = new Date();
   var input = {
     region: region,
+    key: config_json['key'],
+    encryptedStr: config_json['googleAuth'],
     labelId: 'INBOX',
     userId: 'me',
     queryForMessageList: 'is:unread',
@@ -42,6 +50,16 @@ exports.handler = function (event, context) {
   function errored(err) { context.fail(err, null); }
   function failed(input) { context.done(null, false); }
   function done(input) { context.done(null, true); }
+
+  function addAuthInfo(input) {
+    var auth = JSON.parse(input.decryptedStr);
+    input.clientId = auth.client_id;
+    input.clientSecret = auth.client_secret;
+    input.redirectUrl = auth.redirect_uris;
+    input.token = auth.token;
+    input.decryptedStr = null;  // remove the decrypted str from input params
+    gmail.listMessages(input);
+  }
 
   function saveMessages(input) {
     saveMessage(input, input.messages.length-1, changeMessageLabels);
@@ -139,6 +157,8 @@ exports.handler = function (event, context) {
   }
 
   var flows = [
+    {func:kms.decrypt, success:addAuthInfo, failure:failed, error:errored},
+    {func:addAuthInfo, success:gmail.listMessages, failure:failed, error:errored},
     {func:gmail.listMessages, success:saveMessages, failure:done, error:errored},
     {func:saveMessages, success:changeMessageLabels, failure:failed, error:errored},
     {func:changeMessageLabels, success:done, failure:failed, error:errored},
@@ -146,9 +166,11 @@ exports.handler = function (event, context) {
     {func:buildMetricsData, success:aws_watch.addMetricData, failure:failed, error:errored},
     {func:aws_watch.addMetricData, success:done, failure:failed, error:errored},
   ];
-  input.flows = flows;
+
+  kms.flows = flows;
   gmail.flows = flows;
   dynamodb.flows = flows;
+  aws_watch.flows = flows;
 
   flows[0].func(input);
 };

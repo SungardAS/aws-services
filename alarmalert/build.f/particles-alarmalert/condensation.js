@@ -9,7 +9,7 @@ module.exports.initialize = function(cb) {
     if (error) return cb(error);
   });
 
-  vfs.src(['alarmalert/index_saver.js', 'lib/flow_controller.js', 'lib/aws/*.js', 'lib/google/**/*'],{cwd:'../../..', base:'../../..'})
+  vfs.src(['alarmalert/index_saver.js', 'alarmalert/config/*', 'lib/flow_controller.js', 'lib/aws/*.js', 'lib/google/**/*'],{cwd:'../../..', base:'../../..'})
   .pipe(zip('alarmalert.zip'))
   .pipe(gulp.dest('./particles/assets'))
   .on('end', function(err, data) {
