@@ -17,8 +17,8 @@ update:
 	cd build.f; node run_update_code;
 
 setup:
-	cd build.f/particles-awsconfig; npm install; ./node_modules/.bin/gulp condensation:build; ./node_modules/.bin/gulp condensation:deploy;
-	cd build.f; node run_stack launch --region $(AWS_REGION) --name AWSConfig --particles awsconfig;
+	cd build.f/particles-awsconfigrules; npm install; ./node_modules/.bin/gulp condensation:build; ./node_modules/.bin/gulp condensation:deploy;
+	cd build.f; node run_stack launch --region $(AWS_REGION) --name AWSConfig --particles awsconfigrules;
 
 clean:
 	npm install;
