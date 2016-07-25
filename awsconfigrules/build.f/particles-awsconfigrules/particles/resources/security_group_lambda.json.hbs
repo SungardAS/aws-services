@@ -1,0 +1,15 @@
+{{#resource}}
+  "Type": "AWS::Lambda::Function",
+  "Properties": {
+    "FunctionName": "awsconfigrules-security-group-checker",
+    "Code": {
+      "S3Bucket": { "Fn::Join" : [ ".", [ "sgas.particles-awsconfigrules.blog", { "Ref" : "Environment" }, { "Ref" : "AWS::Region" } ]]},
+      "S3Key": "particles/assets/awsconfigrules.zip"
+    },
+    "Handler": "awsconfigrules/index_security_group_checker.handler",
+    "Runtime": "nodejs",
+    "Timeout": "60",
+    "MemorySize": "128",
+    "Role": { "Fn::GetAtt" : ["LambdaExecutionRole", "Arn"] }
+  }
+{{/resource}}
