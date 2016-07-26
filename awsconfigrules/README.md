@@ -1,5 +1,5 @@
 
-# AWSConfig
+# AWSConfigRules
 
 AWS Lambda functions to manage the AWSConfig Rules
 
