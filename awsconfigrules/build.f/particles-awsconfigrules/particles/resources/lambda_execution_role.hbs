@@ -15,30 +15,23 @@
       "PolicyDocument": {
           "Statement": [
             {
-              "Resource": "arn:aws:logs:*:*:*",
-              "Action": [
-                "logs:CreateLogGroup",
-                "logs:CreateLogStream",
-                "logs:PutLogEvents"
-              ],
-              "Effect": "Allow"
-            },
-            {
-              "Resource": "arn:aws:logs:*:*:*",
-              "Action": [
-                "logs:CreateLogGroup",
-                "logs:CreateLogStream",
-                "logs:PutLogEvents"
-              ],
-              "Effect": "Allow"
-            },
-            {
               "Resource": "*",
               "Action": [
-                "cloudwatch:*",
-                "iam:*",
-                "s3:*",
-                "lambda:*"
+                "config:Put*",
+                "config:Get*",
+                "config:List*",
+                "config:Describe*",
+                "s3:GetBucketVersioning",
+                "s3:ListAllMyBuckets",
+                "s3:GetBucketAcl",
+                "ec2:Describe*",
+                "iam:Get*",
+                "iam:List*",
+                "elasticloadbalancing:Describe*",
+                "lambda:InvokeFunction",
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents"
               ],
               "Effect": "Allow"
             }
