@@ -3,6 +3,7 @@ exports.handler = function (event, context) {
 
     var aws_sts = new (require('../lib/aws/sts'))();
     var aws_ec2 = new (require('../lib/aws/ec2.js'))();
+    var aws_config = new (require('../lib/aws/awsconfig.js'))();
 
     if (!event.federateRoleName)  event.federateRoleName = "federate";
 
@@ -26,17 +27,24 @@ exports.handler = function (event, context) {
         region = event.region,
         group_name = event.groupName;
 
+    var invokingEvent = JSON.parse(event.invokingEvent);
+    console.log(invokingEvent);
+
     var input = {
         sessionName: sessionName,
         roles: roles,
         vpcId: vpc_id,
         region: region,
-        groupName: group_name
+        groupName: group_name,
+        resourceType: invokingEvent.configurationItem.resourceType,
+        resourceId: invokingEvent.configurationItem.resourceId,
+        timeStamp: invokingEvent.configurationItem.configurationItemCaptureTime,
+        complianceType: 'COMPLIANT'
     };
 
-    console.log("%%%%%%%%%%%%%%%%%%%%%% vpc_id=" + vpc_id);
-    console.log("%%%%%%%%%%%%%%%%%%%%%% group_name=" + group_name);
-    console.log("%%%%%%%%%%%%%%%%%%%%%% region=" + region);
+//    console.log("%%%%%%%%%%%%%%%%%%%%%% vpc_id=" + vpc_id);
+//    console.log("%%%%%%%%%%%%%%%%%%%%%% group_name=" + group_name);
+//    console.log("%%%%%%%%%%%%%%%%%%%%%% region=" + region);
 
     function succeeded(input) { context.done(null, true); }
     function failed(input) { context.done(null, false); }
@@ -44,10 +52,11 @@ exports.handler = function (event, context) {
 
     var flows = [
         {func:aws_sts.assumeRoles, success:aws_ec2.securityGroupHasRules, failure:failed, error:errored},
-        {func:aws_ec2.securityGroupHasRules, success:succeeded, failure:failed, error:errored}
+        {func:aws_ec2.securityGroupHasRules, success:aws_config.sendEvaluation, failure:failed, error:errored}
     ];
     aws_ec2.flows = flows;
     aws_sts.flows = flows;
+    aws_config.flows = flows;
 
     flows[0].func(input);
 };
