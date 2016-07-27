@@ -47,6 +47,7 @@ exports.handler = function (event, context) {
         {func:aws_ec2.securityGroupHasRules, success:succeeded, failure:failed, error:errored}
     ];
     aws_ec2.flows = flows;
+    aws_sts.flows = flows;
 
     flows[0].func(input);
 };
