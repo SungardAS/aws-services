@@ -1,0 +1,12 @@
+{{#layout}}
+
+  {{resource "security_group_lambda" logicalId="SecurityGroupLambda"}}
+  {{resource "lambda_execution_role" logicalId="LambdaExecutionRole"}}
+  {{resource "enable_rules_lambda" logicalId="EnableRulesLambda"}}
+
+  {{output "account_id" logicalId="AccountId"}}
+  {{output "stacks_region" logicalId="StacksRegion"}}
+  {{output "security_group_lambda_arn" logicalId="SecurityGroupLambdaArn"}}
+  {{output "enable_rules_lambda_arn" logicalId="EnablerRulesLambdaArn"}}
+
+{{/layout}}

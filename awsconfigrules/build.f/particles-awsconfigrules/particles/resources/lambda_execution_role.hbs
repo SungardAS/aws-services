@@ -1,0 +1,43 @@
+{{#resource}}
+  "Type": "AWS::IAM::Role",
+  "Properties": {
+    "AssumeRolePolicyDocument": {
+      "Version": "2012-10-17",
+      "Statement": [{
+        "Effect": "Allow",
+        "Principal": {"Service": ["lambda.amazonaws.com"]},
+        "Action": ["sts:AssumeRole"]
+      }]
+    },
+    "Path": "/",
+    "Policies": [{
+      "PolicyName": "root",
+      "PolicyDocument": {
+          "Statement": [
+            {
+              "Resource": "*",
+              "Action": [
+                "config:Put*",
+                "config:Get*",
+                "config:List*",
+                "config:Describe*",
+                "s3:GetBucketVersioning",
+                "s3:ListAllMyBuckets",
+                "s3:GetBucketAcl",
+                "ec2:Describe*",
+                "iam:Get*",
+                "iam:List*",
+                "elasticloadbalancing:Describe*",
+                "lambda:InvokeFunction",
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents"
+              ],
+              "Effect": "Allow"
+            }
+          ],
+          "Version": "2012-10-17"
+      }
+    }]
+  }
+{{/resource}}
