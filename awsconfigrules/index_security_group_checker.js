@@ -27,8 +27,12 @@ exports.handler = function (event, context) {
         region = event.region,
         group_name = event.groupName;
 
-    var invokingEvent = JSON.parse(event.invokingEvent);
-    console.log(invokingEvent);
+    if (event.invokingEvent){
+        var invokingEvent = JSON.parse(event.invokingEvent);
+    }else{
+        var invokingEvent = {"configurationItem": {"resourceType": "EC2 VPC",
+            "resourceId": vpc_id, "configurationItemCaptureTime": new Date()}}
+    }
 
     var input = {
         sessionName: sessionName,
@@ -39,12 +43,9 @@ exports.handler = function (event, context) {
         resourceType: invokingEvent.configurationItem.resourceType,
         resourceId: invokingEvent.configurationItem.resourceId,
         timeStamp: invokingEvent.configurationItem.configurationItemCaptureTime,
-        complianceType: 'COMPLIANT'
+        complianceType: 'COMPLIANT',
+        resultToken: ''
     };
-
-//    console.log("%%%%%%%%%%%%%%%%%%%%%% vpc_id=" + vpc_id);
-//    console.log("%%%%%%%%%%%%%%%%%%%%%% group_name=" + group_name);
-//    console.log("%%%%%%%%%%%%%%%%%%%%%% region=" + region);
 
     function succeeded(input) { context.done(null, true); }
     function failed(input) { context.done(null, false); }
