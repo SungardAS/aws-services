@@ -55,7 +55,8 @@ exports.handler = function (event, context) {
 
     var flows = [
         {func:aws_sts.assumeRoles, success:aws_ec2.securityGroupHasRules, failure:failed, error:errored},
-        {func:aws_ec2.securityGroupHasRules, success:aws_config.sendEvaluation, failure:failed, error:errored}
+        {func:aws_ec2.securityGroupHasRules, success:aws_config.sendEvaluation, failure:failed, error:errored},
+        {func:aws_config.sendEvaluation, success:succeeded, failure:failed, error:errored},
     ];
     aws_ec2.flows = flows;
     aws_sts.flows = flows;
