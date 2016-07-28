@@ -27,6 +27,11 @@ exports.handler = function (event, context) {
         region = event.region,
         group_name = event.groupName;
 
+    var ruleParameters = JSON.parse(event.ruleParameters);
+    if (! vpc_id) vpc_id = ruleParameters.vpcId;
+    if (! region) vpc_id = ruleParameters.region;
+    if (! group_name) group_name = ruleParameters.groupName;
+
     if (event.invokingEvent){
         var invokingEvent = JSON.parse(event.invokingEvent);
     }else{
