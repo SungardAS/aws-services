@@ -33,6 +33,8 @@ exports.handler = function (event, context) {
         var invokingEvent = {"configurationItem": {"resourceType": "EC2 VPC",
             "resourceId": vpc_id, "configurationItemCaptureTime": new Date()}}
     }
+    if(event.resultToken) var resultToken = event.resultToken;
+    else var resultToken = "110ec58a-a0f2-4ac4-8393-c866d813b8d1";
 
     var input = {
         sessionName: sessionName,
@@ -44,7 +46,7 @@ exports.handler = function (event, context) {
         resourceId: invokingEvent.configurationItem.resourceId,
         timeStamp: invokingEvent.configurationItem.configurationItemCaptureTime,
         complianceType: 'COMPLIANT',
-        resultToken: ''
+        resultToken: resultToken
     };
 
     function succeeded(input) { context.done(null, true); }
