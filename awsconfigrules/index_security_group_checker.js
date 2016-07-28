@@ -23,32 +23,24 @@ exports.handler = function (event, context) {
         sessionName = "session";
     }
 
-    var vpc_id = event.vpcId,
-        region = event.region,
-        group_name = event.groupName,
-        ruleParameters = event.ruleParameters;
+    var ruleParameters = event.ruleParameters,
+        invokingEvent = event.invokingEvent;
 
-    if (ruleParameters){
-        if (! vpc_id) vpc_id = ruleParameters.vpcId;
-        if (! region) region = ruleParameters.region;
-        if (! group_name) group_name = ruleParameters.groupName;
-    }
+    if (ruleParameters) ruleParameters = JSON.parse(ruleParameters);
+    else ruleParameters = {"vpcId": event.vpcId, "region": event.region, "groupName": event.groupName};
 
-    if (event.invokingEvent){
-        var invokingEvent = JSON.parse(event.invokingEvent);
-    }else{
-        var invokingEvent = {"configurationItem": {"resourceType": "EC2 VPC",
-            "resourceId": vpc_id, "configurationItemCaptureTime": new Date()}}
-    }
+    if (invokingEvent) invokingEvent = JSON.parse(invokingEvent);
+    else invokingEvent = {"configurationItem": {"resourceType": "EC2 VPC", "resourceId": vpc_id, "configurationItemCaptureTime": new Date()}};
+
     if(event.resultToken) var resultToken = event.resultToken;
     else var resultToken = "110ec58a-a0f2-4ac4-8393-c866d813b8d1";
 
     var input = {
         sessionName: sessionName,
         roles: roles,
-        vpcId: vpc_id,
-        region: region,
-        groupName: group_name,
+        vpcId: ruleParameters.vpcId,
+        region: ruleParameters.region,
+        groupName: ruleParameters.groupName,
         resourceType: invokingEvent.configurationItem.resourceType,
         resourceId: invokingEvent.configurationItem.resourceId,
         timeStamp: invokingEvent.configurationItem.configurationItemCaptureTime,
