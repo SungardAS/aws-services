@@ -44,7 +44,6 @@ exports.handler = function (event, context) {
         resourceType: invokingEvent.configurationItem.resourceType,
         resourceId: invokingEvent.configurationItem.resourceId,
         timeStamp: invokingEvent.configurationItem.configurationItemCaptureTime,
-        complianceType: 'COMPLIANT',
         resultToken: resultToken
     };
 
