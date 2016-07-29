@@ -5,8 +5,10 @@
   {{resource "deployer_lambda_execution_role" logicalId="DeployerLambdaExecutionRole"}}
   {{resource "awsconfigrules_role_federation" logicalId="AWSConfigRulesRoleFederation"}}
   {{resource "federation_lambda_function" logicalId="FederationLambdaFunction"}}
+  {{resource "enable_rules_lambda" logicalId="EnableRulesLambda"}}
 
   {{output "account_id" logicalId="AccountId"}}
   {{output "stacks_region" logicalId="StacksRegion"}}
   {{output "security_group_lambda_arn" logicalId="SecurityGroupLambdaArn"}}
+  {{output "enable_rules_lambda_arn" logicalId="EnablerRulesLambdaArn"}}
 {{/layout}}
