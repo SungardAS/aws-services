@@ -1,37 +1,108 @@
 
 var AWS = require('aws-sdk');
-var ec2Main = new AWS.EC2({region:'us-east-1'});
 var nameTagForUnattachedVolume = "unattached";
+
+var main_region = "";
+var federateAccount = "";
+var federateRoleName = "";
+var accountRoleName = "";
+var sessionName = "";
+var db_host = "";
+var db_user = "";
+var db_password = "";
+var db_database = "";
+var kms_key_id = "";
+
 
 exports.handler = function (event, context) {
 
-  var accounts = [];
+  main_region = event.region;
 
+  var fs = require("fs");
+  data = fs.readFileSync(__dirname + '/json/data_' + event.account + '.json', {encoding:'utf8'});
+  data_json = JSON.parse(data);
+  federateAccount = data_json.federateAccount;
+  federateRoleName = data_json.federateRoleName;
+  accountRoleName = data_json.accountRoleName;
+  sessionName = data_json.sessionName;
+  db_host = data_json.db_host;
+  db_user = data_json.db_user;
+  db_password = data_json.db_password;
+  db_database = data_json.db_database;
+  kms_key_id = data_json.kms_key_id;
 
+  decrypt(db_password, function(err, data) {
+    if (err) {
+      console.log(err);
+      context.fail(err);
+    }
+    else {
+      db_password = data;
+      findAccounts(accountRoleName, function(err, accounts) {
+        if (err) {
+          console.log(err);
+          context.fail(err);
+        }
+        else {
+          tagVolumesInNextAccount(accounts, 0, function(err, data) {
+            if (err)  context.fail(err);
+            else {
+              console.log("completed to tag volumnes in all accounts/regions : " + data);
+              context.done(null, data);
+            }
+          });
+        }
+      });
+    }
+  });
+}
 
+function decrypt(password, callback) {
+  if (password == "") callback(null, password);
+  var params = {
+    CiphertextBlob: new Buffer(password, 'base64')
+  };
+  var kms = new AWS.KMS({region:main_region});
+  kms.decrypt(params, function(err, data) {
+    if (err) {
+      callback(err, null);
+    }
+    else {
+      password = data.Plaintext.toString();
+      //console.log(password);
+      callback(null, password);
+    }
+  });
+}
 
-  tagVolumesInNextAccount(accounts, 0, function(err, data) {
-    if (err)  context.fail(err);
-    else context.done(null, data);
-  })
+function encrypt(password, callback) {
+  if (password == "") callback(null, password);
+  var params = {
+    KeyId: kms_key_id,
+    Plaintext: password
+  };
+  var kms = new AWS.KMS({region:main_region});
+  kms.encrypt(params, function(err, data) {
+    if (err) {
+      console.log(err, err.stack);
+      callback(err);
+    }
+    else {
+      password = data.CiphertextBlob.toString('base64');
+      console.log(password);
+      callback(null, password);
+    }
+  });
 }
 
 function findAccounts(accountRoleName, callback) {
 
-
-
-  var host = '127.0.0.1'
-  //var host = 'dd76vhvkzmqyxv.crht7yd5fqrx.us-east-1.rds.amazonaws.com'
-  var user = 'msaws'
-  var password = ''
-  var database = 'msaws'
-
   var mysql      = require('mysql');
   var connection = mysql.createConnection({
-   host     : host,
-   user     : user,
-   password : password,
-   database : database
+   host     : db_host,
+   user     : db_user,
+   password : db_password,
+   database : db_database
   });
 
   console.log("connecting to database");
@@ -44,12 +115,12 @@ function findAccounts(accountRoleName, callback) {
       console.log('connected as id ' + connection.threadId);
       var query = connection.query("SELECT * FROM awsiamrole WHERE name = '" + accountRoleName + "'", function(err, result) {
         if (err) {
-          //connection.end();
+          connection.end();
           console.log("failed to get accounts : " + err);
           callback(err, null);
         }
-        console.log('Successfully retrieved accounts : ' + result);
-        //connection.end();
+        console.log('Successfully retrieved accounts : ' + JSON.stringify(result));
+        connection.end();
         callback(null, result);
       });
     }
@@ -76,61 +147,55 @@ function tagVolumesInNextAccount(accounts, idx, callback) {
   });
 }
 
-function federate(account, federateAccount, federateRoleName, accountRoleName, callback) {
+function federate(account, federateAccount, federateRoleName, accountRoleName, accountRoleExternalId, sessionName, callback) {
 
   var aws_sts = new (require('../lib/aws/sts'))();
-  var aws_config = new (require('../lib/aws/awsconfig.js'))();
-
-  if (!federateRoleName)  federateRoleName = "federate";
-  if (!accountRoleName)  accountRoleName = "sgas_admin";
 
   var roles = [];
   if (federateAccount) {
     roles.push({roleArn:'arn:aws:iam::' + federateAccount + ':role/' + federateRoleName});
-    var admin_role = {roleArn:'arn:aws:iam::' + account + ':role/' + accountRoleName};
-    if (event.roleExternalId) {
-      admin_role.externalId = event.roleExternalId;
+    var admin_role = {roleArn:account.arn};
+    if (accountRoleExternalId) {
+      admin_role.externalId = accountRoleExternalId;
     }
     roles.push(admin_role);
   }
   console.log(roles);
 
-  var sessionName = event.sessionName;
-  if (sessionName == null || sessionName == "") {
-    sessionName = "session";
-  }
-
   var input = {
     sessionName: sessionName,
-    roles: roles,
-    region: event.region
+    roles: roles
   };
 
+  aws_sts.assumeRoles(input, callback);
 }
 
-
 function tagAccountVolumes(account, callback) {
-
   // federate to the account
-
-
-
-
-  ec2Main.describeRegions({}).promise().then(function(data) {
-    return Promise.all(data.Regions.map(function(region) {
-      return tagVolumes(region.RegionName).then(function(data) {
-        console.log("result of region " + region.RegionName + " : " + data);
-        var ret = {};
-        ret[region.RegionName] = data;
-        return ret;
+  federate(account, federateAccount, federateRoleName, account.name, account.externalId, sessionName, function(err, data) {
+    if (err) {
+      console.log(err);
+      callback(err);
+    }
+    else {
+      var ec2Main = new AWS.EC2({region:main_region});
+      ec2Main.describeRegions({}).promise().then(function(data) {
+        return Promise.all(data.Regions.map(function(region) {
+          return tagVolumes(region.RegionName).then(function(data) {
+            console.log("result of region " + region.RegionName + " : " + data);
+            var ret = {};
+            ret[region.RegionName] = data;
+            return ret;
+          });
+        })).then(function(data) {
+          console.log(data);
+          callback(null, data);
+        });
+      }).catch(function(err) {
+        console.log(err);
+        callback(err);
       });
-    })).then(function(data) {
-      console.log(data);
-      callback(null, data);
-    });
-  }).catch(function(err) {
-    console.log(err);
-    callback(err);
+    }
   });
 }
 
