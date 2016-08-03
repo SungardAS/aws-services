@@ -1,0 +1,56 @@
+{{#resource}}
+  "Type": "AWS::IAM::Role",
+  "Properties": {
+    "AssumeRolePolicyDocument": {
+      "Version": "2012-10-17",
+      "Statement": [ {
+        "Sid": "",
+        "Effect": "Allow",
+        "Principal": {
+          "Service": "lambda.amazonaws.com"
+        },
+        "Action": "sts:AssumeRole"
+      } ]
+    },
+    "Path": "/",
+    "Policies": [ {
+      "PolicyName": "InlinePolicy",
+      "PolicyDocument": {
+        "Version": "2012-10-17",
+        "Statement": [
+          {
+            "Resource": "arn:aws:logs:*:*:*",
+            "Action": [
+              "logs:CreateLogGroup",
+              "logs:CreateLogStream",
+              "logs:PutLogEvents"
+            ],
+            "Effect": "Allow"
+          },
+          {
+            "Resource": "arn:aws:logs:*:*:*",
+            "Action": [
+              "logs:CreateLogGroup",
+              "logs:CreateLogStream",
+              "logs:PutLogEvents"
+            ],
+            "Effect": "Allow"
+          },
+          {
+            "Resource": "*",
+            "Action": [
+              "ec2:*",
+              "cloudwatch:*",
+              "iam:*",
+              "s3:*",
+              "lambda:*",
+              "dynamodb:*",
+              "kms:*"
+            ],
+            "Effect": "Allow"
+          }
+        ]
+      }
+    } ]
+  }
+{{/resource}}
