@@ -31,19 +31,18 @@ exports.handler = function (event, context) {
        sessionName: sessionName,
        roles: roles,
        region: event.region,
-       ruleName: event.ruleName,
-       owner: event.owner,
-       sourceID: event.sourceID,
-       resorceType: event.resorceType,
-       descript: event.description,
-       params: event.params
     };
     var flows = [
-       {func:aws_sts.assumeRoles, success:aws_config.enableRule, failure:failed, error:errored},
-       {func:aws_config.enableRule, success:succeeded, failure:failed, error:errored},
+       {func:aws_sts.assumeRoles, success:aws_config.getCreatedRules, failure:failed, error:errored},
+       {func:aws_config.getCreatedRules, success:succeeded, failure:failed, error:errored},
     ];
     aws_sts.flows = flows;
     aws_config.flows = flows;
 
-    flows[0].func(input);
+   console.log("111>>>>>>");
+    var abc = flows[0].func(input);
+   console.log("222>>>>>>");
+   console.log(abc);
+   console.log("333>>>>>>");
+   return abc;
 };
