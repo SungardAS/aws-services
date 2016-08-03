@@ -89,7 +89,7 @@
         {
             "Effect": "Allow",
             "Action": "sns:Publish",
-            "Resource": "arn:aws:sns:*"
+            "Resource": "arn:aws:sns:::*"
         }
     ]
 }
