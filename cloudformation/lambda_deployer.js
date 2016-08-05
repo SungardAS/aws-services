@@ -14,6 +14,8 @@ function LambdaFunctionDeployer() {
     params = {
       FunctionName: input.functionName
     };
+    var runtime = "nodejs4.3";
+
     console.log(params);
     lambda.getFunction(params, function(err, data) {
       if (err) {
@@ -25,7 +27,7 @@ function LambdaFunctionDeployer() {
           FunctionName: input.functionName,
           Handler: input.handler,
           Role: input.roleArn,
-          Runtime: 'nodejs',
+          Runtime: runtime,
           Description: '',
           MemorySize: input.memorySize,
           Timeout: input.timeout

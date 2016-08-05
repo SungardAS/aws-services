@@ -1,12 +1,10 @@
 {{#layout}}
 
-  {{resource "security_group_lambda" logicalId="SecurityGroupLambda"}}
-  {{resource "lambda_execution_role" logicalId="LambdaExecutionRole"}}
-  {{resource "deployer_lambda_execution_role" logicalId="DeployerLambdaExecutionRole"}}
-  {{resource "awsconfigrules_role_federation" logicalId="AWSConfigRulesRoleFederation"}}
+  {{resource "create_security_group_lambda_function" logicalId="CreateSecurityGroupLambdaFunction"}}
   {{resource "federation_lambda_function" logicalId="FederationLambdaFunction"}}
+  {{resource "deployer_lambda_execution_role" logicalId="DeployerLambdaExecutionRole"}}
 
   {{output "account_id" logicalId="AccountId"}}
   {{output "stacks_region" logicalId="StacksRegion"}}
-  {{output "security_group_lambda_arn" logicalId="SecurityGroupLambdaArn"}}
+
 {{/layout}}
