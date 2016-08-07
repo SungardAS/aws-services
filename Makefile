@@ -1,5 +1,5 @@
 
-BUILD_SUBDIRS := lib billingalert awsconfig cloudtrail alarmalert
+BUILD_SUBDIRS := lib billingalert awsconfig cloudtrail alarmalert volume
 
 ifdef AWS_REGION
 else
