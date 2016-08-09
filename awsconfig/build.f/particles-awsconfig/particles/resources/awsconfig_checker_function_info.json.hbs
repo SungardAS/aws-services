@@ -1,6 +1,8 @@
 {{#resource}}
-"Type": "AWS::Lambda::Function",
+"Type": "Custom::AWSConfigFunction",
 "Properties": {
+  "ServiceToken": { "Fn::GetAtt" : ["DeployerLambdaFunction", "Arn"] },
+  "Region": { "Ref": "AWS::Region" },
   "FunctionName": "awsconfig-checker",
   "Code": {
     "S3Bucket": "{{s3.bucket}}",
