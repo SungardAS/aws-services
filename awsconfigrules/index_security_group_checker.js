@@ -4,10 +4,19 @@ exports.handler = function (event, context) {
     var aws_sts = new (require('../lib/aws/sts'))();
     var aws_ec2 = new (require('../lib/aws/ec2.js'))();
     var aws_config = new (require('../lib/aws/awsconfig.js'))();
+    if (event.ruleParameters){
+        var ruleParameters = JSON.parse(event.ruleParameters);
+        event.federateRoleName = ruleParameters.federateRoleName;
+        event.federateAccount = ruleParameters.federateAccount;
+        event.account = ruleParameters.account;
+        event.roleName = ruleParameters.roleName;
+        event.roleExternalId = ruleParameters.roleExternalId;
+    }
 
     if (!event.federateRoleName)  event.federateRoleName = "federate";
 
     var roles = [];
+
     if (event.federateAccount) {
         roles.push({roleArn:'arn:aws:iam::' + event.federateAccount + ':role/' + event.federateRoleName});
         var admin_role = {roleArn:'arn:aws:iam::' + event.account + ':role/' + event.roleName};
@@ -23,11 +32,9 @@ exports.handler = function (event, context) {
         sessionName = "session";
     }
 
-    var ruleParameters = event.ruleParameters,
-        invokingEvent = event.invokingEvent;
+    var invokingEvent = event.invokingEvent;
 
-    if (ruleParameters) ruleParameters = JSON.parse(ruleParameters);
-    else ruleParameters = {"vpcId": event.vpcId, "region": event.region, "groupName": event.groupName};
+    if (!ruleParameters) ruleParameters = {"vpcId": event.vpcId, "region": event.region, "groupName": event.groupName};
 
     if (invokingEvent) invokingEvent = JSON.parse(invokingEvent);
     else invokingEvent = {"configurationItem": {"resourceType": "EC2 VPC", "resourceId": event.vpcId, "configurationItemCaptureTime": new Date()}};
