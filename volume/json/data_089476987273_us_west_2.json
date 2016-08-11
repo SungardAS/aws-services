@@ -1,0 +1,11 @@
+{
+  "federateAccount": "089476987273",
+  "federateRoleName": "federate",
+  "accountRoleName": "sgas_dev_admin",
+  "sessionName": "abcde",
+  "db_host": "dd76vhvkzmqyxv.crht7yd5fqrx.us-east-1.rds.amazonaws.com",
+  "db_user": "msaws",
+  "db_password": "AQECAHiXVr02cGhnMV/TX4uitci/Tao3gV/bPVzEPTcbFMqBHgAAAGcwZQYJKoZIhvcNAQcGoFgwVgIBADBRBgkqhkiG9w0BBwEwHgYJYIZIAWUDBAEuMBEEDB+qqRbklonEziprFgIBEIAkUPSU54mdk+HKepWLBDCkgpNAu3XDoq7VDerVWfs3eyg6r7Wb",
+  "db_database": "msaws",
+  "kms_key_id": "72293948-b3ce-4c08-b430-3aa1649ae40b"
+}

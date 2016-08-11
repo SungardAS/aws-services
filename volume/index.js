@@ -19,7 +19,7 @@ exports.handler = function (event, context) {
   main_region = event.region;
 
   var fs = require("fs");
-  data = fs.readFileSync(__dirname + '/json/data_' + event.account + '.json', {encoding:'utf8'});
+  data = fs.readFileSync(__dirname + '/json/data_' + event.account + '_' + main_region.replace(/-/g, '_') + '.json', {encoding:'utf8'});
   data_json = JSON.parse(data);
   federateAccount = data_json.federateAccount;
   federateRoleName = data_json.federateRoleName;
