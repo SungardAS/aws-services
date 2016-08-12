@@ -1,0 +1,12 @@
+{
+  "id": "73e36e6e-1b7b-4999-9912-70faebcfecb7",
+  "detail-type": "Scheduled Event",
+  "source": "aws.events",
+  "account": "089476987273",
+  "time": "2015-11-02T21:31:39Z",
+  "region": "us-east-1",
+  "resources": [
+    "arn:aws:events:us-east-1:089476987273:rule/firstscheduler"
+  ],
+  "detail": {}
+}

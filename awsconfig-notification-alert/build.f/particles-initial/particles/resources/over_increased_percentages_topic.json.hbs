@@ -1,0 +1,9 @@
+{{#resource}}
+  "Type" : "AWS::SNS::Topic",
+  "Properties" : {
+     "Subscription" : [
+       { "Endpoint" : { "Fn::GetAtt" : [ "NotificationAlertSaverFunctionInfo", "Arn" ]}, "Protocol" : "lambda" }
+     ],
+     "TopicName" : "awsconfig-topic"
+  }
+{{/resource}}

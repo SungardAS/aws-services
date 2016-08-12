@@ -1,0 +1,7 @@
+{
+  "topicName" : "awsconfig-topic",
+  "saverFuncName" : "notificationalert_saver",
+  "assumeRolePolicyName" : "awsconfig_notification_assume_role_policy",
+  "roleName" : "awsconfig-notification-setup-role",
+  "inlinePolicyName" : "awsconfig_notification_setup_policy"
+}

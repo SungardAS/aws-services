@@ -1,0 +1,13 @@
+{{#resource}}
+  "Type": "AWS::Lambda::Function",
+  "Properties": {
+    "Code": {
+      "S3Bucket": "{{s3.bucket}}",
+      "S3Key": "{{assetPath 'cloudformation_builder.zip'}}"
+    },
+    "Handler": "cloudformation/index_lambda_permission.handler",
+    "Runtime": "nodejs",
+    "Timeout": "60",
+    "Role": { "Fn::GetAtt" : ["DeployerLambdaExecutionRole", "Arn"] }
+  }
+{{/resource}}

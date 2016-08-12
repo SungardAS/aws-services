@@ -1,0 +1,13 @@
+{{#resource}}
+  "Type": "AWS::Lambda::Function",
+  "Properties": {
+    "Code": {
+      "S3Bucket": "{{s3.bucket}}",
+      "S3Key": "{{assetPath 'index_alertmessages.zip'}}"
+    },
+    "Handler": "lambda/index_alertmessages.handler",
+    "Runtime": "nodejs",
+    "Timeout": "30",
+    "Role": { "Fn::GetAtt" : ["AlertMessagesFunctionRoleInfo", "Arn"] }
+  }
+{{/resource}}

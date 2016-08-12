@@ -1,0 +1,17 @@
+{{#resource}}
+  "Type": "Custom::SnsSubscribeLambdaFunction",
+  "Properties": {
+    "ServiceToken": { "Fn::GetAtt" : ["DeployerLambdaFunction", "Arn"] },
+    "Region": { "Ref": "AWS::Region" },
+    "FunctionName": "sns-subscribe_lambda_function",
+    "Code": {
+      "S3Bucket": "{{s3.bucket}}",
+      "S3Key": "{{assetPath 'notificationalert.zip'}}"
+    },
+    "Handler":"awsconfig-notification-alert/index_sns_subscribe.handler",
+    "Runtime": "nodejs",
+    "Timeout": "60",
+    "MemorySize": "128",
+    "Role": { "Fn::GetAtt" : ["SnsSubscribeFunctionRoleInfo", "Arn"] }
+  }
+{{/resource}}
