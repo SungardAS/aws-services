@@ -8,7 +8,7 @@ AWS micro service to send a notification when the config policy violation.
 
     $ make \
       -e AWS_REGION=<region> \
-      -e ACCOUNTS="<accounts whose billing charges will be monitored separated by spaces>"
+      -e ACCOUNTS="<accounts whose config policy will be monitored separated by spaces>"
 
 
 ## How To Update Lambda Function Codes
@@ -26,4 +26,4 @@ AWS micro service to send a notification when the config policy violation.
     $ cd test
     $ node run_lambda <function_name>
       where
-        <function_name> is one of 'index', 'index_saver' and 'index_populator'
+        <function_name> is one of 'index_sns_subscribe' and 'index_saver'
