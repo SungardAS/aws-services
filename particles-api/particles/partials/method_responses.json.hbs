@@ -1,8 +1,11 @@
+---
+contentType: "application/json"
+---
 "MethodResponses" : [
   {
     "StatusCode": "200",
     "ResponseModels": {
-      "text/html": "Empty"
+      {{helper "m:core" "propertyValue" contentType}}: "Empty"
     },
     "ResponseParameters": {
       "method.response.header.Access-Control-Allow-Origin": "'*'"
@@ -11,7 +14,7 @@
   {
     "StatusCode": "403",
     "ResponseModels": {
-      "text/html": "Empty"
+      {{helper "m:core" "propertyValue" contentType}}: "Empty"
     },
     "ResponseParameters": {
       "method.response.header.Access-Control-Allow-Origin": "'*'"
@@ -20,7 +23,7 @@
   {
     "StatusCode": "401",
     "ResponseModels": {
-      "text/html": "Empty"
+      {{helper "m:core" "propertyValue" contentType}}: "Empty"
     },
     "ResponseParameters": {
       "method.response.header.Access-Control-Allow-Origin": "'*'"

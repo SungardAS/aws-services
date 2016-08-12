@@ -69,7 +69,7 @@
         },
         {{{ partial 'integration_responses' }}}
       },
-      {{{ partial 'method_responses_json' }}}
+      {{{ partial 'method_responses' }}}
     }
   {{/resource}}
 
@@ -99,7 +99,7 @@
         },
         {{{ partial 'integration_responses' }}}
       },
-      {{{ partial 'method_responses_json' }}}
+      {{{ partial 'method_responses' }}}
     }
   {{/resource}}
 
@@ -121,7 +121,7 @@
         },
         {{{ partial 'integration_responses' }}}
       },
-      {{{ partial 'method_responses_json' }}}
+      {{{ partial 'method_responses' }}}
     }
   {{/resource}}
 
@@ -135,9 +135,13 @@
       "Integration": {
         "Type": "MOCK",
         "RequestTemplates": {"application/json": "{\"statusCode\": 200}" },
-        {{{ partial 'integration_responses_post_get_delete_options' }}}
+        {{{ partial 'integration_responses_options'
+          allowedMethods="'POST,GET,DELETE,OPTIONS'"
+        }}}
       },
-      {{{ partial 'method_responses_json_post_get_delete_options' }}}
+      {{{ partial 'method_responses_options'
+        allowedMethods="'POST,GET,DELETE,OPTIONS'"
+      }}}
     }
   {{/resource}}
 

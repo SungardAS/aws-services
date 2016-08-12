@@ -1,33 +1,30 @@
-"MethodResponses" : [
+---
+allowedMethods: "'OPTIONS'"
+---
+"IntegrationResponses": [
   {
+    "SelectionPattern": "",
     "StatusCode": "200",
-    "ResponseModels": {
-      "text/html": "Empty"
-    },
     "ResponseParameters": {
-      "method.response.header.Access-Control-Allow-Methods": "'GET,OPTIONS'",
+      "method.response.header.Access-Control-Allow-Methods": {{helper "m:core" "propertyValue" allowedMethods}},
       "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
       "method.response.header.Access-Control-Allow-Origin": "'*'"
     }
   },
   {
+    "SelectionPattern": "not permitted.*",
     "StatusCode": "403",
-    "ResponseModels": {
-      "text/html": "Empty"
-    },
     "ResponseParameters": {
-      "method.response.header.Access-Control-Allow-Methods": "'GET,OPTIONS'",
+      "method.response.header.Access-Control-Allow-Methods": {{helper "m:core" "propertyValue" allowedMethods}},
       "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
       "method.response.header.Access-Control-Allow-Origin": "'*'"
     }
   },
   {
+    "SelectionPattern": "unauthorized.*",
     "StatusCode": "401",
-    "ResponseModels": {
-      "text/html": "Empty"
-    },
     "ResponseParameters": {
-      "method.response.header.Access-Control-Allow-Methods": "'GET,OPTIONS'",
+      "method.response.header.Access-Control-Allow-Methods": {{helper "m:core" "propertyValue" allowedMethods}},
       "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
       "method.response.header.Access-Control-Allow-Origin": "'*'"
     }

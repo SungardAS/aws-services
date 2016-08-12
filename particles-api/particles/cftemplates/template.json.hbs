@@ -52,24 +52,55 @@
   {{resource "invoke_function_role" logicalId="InvokeFunctionRole"}}
 
   {{#resource logicalId="AwsServicesRestApi"}}
-    "Type": "AWS::CloudFormation::Stack",
-     "Properties": {
-      "TemplateURL": "{{templateS3Url 'apigateway_api.template.json'}}",
-       "Parameters": {
-         "LambdaInvokeRoleArn": {"Fn::GetAtt" : [ "InvokeFunctionRole", "Arn" ]},
-         "AwsConfigGetLambdaArn": {"Ref" : "AwsConfigGetLambdaArn"},
-         "AwsConfigPostLambdaArn": {"Ref" : "AwsConfigPostLambdaArn"},
-         "AwsConfigDeleteLambdaArn": {"Ref" : "AwsConfigDeleteLambdaArn"},
-         "CloudTrailGetLambdaArn": {"Ref" : "CloudTrailGetLambdaArn"},
-         "CloudTrailPostLambdaArn": {"Ref" : "CloudTrailPostLambdaArn"},
-         "CloudTrailDeleteLambdaArn": {"Ref" : "CloudTrailDeleteLambdaArn"},
-         "StageName": {"Ref" : "StageName"}
-       }
+    "Type" : "AWS::ApiGateway::RestApi",
+    "Properties" : {
+      "Description" : "AWS Services API",
+      "Name" : {"Ref": "AWS::StackName" }
     }
   {{/resource}}
 
-  {{#output logicalId="AwsServicesRestApiId"}}
-    "Value": {"Fn::GetAtt" : [ "AwsServicesRestApi", "Outputs.Uri" ]}
+  {{#resource logicalId="AwsServicesResAwsConfig"}}
+    "Type": "AWS::CloudFormation::Stack",
+    "Properties": {
+      "TemplateURL": "{{templateS3Url 'awsconfig.template.json'}}",
+      "Parameters": {
+        "RestApiId": { "Ref": "AwsServicesRestApi" },
+        "ParentResourceId": { "Fn::GetAtt": ["AwsServicesRestApi", "RootResourceId"] },
+        "LambdaInvokeRoleArn": {"Fn::GetAtt" : [ "InvokeFunctionRole", "Arn" ]},
+        "GetLambdaArn": {"Ref": "AwsConfigGetLambdaArn" },
+        "PostLambdaArn": {"Ref": "AwsConfigPostLambdaArn" },
+        "DeleteLambdaArn": {"Ref": "AwsConfigDeleteLambdaArn" }
+      }
+    }
+  {{/resource}}
+
+  {{#resource logicalId="AwsServicesResCloudTrail"}}
+    "Type": "AWS::CloudFormation::Stack",
+    "Properties": {
+      "TemplateURL": "{{templateS3Url 'cloudtrail.template.json'}}",
+      "Parameters": {
+        "RestApiId": { "Ref": "AwsServicesRestApi" },
+        "ParentResourceId": { "Fn::GetAtt": ["AwsServicesRestApi", "RootResourceId"] },
+        "LambdaInvokeRoleArn": {"Fn::GetAtt" : [ "InvokeFunctionRole", "Arn" ]},
+        "GetLambdaArn": {"Ref": "CloudTrailGetLambdaArn" },
+        "PostLambdaArn": {"Ref": "CloudTrailPostLambdaArn" },
+        "DeleteLambdaArn": {"Ref": "CloudTrailDeleteLambdaArn" }
+      }
+    }
+  {{/resource}}
+
+  {{#resource logicalId="AwsServicesApiDeployment"}}
+    "DependsOn": "AwsServicesResCloudTrail",
+    "Type" : "AWS::ApiGateway::Deployment",
+    "Properties" : {
+      "RestApiId": { "Ref": "AwsServicesRestApi" },
+      "Description": "Stage Deployment",
+      "StageName": { "Ref": "StageName" }
+    }
+  {{/resource}}
+
+  {{#output logicalId="Uri"}}
+    "Value": {"Fn::Join": ["", ["https://", {"Ref" : "AwsServicesRestApi"}, ".execute-api.", {"Ref": "AWS::Region"}, ".amazonaws.com/", { "Ref": "StageName" }]]}
   {{/output}}
 
 {{/layout}}

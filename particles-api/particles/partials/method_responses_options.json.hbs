@@ -1,27 +1,37 @@
-"IntegrationResponses": [
+---
+contentType: "application/json"
+allowedMethods: "'OPTIONS'"
+---
+"MethodResponses" : [
   {
-    "SelectionPattern": "",
     "StatusCode": "200",
+    "ResponseModels": {
+      {{helper "m:core" "propertyValue" contentType}}: "Empty"
+    },
     "ResponseParameters": {
-      "method.response.header.Access-Control-Allow-Methods": "'POST,GET,OPTIONS'",
+      "method.response.header.Access-Control-Allow-Methods": {{helper "m:core" "propertyValue" allowedMethods}},
       "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
       "method.response.header.Access-Control-Allow-Origin": "'*'"
     }
   },
   {
-    "SelectionPattern": "not permitted.*",
     "StatusCode": "403",
+    "ResponseModels": {
+      {{helper "m:core" "propertyValue" contentType}}: "Empty"
+    },
     "ResponseParameters": {
-      "method.response.header.Access-Control-Allow-Methods": "'POST,GET,OPTIONS'",
+      "method.response.header.Access-Control-Allow-Methods": {{helper "m:core" "propertyValue" allowedMethods}},
       "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
       "method.response.header.Access-Control-Allow-Origin": "'*'"
     }
   },
   {
-    "SelectionPattern": "unauthorized.*",
     "StatusCode": "401",
+    "ResponseModels": {
+      {{helper "m:core" "propertyValue" contentType}}: "Empty"
+    },
     "ResponseParameters": {
-      "method.response.header.Access-Control-Allow-Methods": "'POST,GET,OPTIONS'",
+      "method.response.header.Access-Control-Allow-Methods": {{helper "m:core" "propertyValue" allowedMethods}},
       "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
       "method.response.header.Access-Control-Allow-Origin": "'*'"
     }
