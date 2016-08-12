@@ -1,0 +1,75 @@
+{{#layout}}
+
+  {{
+     parameter "m:core" "base"
+     logicalId="AwsConfigGetLambdaArn"
+     type="String"
+     description="ARN of lambda function for AwsConfig get method"
+  }}
+
+  {{
+     parameter "m:core" "base"
+     logicalId="AwsConfigPostLambdaArn"
+     type="String"
+     description="ARN of lambda function for AwsConfig post method"
+  }}
+
+  {{
+     parameter "m:core" "base"
+     logicalId="AwsConfigDeleteLambdaArn"
+     type="String"
+     description="ARN of lambda function for AwsConfig delete method"
+  }}
+
+  {{
+     parameter "m:core" "base"
+     logicalId="CloudTrailGetLambdaArn"
+     type="String"
+     description="ARN of lambda function for CloudTrail get method"
+  }}
+
+  {{
+     parameter "m:core" "base"
+     logicalId="CloudTrailPostLambdaArn"
+     type="String"
+     description="ARN of lambda function for CloudTrail post method"
+  }}
+
+  {{
+     parameter "m:core" "base"
+     logicalId="CloudTrailDeleteLambdaArn"
+     type="String"
+     description="ARN of lambda function for CloudTrail delete method"
+  }}
+
+  {{
+     parameter "m:core" "base"
+     logicalId="StageName"
+     type="String"
+     description="Deployment stage name"
+  }}
+
+  {{resource "invoke_function_role" logicalId="InvokeFunctionRole"}}
+
+  {{#resource logicalId="AwsServicesRestApi"}}
+    "Type": "AWS::CloudFormation::Stack",
+     "Properties": {
+      "TemplateURL": "{{templateS3Url 'apigateway_api.template.json'}}",
+       "Parameters": {
+         "LambdaInvokeRoleArn": {"Fn::GetAtt" : [ "InvokeFunctionRole", "Arn" ]},
+         "AwsConfigGetLambdaArn": {"Ref" : "AwsConfigGetLambdaArn"},
+         "AwsConfigPostLambdaArn": {"Ref" : "AwsConfigPostLambdaArn"},
+         "AwsConfigDeleteLambdaArn": {"Ref" : "AwsConfigDeleteLambdaArn"},
+         "CloudTrailGetLambdaArn": {"Ref" : "CloudTrailGetLambdaArn"},
+         "CloudTrailPostLambdaArn": {"Ref" : "CloudTrailPostLambdaArn"},
+         "CloudTrailDeleteLambdaArn": {"Ref" : "CloudTrailDeleteLambdaArn"},
+         "StageName": {"Ref" : "StageName"}
+       }
+    }
+  {{/resource}}
+
+  {{#output logicalId="AwsServicesRestApiId"}}
+    "Value": {"Fn::GetAtt" : [ "AwsServicesRestApi", "Outputs.Uri" ]}
+  {{/output}}
+
+{{/layout}}
