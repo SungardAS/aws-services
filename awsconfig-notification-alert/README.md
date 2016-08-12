@@ -1,7 +1,7 @@
 
-# Billing Alert System
+# Config  Alert System
 
-AWS micro service to send a notification when the increased percentage of 'EstimatedCharges' exceeds the defined threshold.
+AWS micro service to send a notification when the config policy violation.
 
 
 ## How To Setup

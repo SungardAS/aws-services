@@ -1,0 +1,17 @@
+{{#resource logicalId=handleLogicalId}}
+  "Type" : "AWS::CloudFormation::WaitConditionHandle"
+{{/resource}}
+
+{{#resource logicalId=conditionLogicalId}}
+  "Type" : "AWS::CloudFormation::WaitCondition",
+  {{#if dependsOn}}
+    "DependsOn" : "{{dependsOn}}",
+  {{/if}}
+  "Properties" : {
+    "Handle"  : { "Ref": "{{handleLogicalId}}" },
+    "Timeout" : "{{timeout}}"
+    {{#if count}}
+      ,"Count" : "{{count}}"
+    {{/if}}
+  }
+{{/resource}}
