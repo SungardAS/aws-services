@@ -22,8 +22,7 @@ exports.handler = function (event, context) {
   if (sessionName == null || sessionName == "") {
     sessionName = "session";
   }
-
-  function succeeded(input) { context.done(null, true); }
+  function succeeded(input) { context.done(null, input.rules);}
   function failed(input) { context.done(null, false); }
   function errored(err) { context.fail(err, null); }
 
@@ -39,10 +38,5 @@ exports.handler = function (event, context) {
     aws_sts.flows = flows;
     aws_config.flows = flows;
 
-   console.log("111>>>>>>");
-    var abc = flows[0].func(input);
-   console.log("222>>>>>>");
-   console.log(abc);
-   console.log("333>>>>>>");
-   return abc;
+    flows[0].func(input);
 };

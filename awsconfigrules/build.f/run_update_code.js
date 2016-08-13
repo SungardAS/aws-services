@@ -8,7 +8,7 @@ if (environment)  configFile = environment;
 var config = require('./particles-awsconfigrules/config/' + configFile);
 console.log(config.s3[0].aws.bucket);
 
-var functionNames = ['awsconfigrules-security-group-checker','awsconfigrules-enable-rules','awsconfigrules-fetch-rules''];
+var functionNames = ['awsconfigrules-security-group-checker','awsconfigrules-enable-rules','awsconfigrules-fetch-rules'];
 
 var input = {
   "region": null,
