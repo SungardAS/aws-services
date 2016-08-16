@@ -43,7 +43,8 @@ exports.handler = function (event, context) {
        principal: "config.amazonaws.com",
        sourceAccount: event.customerAccount,
        customerRegion: event.customerRegion,
-       statementId: event.statementId //unique string, some uuid from api
+       statementId: event.statementId, //unique string, some uuid from api
+       action: event.action
     };
     var flows = [
        {func:aws_lambda.addPermission, success:aws_sts.assumeRoles, failure:failed, error:errored},
