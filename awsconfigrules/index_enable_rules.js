@@ -3,6 +3,7 @@ exports.handler = function (event, context) {
 
   var aws_sts = new (require('../lib/aws/sts'))();
   var aws_config = new (require('../lib/aws/awsconfig.js'))();
+  var aws_lambda = new (require('../lib/aws/lambda.js'))();
   var aws  = require("aws-sdk");
 
   if (!event.federateRoleName)  event.federateRoleName = "federate";
@@ -36,14 +37,22 @@ exports.handler = function (event, context) {
        sourceID: event.sourceID,
        resorceType: event.resorceType,
        descript: event.description,
-       params: event.params
+       params: event.params,
+       messageType: event.messageType,
+       functionName: event.functionName,
+       principal: "config.amazonaws.com",
+       sourceAccount: event.customerAccount,
+       customerRegion: event.customerRegion,
+       statementId: event.statementId //unique string, some uuid from api
     };
     var flows = [
+       {func:aws_lambda.addPermission, success:aws_sts.assumeRoles, failure:failed, error:errored},
        {func:aws_sts.assumeRoles, success:aws_config.enableRule, failure:failed, error:errored},
        {func:aws_config.enableRule, success:succeeded, failure:failed, error:errored},
     ];
     aws_sts.flows = flows;
     aws_config.flows = flows;
+    aws_lambda.flows = flows;
 
     flows[0].func(input);
 };
