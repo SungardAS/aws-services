@@ -35,7 +35,7 @@ exports.handler = function (event, context) {
        ruleName: event.ruleName,
        owner: event.owner,
        sourceID: event.sourceID,
-       resorceType: event.resorceType,
+       resourceType: event.resourceType,
        descript: event.description,
        params: event.params,
        messageType: event.messageType,
