@@ -40,9 +40,8 @@ exports.handler = function (event, context) {
        params: event.params,
        messageType: event.messageType,
        functionName: event.functionName,
-       principal: "config.amazonaws.com",
+       principal: event.principal,
        sourceAccount: event.customerAccount,
-       customerRegion: event.customerRegion,
        statementId: event.statementId, //unique string, some uuid from api
        action: event.action
     };
