@@ -45,12 +45,20 @@ exports.handler = function (event, context) {
        statementId: event.statementId, //unique string, some uuid from api
        action: event.action
     };
-    var flows = [
-       {func:aws_lambda.addPermission, success:aws_sts.assumeRoles, failure:failed, error:errored},
-       {func:aws_sts.assumeRoles, success:aws_config.enableRule, failure:failed, error:errored},
-       {func:aws_config.enableRule, success:succeeded, failure:failed, error:errored},
-    ];
-    aws_sts.flows = flows;
+    if (input.owner == "CUSTOM_LAMBDA"){
+        var flows = [
+            {func:aws_lambda.addPermission, success:aws_sts.assumeRoles, failure:failed, error:errored},
+            {func:aws_sts.assumeRoles, success:aws_config.enableRule, failure:failed, error:errored},
+            {func:aws_config.enableRule, success:succeeded, failure:failed, error:errored},
+        ];
+        aws_sts.flows = flows;
+    }else{
+        var flows = [
+            {func:aws_sts.assumeRoles, success:aws_config.enableRule, failure:failed, error:errored},
+            {func:aws_config.enableRule, success:succeeded, failure:failed, error:errored},
+        ];
+    }
+
     aws_config.flows = flows;
     aws_lambda.flows = flows;
 
