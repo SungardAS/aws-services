@@ -1,0 +1,19 @@
+{{#resource}}
+  "Type": "AWS::Lambda::Function",
+  "Properties": {
+    "FunctionName": "volume_tagger",
+    "Code": {
+      "S3Bucket": "{{s3.bucket}}",
+      "S3Key": "{{assetPath 'volume.zip'}}"
+    },
+    "Handler":"volume/index.handler",
+    "Runtime": "nodejs4.3",
+    "Timeout": "180",
+    "MemorySize": "128",
+    "Role": { "Fn::GetAtt" : [ "VolumeTaggerFunctionRoleInfo", "Arn" ]},
+    "VpcConfig": {
+      "SecurityGroupIds" : { "Ref": "SecurityGroupIds" },
+      "SubnetIds" : { "Ref": "SubnetIds" }
+   }
+  }
+{{/resource}}

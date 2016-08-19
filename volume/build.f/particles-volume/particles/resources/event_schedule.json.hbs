@@ -1,0 +1,12 @@
+{{#resource}}
+  "Type": "AWS::Events::Rule",
+  "Properties": {
+    "Description": "EventSchedule",
+    "ScheduleExpression": "rate(10 minutes)",
+    "State": "ENABLED",
+    "Targets": [{
+      "Arn": { "Fn::GetAtt": ["VolumeTaggerFunctionInfo", "Arn"] },
+      "Id": "VolumeTaggerFunctionInfoV1"
+    }]
+  }
+{{/resource}}
