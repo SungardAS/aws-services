@@ -28,31 +28,43 @@ exports.handler = function (event, context) {
   function failed(input) { context.done(null, false); }
   function errored(err) { context.fail(err, null); }
 
-    var input = {
-       sessionName: sessionName,
-       roles: roles,
-       region: event.region,
-       ruleName: event.ruleName,
-       owner: event.owner,
-       sourceID: event.sourceID,
-       resourceType: event.resourceType,
-       descript: event.description,
-       params: event.params,
-       messageType: event.messageType,
-       functionName: event.functionName,
-       principal: event.principal,
-       sourceAccount: event.customerAccount,
-       statementId: event.statementId, //unique string, some uuid from api
-       action: event.action
-    };
-    if (input.owner == "CUSTOM_LAMBDA"){
+    console.log(event);
+    if (event.owner == "CUSTOM_LAMBDA"){
+      var input = {
+         sessionName: sessionName,
+         roles: roles,
+         region: event.region,
+         ruleName: event.ruleName,
+         owner: event.owner,
+         sourceID: event.sourceID,
+         resourceType: event.resourceType,
+         descript: event.description,
+         params: event.params,
+         messageType: event.messageType,
+         functionName: event.functionName,
+         principal: event.principal,
+         sourceAccount: event.customerAccount,
+         statementId: event.statementId, //unique string, some uuid from api
+         action: event.action
+      };
         var flows = [
             {func:aws_lambda.addPermission, success:aws_sts.assumeRoles, failure:failed, error:errored},
             {func:aws_sts.assumeRoles, success:aws_config.enableRule, failure:failed, error:errored},
             {func:aws_config.enableRule, success:succeeded, failure:failed, error:errored},
         ];
-        aws_sts.flows = flows;
+    aws_lambda.flows = flows;
     }else{
+      var input = {
+         sessionName: sessionName,
+         roles: roles,
+         region: event.region,
+         ruleName: event.ruleName,
+         owner: event.owner,
+         sourceID: event.sourceID,
+         resourceType: event.resourceType,
+         descript: event.description,
+         params: event.params,
+      };
         var flows = [
             {func:aws_sts.assumeRoles, success:aws_config.enableRule, failure:failed, error:errored},
             {func:aws_config.enableRule, success:succeeded, failure:failed, error:errored},
@@ -60,7 +72,7 @@ exports.handler = function (event, context) {
     }
 
     aws_config.flows = flows;
-    aws_lambda.flows = flows;
+    aws_sts.flows = flows;
 
     flows[0].func(input);
 };
