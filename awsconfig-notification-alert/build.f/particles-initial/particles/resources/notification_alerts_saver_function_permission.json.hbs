@@ -6,9 +6,10 @@
     "PackageJSON": {
       "region": { "Ref": "AWS::Region" },
       "functionName":  { "Fn::GetAtt" : [ "NotificationAlertSaverFunctionInfo", "Name" ]},
-      "action": "lambda:invokeFunction",
+      "action": "lambda:InvokeFunction",
       "principal": "sns.amazonaws.com",
-      "statementId": "sns_invoke"
+      "statementId": "snsinvoke",
+      "SourceAccount": { "Ref": "AWS::AccountId" }
     }
   }
 {{/resource}}

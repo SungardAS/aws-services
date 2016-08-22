@@ -3,14 +3,14 @@
   {{parameter "read_capacity_units" logicalId="ReadCapacityUnits"}}
   {{parameter "write_capacity_units" logicalId="WriteCapacityUnits"}}
   {{parameter "dynamodb_table_name_for_streams" logicalId="DynamoDBTableNameForStreams"}}
-  
+
    {{condition "is_test" logicalId="IsTest"}}
-  
+
   {{resource "deployer_lambda_function" logicalId="DeployerLambdaFunction"}}
   {{resource "deployer_lambda_execution_role" logicalId="DeployerLambdaExecutionRole"}}
   {{resource "permission_lambda_function" logicalId="PermissionLambdaFunction"}}
   {{resource "dynamodbstreams_lambda_function" logicalId="DynamoDBStreamsLambdaFunction"}}
-  
+
   {{resource "notification_alerts" logicalId="NotificationAlerts"}}
   {{resource "notification_alerts_streams_trigger" logicalId="NotificationAlertStreamsTrigger"}}
   {{resource "alert_messages_function_role_info" logicalId="AlertMessagesFunctionRoleInfo"}}
@@ -18,14 +18,14 @@
 
   {{resource "notification_alerts_saver_function_info" logicalId="NotificationAlertSaverFunctionInfo"}}
   {{resource "notification_alerts_saver_function_role_info" logicalId="NotificationAlertSaverFunctionRoleInfo"}}
-  {{resource "notification_alerts_saver_function_permission" logicalId="NotificationAlertSaverFunctionPermission"}}  
+  {{resource "notification_alerts_saver_function_permission" logicalId="NotificationAlertSaverFunctionPermission"}}
 
   {{resource "sns-subscribe_lambda_function" logicalId="SnsSubscribeLambdaFunction"}}
   {{resource "sns-subscribe_function_role_info" logicalId="SnsSubscribeFunctionRoleInfo"}}
-  
+
   {{output "account_id" logicalId="AccountId"}}
   {{output "stacks_region" logicalId="StacksRegion"}}
-  
+
   {{output "notification_alerts_saver_function_name" logicalId="NotificationAlertSaverFunctionName"}}
   {{output "notification_alerts_saver_function_arn" logicalId="NotificationAlertSaverFunctionArn"}}
   {{output "notification_alerts_saver_function_role_arn" logicalId="NotificationAlertSaverFunctionRoleArn"}}

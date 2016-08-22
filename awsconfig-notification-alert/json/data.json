@@ -1,6 +1,9 @@
 {
   "topicName" : "awsconfig-topic",
   "saverFuncName" : "notificationalert_saver",
+  "AccountId" : "442294194136",
+  "sourceAccount" : "714270045944",
+  "actionName": "Subscribe",
   "assumeRolePolicyName" : "awsconfig_notification_assume_role_policy",
   "roleName" : "awsconfig-notification-setup-role",
   "inlinePolicyName" : "awsconfig_notification_setup_policy"
