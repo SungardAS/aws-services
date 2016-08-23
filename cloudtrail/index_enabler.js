@@ -34,7 +34,8 @@ exports.handler = function (event, context) {
     "ap-southeast-2": "arn:aws:iam::284668455005:root",
     "us-west-2": "arn:aws:iam::113285607260:root",
     "eu-central-1": "arn:aws:iam::035351147821:root",
-    "ap-northeast-2": "arn:aws:iam::492519147666:root"
+    "ap-northeast-2": "arn:aws:iam::492519147666:root",
+    "ap-south-1": "arn:aws:iam::977081816279:root"
   };
 
   // find root account id for that region

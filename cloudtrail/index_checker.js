@@ -22,10 +22,15 @@ exports.handler = function (event, context) {
     sessionName = "session";
   }
 
+  var fs = require("fs");
+  var data = fs.readFileSync(__dirname + '/json/data.json', {encoding:'utf8'});
+  var data_json = JSON.parse(data);
+
   var input = {
     sessionName: sessionName,
     roles: roles,
-    region: event.region
+    region: event.region,
+    trailName: data_json.trailName
   };
 
   function succeeded(input) { context.done(null, true); }
