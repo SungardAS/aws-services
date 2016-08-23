@@ -45,7 +45,6 @@ exports.handler = function (event, context) {
     var input = {
         sessionName: sessionName,
         roles: roles,
-        vpcId: ruleParameters.vpcId,
         region: ruleParameters.region,
         groupName: ruleParameters.groupName,
         resourceType: invokingEvent.configurationItem.resourceType,
@@ -54,14 +53,18 @@ exports.handler = function (event, context) {
         resultToken: resultToken
     };
 
+    if(ruleParameters.vpcId) {
+        input.vpcId = ruleParameters.vpcId;
+    }
+
     function succeeded(input) { context.done(null, true); }
     function failed(input) { context.done(null, false); }
     function errored(err) { context.fail(err, null); }
 
     var flows = [
         {func:aws_sts.assumeRoles, success:aws_ec2.securityGroupHasRules, failure:failed, error:errored},
-        {func:aws_ec2.securityGroupHasRules, success:aws_config.sendEvaluation, failure:aws_config.sendEvaluation, error:errored},
-        {func:aws_config.sendEvaluation, success:succeeded, failure:failed, error:errored},
+        {func:aws_ec2.securityGroupHasRules, success:aws_config.sendEvaluations, failure:aws_config.sendEvaluations, error:errored},
+        {func:aws_config.sendEvaluations, success:succeeded, failure:failed, error:errored},
     ];
     aws_ec2.flows = flows;
     aws_sts.flows = flows;
