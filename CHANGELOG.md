@@ -1,6 +1,18 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [1.4] - 2016-09-30
+### Added
+- AWSConfig & CloudTrail
+  - Implemented API Gateway to provide api interfaces to public
+
+### Changed
+- AWSConfig & CloudTrail
+  - Changed Lambda function deployment using "AWS::Lambda::Function" from the custom Lambda function
+
+### Removed
+- None
+
 ## [1.3] - 2016-06-30
 ### Added
 - Volumes

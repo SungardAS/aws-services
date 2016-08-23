@@ -1,22 +1,52 @@
 {{#layout}}
 
-  {{resource "deployer_lambda_function" logicalId="DeployerLambdaFunction"}}
+  {{
+     parameter "m:core" "base"
+     logicalId="StageName"
+     type="String"
+     description="Deployment stage name"
+  }}
+
   {{resource "federation_lambda_function" logicalId="FederationLambdaFunction"}}
-  {{resource "deployer_lambda_execution_role" logicalId="DeployerLambdaExecutionRole"}}
+  {{resource "federation_lambda_execution_role" logicalId="FederationLambdaExecutionRole"}}
   {{resource "awsconfig_checker_function_info" logicalId="AWSConfigCheckerFunctionInfo"}}
   {{resource "awsconfig_enabler_function_info" logicalId="AWSConfigEnablerFunctionInfo"}}
   {{resource "awsconfig_remover_function_info" logicalId="AWSConfigRemoverFunctionInfo"}}
   {{resource "awsconfig_function_role_info" logicalId="AWSConfigFunctionRoleInfo"}}
   {{resource "awsconfig_role_federation" logicalId="AWSConfigRoleFederation"}}
 
-  {{output "account_id" logicalId="AccountId"}}
-  {{output "stacks_region" logicalId="StacksRegion"}}
-  {{output "awsconfig_checker_function_name" logicalId="AWSConfigCheckerFunctionName"}}
-  {{output "awsconfig_checker_function_arn" logicalId="AWSConfigCheckerFunctionArn"}}
-  {{output "awsconfig_enabler_function_name" logicalId="AWSConfigEnablerFunctionName"}}
-  {{output "awsconfig_enabler_function_arn" logicalId="AWSConfigEnablerFunctionArn"}}
-  {{output "awsconfig_remover_function_name" logicalId="AWSConfigRemoverFunctionName"}}
-  {{output "awsconfig_remover_function_arn" logicalId="AWSConfigRemoverFunctionArn"}}
-  {{output "awsconfig_function_role_arn" logicalId="AWSConfigFunctionRoleArn"}}
+  {{resource "m:api-gateway" "invoke_function_role" logicalId="InvokeFunctionRole"}}
+  {{#resource logicalId="AwsConfigRestApi"}}
+    "Type" : "AWS::ApiGateway::RestApi",
+    "Properties" : {
+      "Description" : "AwsConfig API",
+      "Name" : "AwsConfigAPI"
+    }
+  {{/resource}}
+  {{#resource logicalId="AwsConfigRes"}}
+    "Type": "AWS::CloudFormation::Stack",
+    "Properties": {
+      "TemplateURL": "{{templateS3Url 'awsconfig.template.json'}}",
+      "Parameters": {
+        "RestApiId": { "Ref": "AwsConfigRestApi" },
+        "ParentResourceId": { "Fn::GetAtt": ["AwsConfigRestApi", "RootResourceId"] },
+        "LambdaInvokeRoleArn": {"Fn::GetAtt" : [ "InvokeFunctionRole", "Arn" ]},
+        "GetLambdaArn": { "Fn::GetAtt" : [ "AWSConfigCheckerFunctionInfo", "Arn" ]},
+        "PostLambdaArn": { "Fn::GetAtt" : [ "AWSConfigEnablerFunctionInfo", "Arn" ]},
+        "DeleteLambdaArn": { "Fn::GetAtt" : [ "AWSConfigRemoverFunctionInfo", "Arn" ]}
+      }
+    }
+  {{/resource}}
+  {{#resource logicalId="AwsConfigApiDeployment"}}
+    "DependsOn": "AwsConfigRes",
+    "Type" : "AWS::ApiGateway::Deployment",
+    "Properties" : {
+      "RestApiId": { "Ref": "AwsConfigRestApi" },
+      "Description": "Stage Deployment",
+      "StageName": { "Ref": "StageName" }
+    }
+  {{/resource}}
+
+  {{output "awsconfig_api_uri" logicalId="APIUri"}}
 
 {{/layout}}
