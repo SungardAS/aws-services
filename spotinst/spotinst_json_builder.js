@@ -95,7 +95,7 @@ var defaultScheduling = {
 
 module.exports = {
 
-  buildSpotinstJSON: function(instance, name, description, keyPairName, tags) {
+  build: function(instance, name, description, keyPairName, tags) {
 
     var group = {
       "name": name,
@@ -235,5 +235,54 @@ module.exports = {
 
     //console.log(JSON.stringify(spotInstJSON));
     return spotInstJSON;
+  },
+
+  deploy: function(spotInstJSON, accessKey) {
+
+    // curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer d04821bde138802e17d3b4cbda1283b2193f79e419341bfb3b51073d9187185f" -d @json/i-79dea6e4-dbaccessor.json https://api.spotinst.io/aws/ec2/group
+
+    var rp = require('request-promise');
+    var options = {
+      method: 'POST',
+      uri: 'https://api.spotinst.io/aws/ec2/group',
+      body: spotInstJSON,
+      headers: {
+        "content-type": "application/json",
+        "Authorization": "Bearer " + accessKey
+      },
+      json: true // Automatically stringifies the body to JSON
+    };
+
+    return rp(options).then(function (parsedBody) {
+      console.log(parsedBody);
+      return parsedBody;
+    });
   }
 }
+
+/*
+var rp = require('request-promise');
+var options = {
+  method: 'POST',
+  uri: 'https://t9d2i86pud.execute-api.us-east-1.amazonaws.com/v1/cloudtrail',
+  body: {
+    "federateAccount": "089476987273",
+    "account": "089476987273",
+    "federateRoleName": "federate",
+    "roleName": "sgas_dev_admin",
+    "sessionName": "abcde",
+    "region": "ap-south-1"
+  },
+  headers: {
+    "content-type": "application/json",
+    "roleExternalId": "88df904d-c597-40ef-8b29-b767aba1eaa4"
+  },
+  json: true // Automatically stringifies the body to JSON
+};
+
+rp(options).then(function (parsedBody) {
+  console.log(parsedBody);
+}).catch(function (err) {
+  console.log(err);
+});
+*/

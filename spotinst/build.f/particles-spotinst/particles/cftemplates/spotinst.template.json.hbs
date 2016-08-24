@@ -1,0 +1,82 @@
+{{#layout}}
+
+  {{
+     parameter "m:core" "base"
+     logicalId="LambdaInvokeRoleArn"
+     type="String"
+     description="ARN of IAM role that can invoke lambda functions"
+  }}
+
+  {{
+    parameter "m:core" "base"
+    logicalId="RestApiId"
+    type="String"
+    description="API Id"
+  }}
+
+  {{
+    parameter "m:core" "base"
+    logicalId="ParentResourceId"
+    type="String"
+    description="Parent Resource Id"
+  }}
+
+  {{
+     parameter "m:core" "base"
+     logicalId="PostLambdaArn"
+     type="String"
+     description="ARN of lambda function for post method"
+  }}
+
+  {{#resource logicalId="Spotinst"}}
+    "Type" : "AWS::ApiGateway::Resource",
+    "Properties" : {
+      "RestApiId": { "Ref": "RestApiId" },
+      "ParentId": { "Ref": "ParentResourceId" },
+      "PathPart": "spotinst"
+    }
+  {{/resource}}
+
+  {{#resource logicalId="SpotinstPost"}}
+    "Type" : "AWS::ApiGateway::Method",
+    "Properties" : {
+      "RestApiId": { "Ref": "RestApiId" },
+      "ResourceId": { "Ref": "Spotinst" },
+      "HttpMethod": "POST",
+      "AuthorizationType": "NONE",
+      "RequestParameters": {"method.request.header.Authorization":true},
+      "Integration": {
+        "Credentials": { "Ref": "LambdaInvokeRoleArn" },
+        "IntegrationHttpMethod": "POST",
+        "Type": "AWS",
+        "Uri": {"Fn::Join": ["", ["arn:aws:apigateway:", {"Ref": "AWS::Region"}, ":lambda:path/2015-03-31/functions/", { "Ref": "PostLambdaArn" }, "/invocations"]]},
+        "RequestTemplates": {
+          "application/json": "{\n  \"account\": \"$input.path('$').account\",\n  \"dryRun\": $input.path('$').dryRun,\n  \"instanceId\": \"$input.path('$').instanceId\",\n  \"name\": \"$input.path('$').name\",\n  \"description\": \"$input.path('$').description\",\n  \"tags\": \"$input.path('$').tags\",\n  \"keyPairName\": \"$input.path('$').keyPairName\"\n}\n"
+        },
+        {{{ partial 'm:api-gateway' 'integration_responses' }}}
+      },
+      {{{ partial 'm:api-gateway' 'method_responses' }}}
+    }
+  {{/resource}}
+
+  {{#resource logicalId="SpotinstOptions"}}
+    "Type" : "AWS::ApiGateway::Method",
+    "Properties" : {
+      "RestApiId": { "Ref": "RestApiId" },
+      "ResourceId": { "Ref": "Spotinst" },
+      "HttpMethod": "OPTIONS",
+      "AuthorizationType": "NONE",
+      "Integration": {
+        "Type": "MOCK",
+        "RequestTemplates": {"application/json": "{\"statusCode\": 200}" },
+        {{{ partial 'm:api-gateway' 'integration_responses_options'
+          allowedMethods="'POST,OPTIONS'"
+        }}}
+      },
+      {{{ partial 'm:api-gateway' 'method_responses_options'
+        allowedMethods="'POST,OPTIONS'"
+      }}}
+    }
+  {{/resource}}
+
+{{/layout}}

@@ -1,0 +1,45 @@
+{{#layout}}
+
+  {{
+     parameter "m:core" "base"
+     logicalId="StageName"
+     type="String"
+     description="Deployment stage name"
+  }}
+
+  {{resource "lambda_function" logicalId="LambdaFunction"}}
+  {{resource "lambda_execution_role" logicalId="LambdaExecutionRole"}}
+
+  {{resource "m:api-gateway" "invoke_function_role" logicalId="InvokeFunctionRole"}}
+    {{#resource logicalId="SpotinstRestApi"}}
+      "Type" : "AWS::ApiGateway::RestApi",
+      "Properties" : {
+        "Description" : "Spotinst API",
+        "Name" : "SpotinstAPI"
+      }
+    {{/resource}}
+    {{#resource logicalId="SpotinstRes"}}
+      "Type": "AWS::CloudFormation::Stack",
+      "Properties": {
+        "TemplateURL": "{{templateS3Url 'spotinst.template.json'}}",
+        "Parameters": {
+          "RestApiId": { "Ref": "SpotinstRestApi" },
+          "ParentResourceId": { "Fn::GetAtt": ["SpotinstRestApi", "RootResourceId"] },
+          "LambdaInvokeRoleArn": {"Fn::GetAtt" : [ "InvokeFunctionRole", "Arn" ]},
+          "PostLambdaArn": { "Fn::GetAtt" : [ "LambdaFunction", "Arn" ]}
+        }
+      }
+    {{/resource}}
+    {{#resource logicalId="SpotinstApiDeployment"}}
+      "DependsOn": "SpotinstRes",
+      "Type" : "AWS::ApiGateway::Deployment",
+      "Properties" : {
+        "RestApiId": { "Ref": "SpotinstRestApi" },
+        "Description": "Stage Deployment",
+        "StageName": { "Ref": "StageName" }
+      }
+    {{/resource}}
+
+  {{output "spotinst_api_uri" logicalId="APIUri"}}
+
+{{/layout}}
