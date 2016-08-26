@@ -1,7 +1,6 @@
 {
   "cpuUtilizationThreshold": 10,
   "snsMessageSubject": "LowActivityEC2Instance",
-  "snsTopicArn": "arn:aws:sns:us-east-1:089476987273:LowActivityEC2InstanceTopic",
-  "dynamodbRegion": "us-east-1",
+  "snsTopicArn": "arn:aws:sns:<region>:<account>:LowActivityEC2InstanceTopic",
   "dynamodbTableName": "instance_usage_metrics"
 }

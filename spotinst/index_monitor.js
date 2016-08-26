@@ -21,6 +21,7 @@ exports.handler = (event, context, callback) => {
   */
 
   var main_region = event.region;
+  var main_account = event.account;
 
   var fs = require("fs");
   var config = fs.readFileSync(__dirname + '/config/config.json', {encoding:'utf8'});
@@ -28,7 +29,7 @@ exports.handler = (event, context, callback) => {
   console.log(config_json);
   var cpuUtilizationThreshold = config_json['cpuUtilizationThreshold'];
   var snsMessageSubject = config_json['snsMessageSubject'];
-  var snsTopicArn = config_json['snsTopicArn'];
+  var snsTopicArn = config_json['snsTopicArn'].replace("<region>", main_region).replace("<account>", main_account);
   var dynamodbTableName = config_json['dynamodbTableName'];
 
   // first, remove the old data from dynamodb
@@ -68,6 +69,7 @@ exports.handler = (event, context, callback) => {
       regionInstances[key].forEach(function(instance) {
         if (instance.Metrics && instance.Metrics.Maximum < cpuUtilizationThreshold) {
           instance.Region = key;
+          instance.Account = main_account;  // temporarily until all accounts are supported
           console.log("\n\n");
           console.log(JSON.stringify(instance, null, 2));
           promises.push(collector.sendSNSNotification(instance, snsMessageSubject, snsTopicArn, main_region));

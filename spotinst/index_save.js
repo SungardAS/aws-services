@@ -5,13 +5,11 @@ var docClient = require('./dynamodb_document');
 
 exports.handler = (event, context, callback) => {
 
+  var main_region = event.Records[0].EventSubscriptionArn.split(":")[3];
+
   var messageJSON = JSON.parse(event.Records[0].Sns.Message);
-  var account = event.Records[0].EventSubscriptionArn.split(":")[4];
-  var region = messageJSON.Region;
   console.log('From SNS:', messageJSON);
-  messageJSON.Account = account;
-  messageJSON.Region = region;
-  messageJSON.HashKey = account + "." + region + "." + messageJSON.InstanceId;
+  messageJSON.HashKey = messageJSON.Account + "." + messageJSON.Region + "." + messageJSON.InstanceId;
   //messageJSON.RangeKey = messageJSON.Metrics.Maximum;
   messageJSON.ReportedAt = new Date().toISOString();
   removeNullAttrs(messageJSON);
@@ -20,10 +18,9 @@ exports.handler = (event, context, callback) => {
   var config = fs.readFileSync(__dirname + '/config/config.json', {encoding:'utf8'});
   var config_json = JSON.parse(config);
   console.log(config_json);
-  var dynamodbRegion = config_json['dynamodbRegion'];
   var dynamodbTableName = config_json['dynamodbTableName'];
 
-  docClient.save(dynamodbTableName, messageJSON, dynamodbRegion).then(function(ret) {
+  docClient.save(dynamodbTableName, messageJSON, main_region).then(function(ret) {
     console.log(ret);
     callback(null, ret);
   }).catch(function(err) {
