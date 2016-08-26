@@ -1,0 +1,9 @@
+{{#resource}}
+  "Type" : "AWS::SNS::Topic",
+  "Properties" : {
+     "Subscription" : [
+       { "Endpoint" : { "Fn::GetAtt" : [ "LambdaSaveFunction", "Arn" ]}, "Protocol" : "lambda" }
+     ],
+     "TopicName" : "LowActivityEC2InstanceTopic"
+  }
+{{/resource}}

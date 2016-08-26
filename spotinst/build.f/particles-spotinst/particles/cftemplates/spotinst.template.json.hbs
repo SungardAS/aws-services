@@ -44,14 +44,14 @@
       "ResourceId": { "Ref": "Spotinst" },
       "HttpMethod": "POST",
       "AuthorizationType": "NONE",
-      "RequestParameters": {"method.request.header.Authorization":true},
+      "RequestParameters": {"method.request.header.spotinstAccessKey":true},
       "Integration": {
         "Credentials": { "Ref": "LambdaInvokeRoleArn" },
         "IntegrationHttpMethod": "POST",
         "Type": "AWS",
         "Uri": {"Fn::Join": ["", ["arn:aws:apigateway:", {"Ref": "AWS::Region"}, ":lambda:path/2015-03-31/functions/", { "Ref": "PostLambdaArn" }, "/invocations"]]},
         "RequestTemplates": {
-          "application/json": "{\n  \"account\": \"$input.path('$').account\",\n  \"dryRun\": $input.path('$').dryRun,\n  \"instanceId\": \"$input.path('$').instanceId\",\n  \"name\": \"$input.path('$').name\",\n  \"description\": \"$input.path('$').description\",\n  \"tags\": \"$input.path('$').tags\",\n  \"keyPairName\": \"$input.path('$').keyPairName\"\n}\n"
+          "application/json": "{\n  \"account\": \"$input.path('$').account\",\n  \"dryRun\": $input.path('$').dryRun,\n  \"instanceId\": \"$input.path('$').instanceId\",\n  \"name\": \"$input.path('$').name\",\n  \"description\": \"$input.path('$').description\",\n  \"tags\": \"$input.path('$').tags\",\n  \"keyPairName\": \"$input.path('$').keyPairName\",\n  \"spotinstAccessKey\": \"$input.params().header.get('spotinstAccessKey')\"\n}\n"
         },
         {{{ partial 'm:api-gateway' 'integration_responses' }}}
       },

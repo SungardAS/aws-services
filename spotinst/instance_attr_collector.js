@@ -2,40 +2,39 @@
 // aws cloudwatch get-metric-statistics --metric-name CPUUtilization --start-time 2016-08-01T00:00:00 --end-time 2016-08-11T15:00:00 --period 1440 --namespace AWS/EC2 --statistics Minimum --dimensions Name=InstanceId,Value=<your-instance-id>
 
 var AWS = require('aws-sdk');
-var region = 'us-east-1';
 
 module.exports = {
 
-  getEC2InstanceAttrs: function(instanceId) {
+  getEC2InstanceAttrs: function(instanceId, region) {
     var self = this;
-    return self.getEC2Instance(instanceId).then(function(instance) {
-      return self.getEC2InstanceUserData(instance).then(function(userData) {
+    return self.getEC2Instance(instanceId, region).then(function(instance) {
+      return self.getEC2InstanceUserData(instance, region).then(function(userData) {
         instance.UserData = userData;
         return instance;
       });
     }).then(function(instance) {
-      return self.getVolumeDetails(instance).then(function(volumes) {
+      return self.getVolumeDetails(instance, region).then(function(volumes) {
         instance.Volumes = volumes;
         return instance;
       });
     }).then(function(instance) {
-      return self.getAutoScalingInstances(instance).then(function(autoScalingGroups) {
+      return self.getAutoScalingInstances(instance, region).then(function(autoScalingGroups) {
         instance.AutoScalingGroups = autoScalingGroups;
         return instance;
       });
     }).then(function(instance) {
       if (instance.AutoScalingGroups.length == 0) return instance;
-      return self.getAutoScalingGroupDetails(instance).then(function(autoScalingGroups) {
+      return self.getAutoScalingGroupDetails(instance, region).then(function(autoScalingGroups) {
         instance.AutoScalingGroups = autoScalingGroups;
         return instance;
       });
     }).then(function(instance) {
-      return self.getSubnetDetails(instance).then(function(subnets) {
+      return self.getSubnetDetails(instance, region).then(function(subnets) {
         instance.Subnets = subnets;
         return instance;
       });
     }).then(function(instance) {
-      return self.getAWSCPUUtilizationMetricStatisticsByEC2Instance(instance).then(function(metrics) {
+      return self.getAWSCPUUtilizationMetricStatisticsByEC2Instance(instance, region).then(function(metrics) {
         instance.Metrics = metrics;
         //console.log(instance);
         return instance;
@@ -45,7 +44,7 @@ module.exports = {
     });
   },
 
-  getEC2Instance: function(instanceId) {
+  getEC2Instance: function(instanceId, region) {
     var ec2 = new AWS.EC2({region: region});
     var params = {
       /*DryRun: true || false,
@@ -143,7 +142,7 @@ module.exports = {
     */
   },
 
-  getEC2InstanceUserData: function(instance) {
+  getEC2InstanceUserData: function(instance, region) {
     var ec2 = new AWS.EC2({region: region});
     var params = {
       Attribute: 'userData',
@@ -156,7 +155,7 @@ module.exports = {
     });
   },
 
-  getVolumeDetails: function(instance) {
+  getVolumeDetails: function(instance, region) {
     var ec2 = new AWS.EC2({region: region});
     var params = {
       //DryRun: true || false,
@@ -179,7 +178,7 @@ module.exports = {
     });
   },
 
-  getAutoScalingInstances: function(instance) {
+  getAutoScalingInstances: function(instance, region) {
     var autoscaling = new AWS.AutoScaling({region: region});
     var params = {
       InstanceIds: [
@@ -204,7 +203,7 @@ module.exports = {
     */
   },
 
-  getAutoScalingGroupDetails: function(instance) {
+  getAutoScalingGroupDetails: function(instance, region) {
     var autoscaling = new AWS.AutoScaling({region: region});
     var params = {
       AutoScalingGroupNames: instance.AutoScalingGroups.map(function(group) { return group.AutoScalingGroupName; }),
@@ -266,7 +265,7 @@ module.exports = {
     */
   },
 
-  getSubnetDetails: function(instance) {
+  getSubnetDetails: function(instance, region) {
     var subnets = [];
     if (instance.AutoScalingGroups.length == 0) {
       subnets.push(instance.SubnetId);
@@ -294,7 +293,10 @@ module.exports = {
     });
   },
 
-  getAWSCPUUtilizationMetricStatisticsByEC2Instance: function(instance) {
+  getAWSCPUUtilizationMetricStatisticsByEC2Instance: function(instance, region) {
+
+    // aws cloudwatch get-metric-statistics --metric-name CPUUtilization --start-time 2016-08-01T00:00:00 --end-time 2016-08-11T15:00:00 --period 1440 --namespace AWS/EC2 --statistics Minimum --dimensions Name=InstanceId,Value=<your-instance-id>
+
     var cloudWatch = new AWS.CloudWatch({region: region});
     var startTime = new Date();
     //startTime.setHours(startTime.getHours() - 24*14);
@@ -329,18 +331,18 @@ module.exports = {
     });
   },
 
-  sendSNSNotification: function(instanceMetrics) {
+  sendSNSNotification: function(instanceMetrics, SNSMessageSubject, SNSTopicArn, region) {
     var sns = new AWS.SNS({region: region});
     var params = {
       Message: JSON.stringify(instanceMetrics),
-      Subject: "LowActivityEC2Instance",
-      TopicArn: "arn:aws:sns:us-east-1:089476987273:LowActivityEC2Instances"
+      Subject: SNSMessageSubject,
+      TopicArn: SNSTopicArn
     };
     //console.log(params);
     return sns.publish(params).promise();
   },
 
-  getRunningEC2Instances: function() {
+  getRunningEC2Instances: function(region) {
     var ec2 = new AWS.EC2({region: region});
     var params = {
       /*DryRun: true || false,
@@ -380,7 +382,7 @@ module.exports = {
     });
   },
 
-  getAutoScalingGroups: function() {
+  getAutoScalingGroups: function(region) {
     var autoscaling = new AWS.AutoScaling({region: region});
     var params = {
       /*AutoScalingGroupNames: [

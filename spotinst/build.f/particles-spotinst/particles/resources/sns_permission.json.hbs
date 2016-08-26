@@ -1,0 +1,9 @@
+{{#resource}}
+  "Type": "AWS::Lambda::Permission",
+  "Properties": {
+    "FunctionName" : { "Fn::GetAtt" : ["LambdaSaveFunction", "Arn"] },
+    "Action": "lambda:InvokeFunction",
+    "Principal": "sns.amazonaws.com",
+    "SourceArn": { "Ref" : "LowActivityEC2InstanceTopic" }
+  }
+{{/resource}}

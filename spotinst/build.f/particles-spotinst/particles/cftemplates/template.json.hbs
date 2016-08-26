@@ -7,39 +7,66 @@
      description="Deployment stage name"
   }}
 
+  {{
+     parameter "m:core" "base"
+     logicalId="ReadCapacityUnits"
+     type="Number"
+     default=1
+     description="Read Capacity Units in DynamoDB"
+  }}
+
+  {{
+     parameter "m:core" "base"
+     logicalId="WriteCapacityUnits"
+     type="Number"
+     default=1
+     description="Write Capacity Units in DynamoDB"
+  }}
+
   {{resource "lambda_function" logicalId="LambdaFunction"}}
+  {{resource "lambda_monitor_function" logicalId="LambdaMonitorFunction"}}
+  {{resource "lambda_save_function" logicalId="LambdaSaveFunction"}}
   {{resource "lambda_execution_role" logicalId="LambdaExecutionRole"}}
 
-  {{resource "m:api-gateway" "invoke_function_role" logicalId="InvokeFunctionRole"}}
-    {{#resource logicalId="SpotinstRestApi"}}
-      "Type" : "AWS::ApiGateway::RestApi",
-      "Properties" : {
-        "Description" : "Spotinst API",
-        "Name" : "SpotinstAPI"
-      }
-    {{/resource}}
-    {{#resource logicalId="SpotinstRes"}}
-      "Type": "AWS::CloudFormation::Stack",
-      "Properties": {
-        "TemplateURL": "{{templateS3Url 'spotinst.template.json'}}",
-        "Parameters": {
-          "RestApiId": { "Ref": "SpotinstRestApi" },
-          "ParentResourceId": { "Fn::GetAtt": ["SpotinstRestApi", "RootResourceId"] },
-          "LambdaInvokeRoleArn": {"Fn::GetAtt" : [ "InvokeFunctionRole", "Arn" ]},
-          "PostLambdaArn": { "Fn::GetAtt" : [ "LambdaFunction", "Arn" ]}
-        }
-      }
-    {{/resource}}
-    {{#resource logicalId="SpotinstApiDeployment"}}
-      "DependsOn": "SpotinstRes",
-      "Type" : "AWS::ApiGateway::Deployment",
-      "Properties" : {
-        "RestApiId": { "Ref": "SpotinstRestApi" },
-        "Description": "Stage Deployment",
-        "StageName": { "Ref": "StageName" }
-      }
-    {{/resource}}
+  {{resource "low_activity_ec2_instance_topic" logicalId="LowActivityEC2InstanceTopic"}}
+  {{resource "sns_permission" logicalId="LowActivityEC2InstanceTopicPermission"}}
 
+  {{resource "event_schedule" logicalId="EventSchedule"}}
+  {{resource "event_permission" logicalId="EventPermission"}}
+
+  {{resource "ec2_instance_dynamodb" logicalId="EC2InstanceDynamoDB"}}
+
+  {{resource "m:api-gateway" "invoke_function_role" logicalId="InvokeFunctionRole"}}
+  {{#resource logicalId="SpotinstRestApi"}}
+    "Type" : "AWS::ApiGateway::RestApi",
+    "Properties" : {
+      "Description" : "Spotinst API",
+      "Name" : "SpotinstAPI"
+    }
+  {{/resource}}
+  {{#resource logicalId="SpotinstRes"}}
+    "Type": "AWS::CloudFormation::Stack",
+    "Properties": {
+      "TemplateURL": "{{templateS3Url 'spotinst.template.json'}}",
+      "Parameters": {
+        "RestApiId": { "Ref": "SpotinstRestApi" },
+        "ParentResourceId": { "Fn::GetAtt": ["SpotinstRestApi", "RootResourceId"] },
+        "LambdaInvokeRoleArn": {"Fn::GetAtt" : [ "InvokeFunctionRole", "Arn" ]},
+        "PostLambdaArn": { "Fn::GetAtt" : [ "LambdaFunction", "Arn" ]}
+      }
+    }
+  {{/resource}}
+  {{#resource logicalId="SpotinstApiDeployment"}}
+    "DependsOn": "SpotinstRes",
+    "Type" : "AWS::ApiGateway::Deployment",
+    "Properties" : {
+      "RestApiId": { "Ref": "SpotinstRestApi" },
+      "Description": "Stage Deployment",
+      "StageName": { "Ref": "StageName" }
+    }
+  {{/resource}}
+
+  {{output "low_activity_ec2_instance_topic" logicalId="LowActivityEC2InstanceTopic"}}
   {{output "spotinst_api_uri" logicalId="APIUri"}}
 
 {{/layout}}

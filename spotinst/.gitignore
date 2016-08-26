@@ -8,4 +8,4 @@ README.md.local
 dist
 utils
 config/*
-!config/account_id.json
+!config/config.json
