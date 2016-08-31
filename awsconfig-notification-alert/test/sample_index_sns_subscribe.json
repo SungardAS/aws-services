@@ -1,0 +1,12 @@
+{
+  "federateAccount": "442294194136",
+  "federateRoleName": "federate",
+  "account": "714270045944",
+  "topicName": "awsconfig-topic",
+  "roleName": "sgas_dev_admin",
+  "region": "us-west-2",
+  "roleExternalId": "0b6318ce-41ac-4774-87ae-2b6da44a78d1",
+  "AccountId": "442294194136",
+  "sessionName": "abcde",
+  "statementId": "snsinvoke"
+}
