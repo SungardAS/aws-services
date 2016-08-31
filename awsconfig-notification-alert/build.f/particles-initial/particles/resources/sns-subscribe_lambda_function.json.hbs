@@ -1,8 +1,6 @@
 {{#resource}}
-  "Type": "Custom::SnsSubscribeLambdaFunction",
+ "Type": "AWS::Lambda::Function",
   "Properties": {
-    "ServiceToken": { "Fn::GetAtt" : ["DeployerLambdaFunction", "Arn"] },
-    "Region": { "Ref": "AWS::Region" },
     "FunctionName": "sns-subscribe_lambda_function",
     "Code": {
       "S3Bucket": "{{s3.bucket}}",
@@ -12,6 +10,6 @@
     "Runtime": "nodejs",
     "Timeout": "60",
     "MemorySize": "128",
-    "Role": { "Fn::GetAtt" : ["SnsSubscribeFunctionRoleInfo", "Arn"] }
+    "Role": { "Fn::GetAtt" : ["DeployerLambdaExecutionRole", "Arn"] }
   }
 {{/resource}}

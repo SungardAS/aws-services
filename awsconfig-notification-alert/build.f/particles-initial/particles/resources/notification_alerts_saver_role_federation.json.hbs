@@ -1,0 +1,10 @@
+{{#resource}}
+  "Type": "Custom::NotificationAlertSaverRoleFederation",
+  "Properties": {
+    "ServiceToken": { "Fn::GetAtt" : ["FederationLambdaFunction", "Arn"] },
+    "AWSAccountId": { "Ref": "AWS::AccountId" },
+    "Region": { "Ref": "AWS::Region" },
+    "RoleArn": { "Fn::GetAtt" : [ "AlertMessagesFunctionRoleInfo", "Arn" ]},
+    "FederationRoleName": "federate"
+  }
+{{/resource}}

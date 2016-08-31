@@ -1,6 +1,7 @@
 {{#resource}}
   "Type": "AWS::Lambda::Function",
   "Properties": {
+  "FunctionName": "notification_alert",
     "Code": {
       "S3Bucket": "{{s3.bucket}}",
       "S3Key": "{{assetPath 'index_alertmessages.zip'}}"

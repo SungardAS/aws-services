@@ -1,8 +1,6 @@
 {{#resource}}
-  "Type": "Custom::NotificationAlertSaverFunctionInfo",
+ "Type": "AWS::Lambda::Function",
   "Properties": {
-    "ServiceToken": { "Fn::GetAtt" : ["DeployerLambdaFunction", "Arn"] },
-    "Region": { "Ref": "AWS::Region" },
     "FunctionName": "notificationalert_saver",
     "Code": {
       "S3Bucket": "{{s3.bucket}}",
@@ -12,6 +10,6 @@
     "Runtime": "nodejs",
     "Timeout": "60",
     "MemorySize": "128",
-    "Role": { "Fn::GetAtt" : [ "NotificationAlertSaverFunctionRoleInfo", "Arn" ]}
+    "Role": { "Fn::GetAtt" : [ "AlertMessagesFunctionRoleInfo", "Arn" ]}
   }
 {{/resource}}
