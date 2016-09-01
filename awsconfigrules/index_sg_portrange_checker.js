@@ -32,13 +32,8 @@ exports.handler = function (event, context) {
         sessionName = "session";
     }
 
-    //console.log("111###############");
-    //console.log(event);
-    //console.log("222###############");
-    //console.log(invokingEvent);
     var invokingEvent = event.invokingEvent;
     if (invokingEvent) invokingEvent = JSON.parse(invokingEvent);
-    //else invokingEvent = {"configurationItem": {"resourceType": "SG", "resourceId": event.region, "configurationItemCaptureTime": new Date()}};
     else invokingEvent = {"configurationItem": {"resourceType": "SecurityGroup","resourceId": event.region, "configurationItemCaptureTime": new Date()}};
 
     if(event.resultToken) var resultToken = event.resultToken;
@@ -49,7 +44,6 @@ exports.handler = function (event, context) {
         roles: roles,
         region: ruleParameters.region,
         resourceType: invokingEvent.configurationItem.resourceType,
-        //resourceId: invokingEvent.configurationItem.resourceId,
         timeStamp: invokingEvent.configurationItem.configurationItemCaptureTime,
         startPort: ruleParameters.startPort,
         endPort: ruleParameters.endPort,
@@ -63,7 +57,6 @@ exports.handler = function (event, context) {
     var flows = [
         {func:aws_sts.assumeRoles, success:aws_sg.sgInboundRulesHasPortRange, failure:failed, error:errored},
         {func:aws_sg.sgInboundRulesHasPortRange, success:aws_config.sendEvaluation, failure:aws_config.sendEvaluation, error:errored},
-        //{func:aws_config.sendEvaluation, success:succeeded, failure:failed, error:errored},
     ];
     aws_sg.flows = flows;
     aws_sts.flows = flows;
