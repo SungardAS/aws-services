@@ -1,6 +1,6 @@
 exports.handler = function(event, context ) {
 
-    var aws_sts = new (require('../lib/aws/sts'))();
+    var aws_sts = new (require('../lib/aws/sts2.js'))();
     var aws_ec2 = new (require('../lib/aws/ec2.js'))();
     var aws_config = new (require('../lib/aws/awsconfig.js'))();
     if (event.ruleParameters){
@@ -33,10 +33,10 @@ exports.handler = function(event, context ) {
 
     var invokingEvent = event.invokingEvent;
 
-    if (!ruleParameters) ruleParameters = {"vpcId": event.vpcId, "region": event.region, "groupName": event.groupName};
+    if (!ruleParameters) ruleParameters = {"region": event.region};
 
     if (invokingEvent) invokingEvent = JSON.parse(invokingEvent);
-    else invokingEvent = {"configurationItem": {"resourceType": "EC2 VPC", "resourceId": event.vpcId, "configurationItemCaptureTime": new Date()}};
+    else invokingEvent = {"configurationItem": {"resourceType": "IAM USER", "configurationItemCaptureTime": new Date()}};
 
     if(event.resultToken) var resultToken = event.resultToken;
     else var resultToken = "110ec58a-a0f2-4ac4-8393-c866d813b8d1";
@@ -52,9 +52,10 @@ exports.handler = function(event, context ) {
         timeStamp: invokingEvent.configurationItem.configurationItemCaptureTime,
         resultToken: resultToken
     };
-
-    var stsAssumeRolePromise = sts.assumeRole(input).promise();
+    console.log("Before assumerole and input == " + input);
+    var stsAssumeRolePromise = aws_sts.assumeRoles(input).promise();
     stsAssumeRolePromise.then(function(data) {
+        console.log("Inside assumeRole.then");
         iamService = new (require('../lib/aws/iam.js'))();
         return iamService.getUsersWithPolicies().promise();
     }).then(function(data) {
