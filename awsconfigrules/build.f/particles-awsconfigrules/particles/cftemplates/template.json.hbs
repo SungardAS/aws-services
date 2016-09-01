@@ -8,6 +8,7 @@
   {{resource "enable_rules_lambda" logicalId="EnableRulesLambda"}}
   {{resource "fetch_rules_lambda" logicalId="FetchRulesLambda"}}
   {{resource "sg_portrange_lambda" logicalId="SGPortRangeLambda"}}
+  {{resource "cloudtrail_s3bucket_logging_checker" logicalId="CloudtrailS3bucketLoggingChecker"}}
 
   {{output "account_id" logicalId="AccountId"}}
   {{output "stacks_region" logicalId="StacksRegion"}}
@@ -15,4 +16,5 @@
   {{output "enable_rules_lambda_arn" logicalId="EnablerRulesLambdaArn"}}
   {{output "fetch_rules_lambda_arn" logicalId="FetchRulesLambdaArn"}}
   {{output "sg_portrange_lambda_arn" logicalId="SGPortRangeLambdaArn"}}
+  {{output "cloudtrail_s3bucket_logging_checker_arn" logicalId="CloudtrailS3bucketLoggingCheckerArn"}}
 {{/layout}}
