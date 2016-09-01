@@ -1,0 +1,10 @@
+{
+  "billingBucketName": "billing.cto.sungardas.com.test.redshift",
+  "billingFileKeyPrefix": "/FeedToRedshift/",
+  "bucketIAMRoleArn": "arn:aws:iam::054649790173:role/RedshiftAccessS3",
+  "bucketRegion": "us-east-1",
+  "dynamoDBTableName": "billing_summary",
+  "redshiftConnectionString": "billingcluster.c1ryz9ousvcz.us-east-1.redshift.amazonaws.com:5439/dev",
+  "redshiftUser": "billing",
+  "redshiftPass": "AQECAHhvx7uYjb4q+Xfrq3bgIu96hGFBFv9wpvmucCiwLO72nAAAAGcwZQYJKoZIhvcNAQcGoFgwVgIBADBRBgkqhkiG9w0BBwEwHgYJYIZIAWUDBAEuMBEEDMkpw4LTtKhvhFADqgIBEIAkNUmns4pSPjLG0rGjPBl7L9FAvzKuDSkQb5TliEcLSM1Iepub"
+}
