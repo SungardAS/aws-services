@@ -1,8 +1,7 @@
 'use strict';
 
 let AWS = require('aws-sdk');
-let pg = require('pg');
-let PgPromise = require('pgpromise');
+var pgp = require('pg-promise')();
 let dateformat = require('dateformat');
 let diffHours = 6;
 
@@ -60,26 +59,19 @@ exports.handler = (event, context, callback) => {
     console.log('completed to build redshiftConnectionString');
   }).then(function() {
     // connect to the redshift
-  	var db = new PgPromise(pg, redshiftConnectionString);
-  	return db.connect().then(function(conn) {
-      connection = conn;
-      console.log("We've got a connection");
-      return;
-    }).catch(function(err) {
-      console.log(err);
-      if (connection) connection.client.end();
-      callback(err);
-    });
+    var conn = pgp(redshiftConnectionString);
+    console.log("We've got a connection");
+    connection = conn;
   }).then(function() {
     // find the last cost datetime
     console.log("finding last end date");
-    return connection.client.queryP(queryMaxEndDate).then(function(result) {
+    return connection.query(queryMaxEndDate).then(function(result) {
       console.log(result);
-      var lastEndDate = result.rows[0].max;
+      var lastEndDate = result[0].max;
       return lastEndDate;
     }).catch(function(err) {
       console.log(err);
-      if (connection) connection.client.end();
+      pgp.end();
       callback(err);
     });
   }).then(function(lastEndDate) {
@@ -87,14 +79,14 @@ exports.handler = (event, context, callback) => {
     console.log("finding the sum of current month");
     var querySumForThisMonth = querySum.replace("<year_month>", yearMonth).replace("<usage_end_date>", lastEndDate);
     console.log(querySumForThisMonth);
-    return connection.client.queryP(querySumForThisMonth).then(function(result) {
+    return connection.query(querySumForThisMonth).then(function(result) {
       console.log(result);
-      var data = {current: {last_end_date:lastEndDate, sum: result.rows}};
+      var data = {current: {last_end_date:lastEndDate, sum: result}};
       console.log(data);
       return data;
     }).catch(function(err) {
       console.log(err);
-      if (connection) connection.client.end();
+      pgp.end();
       callback(err);
     });
   }).then(function(data) {
@@ -106,9 +98,9 @@ exports.handler = (event, context, callback) => {
     var yearLastMonth = dateformat(new Date(lastEndDate), 'yyyymm');
     var querySumForPrevMonth = querySum.replace("<year_month>", yearLastMonth).replace("<usage_end_date>", lastEndDateStr);
     console.log(querySumForPrevMonth);
-    return connection.client.queryP(querySumForPrevMonth).then(function(result) {
+    return connection.query(querySumForPrevMonth).then(function(result) {
       console.log(result);
-      data.prev = {last_end_date: lastEndDateStr, sum: result.rows};
+      data.prev = {last_end_date: lastEndDateStr, sum: result};
       return data;
       /*
       { current:
@@ -130,7 +122,7 @@ exports.handler = (event, context, callback) => {
       */
     }).catch(function(err) {
       console.log(err);
-      if (connection) connection.client.end();
+      pgp.end();
       callback(err);
     });
   /*}).then(function(lastEndDate) {
@@ -172,14 +164,14 @@ exports.handler = (event, context, callback) => {
     });*/
   }).then(function(data) {
     console.log(data);
-    connection.client.end();
+    pgp.end();
     var merged = merge(data);
     //callback(null, merged);
     var list = toList(merged);
     callback(null, list);
   }).catch(function(err) {
     console.log(err);
-    if (connection) connection.client.end();
+    pgp.end();
     callback(err);
   });
 };

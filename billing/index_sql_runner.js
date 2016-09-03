@@ -1,7 +1,7 @@
 'use strict';
 
 let AWS = require('aws-sdk');
-let pg = require('pg');
+var pgp = require('pg-promise')();
 let PgPromise = require('pgpromise');
 
 exports.handler = (event, context, callback) => {
@@ -26,22 +26,14 @@ exports.handler = (event, context, callback) => {
     redshiftConnectionString = 'pg:' + redshiftUser + ':' + redshiftPass + '@' + redshiftConnectionString;
   }).then(function() {
     // now run the sql in the redshift
-    var connection = null;
-  	var db = new PgPromise(pg, redshiftConnectionString);
-  	db.connect().then(function(conn) {
-      connection = conn;
-      return connection.client.queryP(event.sql).then(function(result) {
-  			console.log(result);
-        connection.client.end();
-        callback(null, result);
-  		}).catch(function(err) {
-        console.log(err);
-        if (connection) connection.client.end();
-        callback(err);
-      });
-    }).catch(function(err) {
+    var connection = pgp(redshiftConnectionString);
+    return connection.query(event.sql).then(function(result) {
+			console.log(result);
+      pgp.end();
+      callback(null, result);
+		}).catch(function(err) {
       console.log(err);
-      if (connection) connection.client.end();
+      pgp.end();
       callback(err);
     });
   }).catch(function(err) {
