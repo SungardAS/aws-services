@@ -25,91 +25,99 @@ exports.handler = (event, context, callback) => {
   // Get the object from the event and show its content type
   const bucket = event.Records[0].s3.bucket.name;
   const key = decodeURIComponent(event.Records[0].s3.object.key.replace(/\+/g, ' '));
+  var tokens = key.split('/');
   if (bucket !== billingBucketName) {
     console.log("not a target bucket, so just return");
     callback(null, null);
+    return;
   }
-  if (key.indexOf(billingFileKeyPrefix)) {
+  else if (key.indexOf(billingFileKeyPrefix)) {
     // '/FeedToRedshift/20160801-20160901/c6d4c249-6872-4ae2-9cd3-35fd43254878/FeedToRedshift-RedshiftCommands.sql'
     console.log("not a target key, so just return");
     callback(null, null);
+    return;
   }
-
-  var tokens = key.split('/');
-  if (tokens[tokens.length-1].indexOf('.sql') < 0) {
+  else if (tokens[tokens.length-1].indexOf('.sql') < 0) {
     console.log("not an sql file, so just return");
     callback(null, null);
+    return;
   }
+  else {
+    console.log("We've got a new billing file, " + key);
+    var yearMonth = tokens[2].split('-')[0].substring(0, 6);
 
-  console.log("We've got a new billing file, " + key);
-  var yearMonth = tokens[2].split('-')[0].substring(0, 6);
-
-  var kms = new AWS.KMS({region:bucketRegion});
-  var params = {
-    CiphertextBlob: new Buffer(redshiftPass, 'base64')
-  };
-  kms.decrypt(params).promise().then(function(data) {
-    redshiftPass = data.Plaintext.toString();
-    redshiftConnectionString = 'pg:' + redshiftUser + ':' + redshiftPass + '@' + redshiftConnectionString;
-  }).then(function() {
-    // get sqls first
-    var params = {
-      Bucket: bucket,
-      Key: key
-    }
-    return s3.getObject(params).promise().then(function(data) {
-      //console.log(data.Body.toString());
-      var sqlStr = data.Body.toString().replace('<AWS_ROLE>', bucketIAMRoleArn).replace("<S3_BUCKET_REGION>", "'" + bucketRegion + "'");
-      console.log(sqlStr);
-      return sqlStr;
-    }).catch(function(err) {
-      console.log(err);
-      callback(err);
-    });
-  }).then(function(sqlStr) {
-    // now run the sql in the redshift
     var connection = null;
-  	var db = new PgPromise(pg, redshiftConnectionString);
-  	db.connect().then(function(conn) {
-      connection = conn;
+    var kms = new AWS.KMS({region:bucketRegion});
+    var params = {
+      CiphertextBlob: new Buffer(redshiftPass, 'base64')
+    };
+    kms.decrypt(params).promise().then(function(data) {
+      redshiftPass = data.Plaintext.toString();
+      redshiftConnectionString = 'pg:' + redshiftUser + ':' + redshiftPass + '@' + redshiftConnectionString;
+    }).then(function() {
+      // get sqls first
+      var params = {
+        Bucket: bucket,
+        Key: key
+      }
+      return s3.getObject(params).promise().then(function(data) {
+        //console.log(data.Body.toString());
+        var sqlStr = data.Body.toString().replace('<AWS_ROLE>', bucketIAMRoleArn).replace("<S3_BUCKET_REGION>", "'" + bucketRegion + "'");
+        console.log(sqlStr);
+        return sqlStr;
+      }).catch(function(err) {
+        console.log(err);
+        callback(err);
+      });
+    }).then(function(sqlStr) {
+      // now run the sql in the redshift
+    	var db = new PgPromise(pg, redshiftConnectionString);
+    	return db.connect().then(function(conn) {
+        connection = conn;
+        console.log("We've got a connection");
+        return sqlStr;
+      }).catch(function(err) {
+        console.log(err);
+        if (connection) connection.client.end();
+        callback(err);
+      });
+    }).then(function(sqlStr) {
       var redshiftDropTableSqlString = "drop table AWSBilling<Year_Month>; drop table AWSBilling<Year_Month>_tagMapping;";
       redshiftDropTableSqlString = redshiftDropTableSqlString.replace("<Year_Month>", yearMonth).replace("<Year_Month>", yearMonth);
       console.log("dropping existing billing tables : " + redshiftDropTableSqlString);
       return connection.client.queryP(redshiftDropTableSqlString).then(function(result) {
   			console.log(result);
-        return result;
+        return sqlStr;
   		}).catch(function(err) {
         console.log("ignoring error during dropping tables : " + err);
-        return null;
+        return sqlStr;
       });
-    }).then(function(result) {
+    }).then(function(sqlStr) {
   		console.log("importing billing data");
   	  return connection.client.queryP(sqlStr).then(function(result) {
   			console.log(result);
         return result;
       }).catch(function(err) {
         console.log(err);
+        if (connection) connection.client.end();
         callback(err);
       });
     }).then(function(result) {
       console.log("\n Now importing to DynamoDB");
-      exportToDynamoDB(connection, yearMonth, bucketRegion, dynamoDBTableName).then(function(result) {
+      return exportToDynamoDB(connection, yearMonth, bucketRegion, dynamoDBTableName).then(function(result) {
         console.log(result);
         connection.client.end();
         callback(null, result);
       }).catch(function(err) {
         console.log(err);
+        if (connection) connection.client.end();
         callback(err);
       });
     }).catch(function(err) {
       console.log(err);
-      if (connection) connection.client.end();
       callback(err);
     });
-  }).catch(function(err) {
-    console.log(err);
-    callback(err);
-  });
+  }
 };
 
 function exportToDynamoDB(connection, yearMonth, bucketRegion, dynamoDBTableName) {

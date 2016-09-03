@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "aws-sdk": "^2.5.4",
+    "dateformat": "^1.0.12",
     "pg": "^6.1.0",
     "pgpromise": "^0.1.1"
   }
