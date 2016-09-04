@@ -27,17 +27,34 @@ exports.handler = (event, context, callback) => {
   console.log('queryMaxEndDate:', queryMaxEndDate);
 
   var yearMonth = dateformat(new Date(), 'yyyymm');
-  var querySum = "select lineItem_UsageAccountId, \
-    sum(cast(lineItem_BlendedCost as float)) blended, \
-    sum(cast(lineitem_unblendedcost as float)) unblended \
-    from AWSBilling<year_month> \
-    where lineitem_usageenddate <= '<usage_end_date>' \
-    group by lineItem_UsageAccountId \
-    order by lineItem_UsageAccountId;"
-    //to_char(sum(cast(lineItem_BlendedCost as float)), 'FM999990D00') blended_rounded, \
-    //to_char(sum(cast(lineitem_unblendedcost as float)), 'FM999990D00') unblended_rounded, \
-    //and lineitem_usageaccountid = '<account>' \
-  //querySum = querySum.replace("<account>", event.account);
+  var querySum = "";
+
+  if (event.account) {
+    querySum = "select lineItem_UsageAccountId, lineitem_productcode, \
+      sum(cast(lineItem_BlendedCost as float)) blended, \
+      sum(cast(lineitem_unblendedcost as float)) unblended \
+      from AWSBilling<year_month> \
+      where lineitem_usageenddate <= '<usage_end_date>' \
+      and lineitem_usageaccountid = '<account>' \
+      group by lineItem_UsageAccountId, lineitem_productcode \
+      order by lineItem_UsageAccountId, lineitem_productcode;"
+      //to_char(sum(cast(lineItem_BlendedCost as float)), 'FM999990D00') blended_rounded, \
+      //to_char(sum(cast(lineitem_unblendedcost as float)), 'FM999990D00') unblended_rounded, \
+    querySum = querySum.replace("<account>", event.account);
+  }
+  else {
+    querySum = "select lineItem_UsageAccountId, \
+      sum(cast(lineItem_BlendedCost as float)) blended, \
+      sum(cast(lineitem_unblendedcost as float)) unblended \
+      from AWSBilling<year_month> \
+      where lineitem_usageenddate <= '<usage_end_date>' \
+      group by lineItem_UsageAccountId \
+      order by lineItem_UsageAccountId;"
+      //to_char(sum(cast(lineItem_BlendedCost as float)), 'FM999990D00') blended_rounded, \
+      //to_char(sum(cast(lineitem_unblendedcost as float)), 'FM999990D00') unblended_rounded, \
+      //and lineitem_usageaccountid = '<account>' \
+    //querySum = querySum.replace("<account>", event.account);
+  }
   console.log('querySum:', querySum);
 
   /*var queryHistoryData = "select sum(cast(lineitem_unblendedcost as float)) unblended, \
@@ -125,50 +142,18 @@ exports.handler = (event, context, callback) => {
       pgp.end();
       callback(err);
     });
-  /*}).then(function(lastEndDate) {
-    // find the sum of current month
-    var startDatetime = new Date(lastEndDate);
-    startDatetime = startDatetime.setHours(startDatetime.getHours() - diffHours);
-    startDatetime = new Date(startDatetime).toISOString();
-    var queryHistoryDataForThisMonth = queryHistoryData.replace("<year_month>", yearMonth).replace("<from_datetime>", startDatetime).replace("<end_datetime>", lastEndDate);
-    console.log(queryHistoryDataForThisMonth);
-    return connection.client.queryP(queryHistoryDataForThisMonth).then(function(result) {
-      console.log(result);
-      var data = {current: {from: startDatetime, to: lastEndDate, sum: result.rows[0]}};
-      console.log(data);
-      return data;
-    }).catch(function(err) {
-      console.log(err);
-      if (connection) connection.client.end();
-      callback(err);
-    });
-  }).then(function(data) {
-    // find the sum of prev month
-    var startDatetime = new Date(data.current.from);
-    startDatetime = startDatetime.setMonth(startDatetime.getMonth() - 1);
-    startDatetime = new Date(startDatetime).toISOString();
-    var endDatetime = new Date(data.current.to);
-    endDatetime = endDatetime.setMonth(endDatetime.getMonth() - 1);
-    var yearLastMonth = dateformat(new Date(endDatetime), 'yyyymm');
-    endDatetime = new Date(endDatetime).toISOString();
-    var queryHistoryDataForPrevMonth = queryHistoryData.replace("<year_month>", yearLastMonth).replace("<from_datetime>", startDatetime).replace("<end_datetime>", endDatetime);
-    console.log(queryHistoryDataForPrevMonth);
-    return connection.client.queryP(queryHistoryDataForPrevMonth).then(function(result) {
-      console.log(result);
-      data.prev = {from: startDatetime, to: endDatetime, sum: result.rows[0]};
-      return data;
-    }).catch(function(err) {
-      console.log(err);
-      if (connection) connection.client.end();
-      callback(err);
-    });*/
   }).then(function(data) {
     console.log(data);
     pgp.end();
-    var merged = merge(data);
-    //callback(null, merged);
-    var list = toList(merged);
-    callback(null, list);
+    if (event.account) {
+      var merged = mergeServices(data);
+      callback(null, merged);
+    }
+    else {
+      var merged = mergeAccounts(data);
+      var list = toListAccounts(merged);
+      callback(null, list);
+    }
   }).catch(function(err) {
     console.log(err);
     pgp.end();
@@ -176,7 +161,9 @@ exports.handler = (event, context, callback) => {
   });
 };
 
-function merge(data) {
+
+// need to merge 'mergeAccounts' & 'toListAccounts' like 'mergeServices'!!!!
+function mergeAccounts(data) {
   var accounts = {};
   data.current.sum.forEach(function(sum) {
     accounts[sum.lineitem_usageaccountid] = {current: sum};
@@ -214,11 +201,7 @@ function merge(data) {
   return merged;
 }
 
-function round(value) {
-  return Math.round(value * 100) / 100;
-}
-
-function toList(data) {
+function toListAccounts(data) {
   var list = [];
   Object.keys(data.accounts).forEach(function(key) {
     console.log(data.accounts[key]);
@@ -246,4 +229,61 @@ function toList(data) {
     list.push(account_sum);
   });
   return list;
+}
+
+function mergeServices(data) {
+  var services = {};
+  data.current.sum.forEach(function(sum) {
+    services[sum.lineitem_productcode] = {current: sum};
+  });
+  data.prev.sum.forEach(function(sum) {
+    if (services[sum.lineitem_productcode]) services[sum.lineitem_productcode].prev = sum;
+    else services[sum.lineitem_productcode] = {current: null, prev: sum};
+  });
+  var merged = [];
+  Object.keys(services).forEach(function(key) {
+    var service_sum = {};
+    if (services[key].current) {
+      service_sum.account = services[key].current.lineitem_usageaccountid;
+      service_sum.service = services[key].current.lineitem_productcode;
+      service_sum.cur_blended = services[key].current.blended;
+      service_sum.cur_unblended = services[key].current.unblended;
+      service_sum.cur_blended_rounded = round(services[key].current.blended);
+      service_sum.cur_unblended_rounded = round(services[key].current.unblended);
+    }
+    if (services[key].prev) {
+      service_sum.account = services[key].prev.lineitem_usageaccountid;
+      service_sum.service = services[key].prev.lineitem_productcode;
+      service_sum.prev_blended = services[key].prev.blended;
+      service_sum.prev_unblended = services[key].prev.unblended;
+      service_sum.prev_blended_rounded = round(services[key].prev.blended);
+      service_sum.prev_unblended_rounded = round(services[key].prev.unblended);
+    }
+    if (services[key].current && services[key].prev) {
+      service_sum.diff_blended = round(services[key].current.blended - services[key].prev.blended);
+      service_sum.diff_unblended = round(services[key].current.unblended - services[key].prev.unblended);
+      if (service_sum.prev_blended_rounded > 0) {
+        service_sum.diff_blended_percentages = round((service_sum.diff_blended / service_sum.prev_blended_rounded) * 100);
+      }
+      else {
+        service_sum.diff_blended_percentages = service_sum.diff_blended;
+      }
+      if (service_sum.prev_unblended_rounded) {
+        service_sum.diff_unblended_percentages = round((service_sum.diff_unblended / service_sum.prev_unblended_rounded) * 100);
+      }
+      else {
+        service_sum.diff_unblended_percentages = service_sum.diff_unblended;
+      }
+    }
+    service_sum.cur_last_end_date = data.current.last_end_date;
+    service_sum.prev_last_end_date = data.prev.last_end_date;
+    service_sum.cur_year_month = dateformat(new Date(data.current.last_end_date), 'yyyymm');
+    service_sum.prev_year_month = dateformat(new Date(data.prev.last_end_date), 'yyyymm');
+    merged.push(service_sum);
+  });
+  return merged;
+}
+
+function round(value) {
+  return Math.round(value * 100) / 100;
 }
