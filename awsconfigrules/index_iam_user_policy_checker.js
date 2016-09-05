@@ -1,5 +1,26 @@
 exports.handler = function(event, context ) {
 
+
+    const EVALUATION_TYPES = {
+        COMPLAINT: 'COMPLIANT',
+        NON_COMPLIANT: 'NON_COMPLIANT',
+    }; 
+
+    var getEvaluation = function getEvaluationParam(userId,value,timeStamp) {
+        var eval = [];
+        complianceType= EVALUATION_TYPES.COMPLAINT
+        if(value > 0){
+            complianceType= EVALUATION_TYPES.NON_COMPLIANT
+        }
+        eval.push({
+            ComplianceResourceType: "AWS::IAM::User" ,
+            ComplianceResourceId: userId,
+            ComplianceType: complianceType,
+            OrderingTimestamp: timeStamp,
+        });
+        return eval;
+    }
+
     var aws_sts = new (require('../lib/aws/sts2.js'))();
     var aws_ec2 = new (require('../lib/aws/ec2.js'))();
     var aws_config = new (require('../lib/aws/awsconfig.js'))();
@@ -32,7 +53,6 @@ exports.handler = function(event, context ) {
     }
 
     var invokingEvent = event.invokingEvent;
-
     if (!ruleParameters) ruleParameters = {"region": event.region};
 
     if (invokingEvent) invokingEvent = JSON.parse(invokingEvent);
@@ -44,25 +64,32 @@ exports.handler = function(event, context ) {
     var input = {
         sessionName: sessionName,
         roles: roles,
-        vpcId: ruleParameters.vpcId,
         region: ruleParameters.region,
-        groupName: ruleParameters.groupName,
         resourceType: invokingEvent.configurationItem.resourceType,
         resourceId: invokingEvent.configurationItem.resourceId,
         timeStamp: invokingEvent.configurationItem.configurationItemCaptureTime,
         resultToken: resultToken
     };
-    console.log("Before assumerole and input == " + input);
-    var stsAssumeRolePromise = aws_sts.assumeRoles(input).promise();
-    stsAssumeRolePromise.then(function(data) {
-        console.log("Inside assumeRole.then");
+    var stsAssumeRolePromise = aws_sts.assumeRoles(input);
+    stsAssumeRolePromise.then(function (data) {
         iamService = new (require('../lib/aws/iam.js'))();
-        return iamService.getUsersWithPolicies().promise();
+        global.creds = data.creds;
+        return iamService.getUsersWithPolicies(data);
     }).then(function(data) {
+        evaluations = [];
         var aws_config = new (require('../lib/aws/awsconfig.js'))();
-        return aws_config.sendEvaluation().promise();
-    }).catch(function(err) {
-        console.log("Error occurred: ");
-        console.log(err);
+        keys = Object.keys(data);
+        for ( var idx in keys) { 
+            var evaluation = getEvaluation(keys[idx],data[keys[idx]],input.timeStamp);
+            evalresult = {};
+            evalresult.evaluations = evaluation;
+            evalresult.resultToken = resultToken;
+            evalresult.creds = global.creds;
+            //TODO: Remove hardcoded region
+            evalresult.region = "us-west-2";
+            aws_config.sendEvaluations(evalresult, function(data){});
+        }
+    }).catch( function (err) {
+        console.log("error is " + err);
     });
 };
