@@ -1,4 +1,6 @@
 
+var _ = require('lodash');
+
 var defaultScaling = {
   "up":  [
     {
@@ -138,7 +140,7 @@ module.exports = {
       "product": instance.Platform == "Windows" ? "Windows" : "Linux/UNIX",
       /*"elasticIps" : [],*/
       "launchSpecification": {
-        "loadBalancerNames": (instance.AutoScalingGroups.length > 0) ? instance.AutoScalingGroups.map(function(group) { return group.LoadBalancerNames[0]; }): null,
+        "loadBalancerNames": (instance.AutoScalingGroups.length > 0) ? _.flatten(instance.AutoScalingGroups.map(function(group) { return group.LoadBalancerNames })): null,
         "healthCheckType": (instance.AutoScalingGroups.length > 0) ? "ELB": null,
         "healthCheckGracePeriod": (instance.AutoScalingGroups.length > 0) ? instance.AutoScalingGroups[0].HealthCheckGracePeriod: null,
         "securityGroupIds": instance.SecurityGroups.map(function(sg) { return sg.GroupId; }),

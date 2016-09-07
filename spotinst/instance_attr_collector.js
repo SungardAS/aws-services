@@ -5,36 +5,36 @@ var AWS = require('aws-sdk');
 
 module.exports = {
 
-  getEC2InstanceAttrs: function(instanceId, region) {
+  getEC2InstanceAttrs: function(instanceId, region, creds) {
     var self = this;
-    return self.getEC2Instance(instanceId, region).then(function(instance) {
-      return self.getEC2InstanceUserData(instance, region).then(function(userData) {
+    return self.getEC2Instance(instanceId, region, creds).then(function(instance) {
+      return self.getEC2InstanceUserData(instance, region, creds).then(function(userData) {
         instance.UserData = userData;
         return instance;
       });
     }).then(function(instance) {
-      return self.getVolumeDetails(instance, region).then(function(volumes) {
+      return self.getVolumeDetails(instance, region, creds).then(function(volumes) {
         instance.Volumes = volumes;
         return instance;
       });
     }).then(function(instance) {
-      return self.getAutoScalingInstances(instance, region).then(function(autoScalingGroups) {
+      return self.getAutoScalingInstances(instance, region, creds).then(function(autoScalingGroups) {
         instance.AutoScalingGroups = autoScalingGroups;
         return instance;
       });
     }).then(function(instance) {
       if (instance.AutoScalingGroups.length == 0) return instance;
-      return self.getAutoScalingGroupDetails(instance, region).then(function(autoScalingGroups) {
+      return self.getAutoScalingGroupDetails(instance, region, creds).then(function(autoScalingGroups) {
         instance.AutoScalingGroups = autoScalingGroups;
         return instance;
       });
     }).then(function(instance) {
-      return self.getSubnetDetails(instance, region).then(function(subnets) {
+      return self.getSubnetDetails(instance, region, creds).then(function(subnets) {
         instance.Subnets = subnets;
         return instance;
       });
     }).then(function(instance) {
-      return self.getAWSCPUUtilizationMetricStatisticsByEC2Instance(instance, region).then(function(metrics) {
+      return self.getAWSCPUUtilizationMetricStatisticsByEC2Instance(instance, region, creds).then(function(metrics) {
         instance.Metrics = metrics;
         //console.log(instance);
         return instance;
@@ -44,8 +44,11 @@ module.exports = {
     });
   },
 
-  getEC2Instance: function(instanceId, region) {
-    var ec2 = new AWS.EC2({region: region});
+  getEC2Instance: function(instanceId, region, creds) {
+    var p = {region: region};
+    if (creds)  p.credentials = creds;
+    console.log(p);
+    var ec2 = new AWS.EC2(p);
     var params = {
       /*DryRun: true || false,
       Filters: [
@@ -64,6 +67,7 @@ module.exports = {
       /*MaxResults: 0,
       NextToken: 'STRING_VALUE'*/
     };
+    console.log(ec2);
     var promise = ec2.describeInstances(params).promise();
     return promise.then(function(data) {
       //console.log(JSON.stringify(data));
@@ -142,8 +146,10 @@ module.exports = {
     */
   },
 
-  getEC2InstanceUserData: function(instance, region) {
-    var ec2 = new AWS.EC2({region: region});
+  getEC2InstanceUserData: function(instance, region, creds) {
+    var p = {region: region};
+    if (creds)  p.credentials = creds;
+    var ec2 = new AWS.EC2(p);
     var params = {
       Attribute: 'userData',
       InstanceId: instance.InstanceId
@@ -155,8 +161,10 @@ module.exports = {
     });
   },
 
-  getVolumeDetails: function(instance, region) {
-    var ec2 = new AWS.EC2({region: region});
+  getVolumeDetails: function(instance, region, creds) {
+    var p = {region: region};
+    if (creds)  p.credentials = creds;
+    var ec2 = new AWS.EC2(p);
     var params = {
       //DryRun: true || false,
       /*Filters: [
@@ -178,8 +186,10 @@ module.exports = {
     });
   },
 
-  getAutoScalingInstances: function(instance, region) {
-    var autoscaling = new AWS.AutoScaling({region: region});
+  getAutoScalingInstances: function(instance, region, creds) {
+    var p = {region: region};
+    if (creds)  p.credentials = creds;
+    var autoscaling = new AWS.AutoScaling(p);
     var params = {
       InstanceIds: [
         instance.InstanceId
@@ -203,8 +213,10 @@ module.exports = {
     */
   },
 
-  getAutoScalingGroupDetails: function(instance, region) {
-    var autoscaling = new AWS.AutoScaling({region: region});
+  getAutoScalingGroupDetails: function(instance, region, creds) {
+    var p = {region: region};
+    if (creds)  p.credentials = creds;
+    var autoscaling = new AWS.AutoScaling(p);
     var params = {
       AutoScalingGroupNames: instance.AutoScalingGroups.map(function(group) { return group.AutoScalingGroupName; }),
       //MaxRecords: 0,
@@ -265,7 +277,7 @@ module.exports = {
     */
   },
 
-  getSubnetDetails: function(instance, region) {
+  getSubnetDetails: function(instance, region, creds) {
     var subnets = [];
     if (instance.AutoScalingGroups.length == 0) {
       subnets.push(instance.SubnetId);
@@ -273,7 +285,9 @@ module.exports = {
     else {
       subnets = instance.AutoScalingGroups[0].VPCZoneIdentifier.split(',');
     }
-    var ec2 = new AWS.EC2({region: region});
+    var p = {region: region};
+    if (creds)  p.credentials = creds;
+    var ec2 = new AWS.EC2(p);
     var params = {
       //DryRun: true || false,
       /*Filters: [
@@ -293,11 +307,13 @@ module.exports = {
     });
   },
 
-  getAWSCPUUtilizationMetricStatisticsByEC2Instance: function(instance, region) {
+  getAWSCPUUtilizationMetricStatisticsByEC2Instance: function(instance, region, creds) {
 
     // aws cloudwatch get-metric-statistics --metric-name CPUUtilization --start-time 2016-08-01T00:00:00 --end-time 2016-08-11T15:00:00 --period 1440 --namespace AWS/EC2 --statistics Minimum --dimensions Name=InstanceId,Value=<your-instance-id>
 
-    var cloudWatch = new AWS.CloudWatch({region: region});
+    var p = {region: region};
+    if (creds)  p.credentials = creds;
+    var cloudWatch = new AWS.CloudWatch(p);
     var startTime = new Date();
     //startTime.setHours(startTime.getHours() - 24*14);
     startTime.setHours(startTime.getHours() - 24);
@@ -331,8 +347,10 @@ module.exports = {
     });
   },
 
-  sendSNSNotification: function(instanceMetrics, SNSMessageSubject, SNSTopicArn, region) {
-    var sns = new AWS.SNS({region: region});
+  sendSNSNotification: function(instanceMetrics, SNSMessageSubject, SNSTopicArn, region, creds) {
+    var p = {region: region};
+    if (creds)  p.credentials = creds;
+    var sns = new AWS.SNS(p);
     var params = {
       Message: JSON.stringify(instanceMetrics),
       Subject: SNSMessageSubject,
@@ -342,8 +360,10 @@ module.exports = {
     return sns.publish(params).promise();
   },
 
-  getRunningEC2Instances: function(region) {
-    var ec2 = new AWS.EC2({region: region});
+  getRunningEC2Instances: function(region, creds) {
+    var p = {region: region};
+    if (creds)  p.credentials = creds;
+    var ec2 = new AWS.EC2(p);
     var params = {
       /*DryRun: true || false,
       Filters: [
@@ -382,8 +402,10 @@ module.exports = {
     });
   },
 
-  getAutoScalingGroups: function(region) {
-    var autoscaling = new AWS.AutoScaling({region: region});
+  getAutoScalingGroups: function(region, creds) {
+    var p = {region: region};
+    if (creds)  p.credentials = creds;
+    var autoscaling = new AWS.AutoScaling(p);
     var params = {
       /*AutoScalingGroupNames: [
         AutoScalingGroupName
