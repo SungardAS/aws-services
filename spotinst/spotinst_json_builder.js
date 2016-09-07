@@ -149,7 +149,7 @@ module.exports = {
         //"keyPair": (instance.KeyName) ? instance.KeyName: null,
         "keyPair": keyPairName,
         ///"iamRole" : {"name": instance.IamInstanceProfile.Arn.split('/')[instance.IamInstanceProfile.Arn.split('/').length-1]},
-        "iamRole" : {"arn": instance.IamInstanceProfile.Arn},
+        "iamRole" : (instance.IamInstanceProfile) ? {"arn": instance.IamInstanceProfile.Arn}: null,
         /*"blockDeviceMappings": [
           {
             "deviceName": "/dev/sdm",
