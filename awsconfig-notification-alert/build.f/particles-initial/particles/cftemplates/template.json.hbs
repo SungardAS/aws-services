@@ -15,8 +15,6 @@
  
   {{resource "notification_alerts_saver_role_federation" logicalId="NotificationAlertSaverRoleFederation"}}
   {{resource "federation_lambda_function" logicalId="FederationLambdaFunction"}}
- 
-  {{resource "sns-subscribe_lambda_function" logicalId="SnsSubscribeLambdaFunction"}}
 
   {{output "account_id" logicalId="AccountId"}}
   {{output "stacks_region" logicalId="StacksRegion"}}
@@ -26,6 +24,4 @@
   {{output "alert_messages_function_name" logicalId="AlertMessagesFunctionName"}}
   {{output "alert_messages_function_arn" logicalId="AlertMessagesFunctionArn"}}
   {{output "alert_messages_function_role_arn" logicalId="AlertMessagesFunctionRoleArn"}}
-  {{output "sns-subscribe_lambda_function" logicalId="SnsSubscribeLambdaFunction"}}
-  {{output "sns-subscribe_lambda_function_arn" logicalId="SnsSubscribeLambdaFunctionArn"}}
 {{/layout}}
