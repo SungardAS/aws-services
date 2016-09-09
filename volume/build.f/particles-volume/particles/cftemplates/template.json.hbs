@@ -1,0 +1,21 @@
+{{#layout}}
+
+  {{parameter "m:core" "base" type="List<AWS::EC2::Subnet::Id>" logicalId="SubnetIds"}}
+  {{parameter "m:core" "base" type="List<AWS::EC2::SecurityGroup::Id>" logicalId="SecurityGroupIds"}}
+
+  {{resource "federation_lambda_function" logicalId="FederationLambdaFunction"}}
+  {{resource "federation_lambda_execution_role" logicalId="FederationLambdaExecutionRole"}}
+
+  {{resource "volume_tagger_function_role_info" logicalId="VolumeTaggerFunctionRoleInfo"}}
+  {{resource "volume_tagger_function_info" logicalId="VolumeTaggerFunctionInfo"}}
+
+  {{resource "role_federation" logicalId="RoleFederation"}}
+
+  {{resource "event_schedule" logicalId="EventSchedule"}}
+  {{resource "event_permission" logicalId="EventPermission"}}
+
+  {{output "volume_tagger_function_name" logicalId="VolumeTaggerFunctionName"}}
+  {{output "volume_tagger_function_arn" logicalId="VolumeTaggerFunctionArn"}}
+  {{output "volume_tagger_function_role_arn" logicalId="VolumeTaggerFunctionRoleArn"}}
+
+{{/layout}}
