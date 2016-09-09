@@ -88,10 +88,41 @@ class Ec2ListContainer extends React.Component {
     });
   }
 
+  handlePrice(e) {
+    if(e) e.preventDefault();
+    const self = this;
+    const accountRoleArn = this.state.accountRoleArns[this.state.account];
+    const externalId = this.state.externalIds[this.state.account];
+    const url = API.get_price_api_url() + '/ec2?federate_role_arn=' + this.state.federateRoleArn + '&account_role_arn=' + accountRoleArn + '&external_id=' + externalId ;
+    const method = 'GET';
+    const params = {};
+    API.send_request(url, method, params).
+    then(function(data) {
+      if (data.errorMessage) {
+        alert(JSON.stringify(data));
+        return;
+      }
+      data.forEach(function(instance) {
+        instance.account = self.state.account;
+        if (instance.autoScalingGroup) {
+          instance.loadBalancerNames = instance.autoScalingGroup.LoadBalancerNames.toString().replace(',', ', ');
+        }
+        else {
+          instance.loadBalancerNames = null;
+        }
+      });
+      self.setState({data: data});
+    })
+    .catch(function(err) {
+      alert(err);
+    });
+  }
+
   render() {
     let changeHandler = this.handleChange.bind(this);
     let submitHandler = this.handleSubmit.bind(this);
-    return (<Ec2List data={this.state.data} accounts={this.state.accounts} changeHandler={changeHandler} submitHandler={submitHandler} />);
+    let priceHandler = this.handlePrice.bind(this);
+    return (<Ec2List data={this.state.data} accounts={this.state.accounts} changeHandler={changeHandler} submitHandler={submitHandler}  priceHandler={priceHandler}/>);
   }
 }
 

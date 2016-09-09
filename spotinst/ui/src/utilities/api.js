@@ -12,6 +12,10 @@ var Api = {
     return GLOBAL.msawsApiUrl;
   },
 
+  get_price_api_url : function() {
+    return GLOBAL.pricerApiUrl;
+  },
+
   send_request: function (url, method, data, anonymous) {
     const self = this;
     if (data) {

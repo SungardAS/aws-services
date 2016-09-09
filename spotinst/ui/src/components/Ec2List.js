@@ -8,7 +8,7 @@ const Ec2List = (ec2List) => {
 
   const ec2Nodes = ec2List.data
     .map((ec2) =>
-      <Ec2 name={ec2.metadata[2]} key={ec2.metadata[1]} account={ec2.account} id={ec2.metadata[1]} region={ec2.region} cpu={ec2.metadata[19]} network={ec2.metadata[20]} days={ec2.metadata[21]} asg={ec2.autoScalingGroupName} lbs={ec2.loadBalancerNames} spot={ec2.detail.InstanceLifecycle} />
+      <Ec2 name={ec2.metadata[2]} key={ec2.metadata[1]} account={ec2.account} id={ec2.metadata[1]} region={ec2.region} cpu={ec2.metadata[19]} network={ec2.metadata[20]} days={ec2.metadata[21]} asg={ec2.autoScalingGroupName} lbs={ec2.loadBalancerNames} spot={ec2.detail.InstanceLifecycle} priceHandler={ec2List.priceHandler} />
     );
   return (
     <div className="container">
