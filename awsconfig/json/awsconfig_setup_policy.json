@@ -3,6 +3,10 @@
     "Statement": [
         {
             "Action": [
+                "config:Put*",
+                "config:Get*",
+                "config:List*",
+                "config:Describe*",
                 "appstream:Get*",
                 "autoscaling:Describe*",
                 "cloudformation:DescribeStacks",
