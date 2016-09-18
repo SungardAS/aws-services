@@ -34,7 +34,8 @@ exports.handler = function (event, context) {
        SubnetId:event.SubnetId,
        VolumeIOps:event.VolumeIOps,
        VolumeSize:event.VolumeSize,
-       VpcId:event.VpcId
+       VpcId:event.VpcId,
+       Eip:event.Eip
   };
     var input = {
        sessionName: sessionName,
