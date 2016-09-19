@@ -1,0 +1,22 @@
+{{#resource}}
+  "Type" : "AWS::DynamoDB::Table",
+  "Properties" : {
+    "TableName" : "notificationalerts",
+    "AttributeDefinitions" : [
+      {
+        "AttributeName" : "id",
+        "AttributeType" : "S"
+      }
+    ],
+    "KeySchema" : [
+      {
+        "AttributeName" : "id",
+        "KeyType" : "HASH"
+      }
+    ],
+    "ProvisionedThroughput" : {
+      "ReadCapacityUnits" : {"Ref" : "ReadCapacityUnits"},
+      "WriteCapacityUnits" : {"Ref" : "WriteCapacityUnits"}
+    }
+  }
+{{/resource}}

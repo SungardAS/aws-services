@@ -3,7 +3,7 @@ var config = {
     {
       aws: {
         region: 'us-east-1',
-        bucket: 'sgas.particles-awsconfig.089476987273.us-east-1'
+        bucket: 'sgas.particles-awsconfig.622821376834.us-east-1'
       },
       clean: true,
       validate: true,
@@ -12,7 +12,7 @@ var config = {
     {
       aws: {
         region: 'us-west-2',
-        bucket: 'sgas.particles-awsconfig.089476987273.us-west-2'
+        bucket: 'sgas.particles-awsconfig.622821376834.us-west-2'
       },
       clean: true,
       validate: true,

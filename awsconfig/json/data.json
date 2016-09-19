@@ -1,6 +1,7 @@
 {
   "bucketNamePostfix" : ".awsconfig",
   "topicName" : "awsconfig-topic",
+  "saverFuncName" : "notificationalert_saver",
   "assumeRolePolicyName" : "awsconfig_assume_role_policy",
   "roleName" : "awsconfig-setup-role",
   "inlinePolicyName" : "awsconfig_setup_policy",

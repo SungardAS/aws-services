@@ -1,0 +1,11 @@
+{{#resource}}
+  "Type": "Custom::NotificationAlertStreamsTrigger",
+  "Properties": {
+    "ServiceToken": { "Fn::GetAtt" : ["DynamoDBStreamsLambdaFunction", "Arn"] },
+    "PackageJSON": {
+      "region": { "Ref": "AWS::Region" },
+      "functionName":  { "Fn::GetAtt" : ["AlertMessagesFunctionInfo", "Arn"] },
+      "tableName": { "Ref": "DynamoDBTableNameForStreams" }
+    }
+  }
+{{/resource}}
