@@ -55,13 +55,16 @@ exports.handler = function (event, context) {
     AccountId: event.federateAccount,
     roleArn : null,
     topicArn : null,
+    sourceArn : null,
     inlinePolicyDoc : null
   };
 
  function resetAuth(input)
    {
         input.creds = null;
+	input.sourceArn = input.topicArn;
         aws_lambda.findFunction(input);
+        console.log(input);
    }
 
   function succeeded(input) { context.done(null, true); }
