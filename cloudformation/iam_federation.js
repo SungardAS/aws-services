@@ -83,12 +83,12 @@ function addStatement(input, callback) {
   if (statements.length == 0) {
     // pick the first statement and append to it
     var assumeStatement = assumeDoc.Statement[0].Principal.AWS;
+
     if(typeof(assumeStatement) == "string"){
         assumeStatement = [assumeStatement];
     }
     assumeStatement.push(lambdaRoleArn);
-    console.log("*********************addStatement 222222222222222 *************************");
-    console.log(assumeDoc.Statement);
+    console.log("assumeStatement = " + JSON.stringify(assumeStatement));
     updateAssumeRolePolicy(input, callback);
   }
   else {
@@ -104,15 +104,16 @@ function removeStatement(input, callback) {
   console.log(assumeDoc.Statement);
   console.log(input.roleArn);
   var found = -1;
-  for (var i = 0; i < assumeDoc.Statement.length; i++) {
-    if (assumeDoc.Statement[i].Principal.AWS == lambdaRoleArn) {
+  var assumeStatement = assumeDoc.Statement[0].Principal.AWS;
+  for (var i = 0; i < assumeStatement.length; i++) {
+    if (assumeStatement[i] == lambdaRoleArn) {
       found = i;
       break;
     }
   }
   if (found >= 0) {
-    assumeDoc.Statement.splice(found, 1);
-    console.log(assumeDoc.Statement);
+    assumeStatement.splice(found, 1);
+    console.log(assumeStatement);
     updateAssumeRolePolicy(input, callback);
   }
   else {
