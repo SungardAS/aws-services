@@ -64,18 +64,30 @@ function addStatement(input, callback) {
   var assumeDoc = input.assumeDoc;
   var federationRoleName = input.federationRoleName;
   var lambdaRoleArn = input.roleArn;
-  var lambdaStatement = {
-    Sid: '',
-    Effect: 'Allow',
-    Principal: { AWS: lambdaRoleArn },
-    Action: 'sts:AssumeRole'
-  };
+
+  console.log("*********************addStatement 111111111111111111 *************************");
+  console.log(assumeDoc.Statement);
   var statements = assumeDoc.Statement.filter(function(statement) {
-    return statement.Principal.AWS == lambdaRoleArn;
+    var s = statement.Principal.AWS;
+    if(typeof(s) == "string"){
+        if(lambdaRoleArn == s) return true;
+        else return false;
+    }
+    for (var idx = 0 ; idx < s.length ; idx ++){
+        if (lambdaRoleArn == s[idx]){
+            return true;
+        }
+    }
   });
   console.log(statements.length);
   if (statements.length == 0) {
-    assumeDoc.Statement.push(lambdaStatement);
+    // pick the first statement and append to it
+    var assumeStatement = assumeDoc.Statement[0].Principal.AWS;
+    if(typeof(assumeStatement) == "string"){
+        assumeStatement = [assumeStatement];
+    }
+    assumeStatement.push(lambdaRoleArn);
+    console.log("*********************addStatement 222222222222222 *************************");
     console.log(assumeDoc.Statement);
     updateAssumeRolePolicy(input, callback);
   }
