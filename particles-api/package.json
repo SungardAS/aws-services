@@ -1,5 +1,5 @@
 {
-  "name": "particles-cloudtrail",
+  "name": "particles-aws-services-api",
   "version": "0.0.0",
   "description": "[Condensation](https://github.com/SungardAS/condensation) particles that build AWS CloudFormation templates.",
   "license": "Apache-2.0",
@@ -14,7 +14,6 @@
     "gulp-git": "^1.7.0",
     "gulp-zip": "^3.2.0",
     "particles-core": "^0.4.5",
-    "vinyl-fs": "^2.3.1",
-    "particles-api-gateway": "0.0.0"
+    "vinyl-fs": "^2.3.1"
   }
 }

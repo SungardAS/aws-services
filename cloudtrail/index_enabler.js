@@ -34,7 +34,8 @@ exports.handler = function (event, context) {
     "ap-southeast-2": "arn:aws:iam::284668455005:root",
     "us-west-2": "arn:aws:iam::113285607260:root",
     "eu-central-1": "arn:aws:iam::035351147821:root",
-    "ap-northeast-2": "arn:aws:iam::492519147666:root"
+    "ap-northeast-2": "arn:aws:iam::492519147666:root",
+    "ap-south-1": "arn:aws:iam::977081816279:root"
   };
 
   // find root account id for that region
@@ -78,7 +79,6 @@ exports.handler = function (event, context) {
     {func:aws_sts.assumeRoles, success:aws_bucket.findBucket, failure:failed, error:errored},
     {func:aws_bucket.findBucket, success:aws_trail.findTrails, failure:aws_bucket.createBucket, error:errored},
     {func:aws_bucket.createBucket, success:aws_bucket.addPolicy, failure:failed, error:errored},
-    {func:aws_bucket.getPolicy, success:aws_trail.findTrails, failure:aws_bucket.addPolicy, error:errored},
     {func:aws_bucket.addPolicy, success:aws_trail.findTrails, failure:failed, error:errored},
     {func:aws_trail.findTrails, success:aws_trail.isLogging, failure:aws_trail.createTrail, error:errored},
     {func:aws_trail.createTrail, success:aws_trail.startLogging, failure:failed, error:errored},

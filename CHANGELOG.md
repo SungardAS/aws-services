@@ -1,6 +1,22 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [1.4] - 2016-09-30
+### Added
+- AWSConfig & CloudTrail
+  - Implemented API Gateway to provide api interfaces to public
+- CloudTrail
+  - Added 'ap-south-1' region support
+
+### Changed
+- AWSConfig & CloudTrail
+  - Changed Lambda function deployment using "AWS::Lambda::Function" from the custom Lambda function
+- CloudTrail
+  - Changed to create a new trail with 'Default' even if there is already one with a different name
+
+### Removed
+- None
+
 ## [1.3] - 2016-06-30
 ### Added
 - Volumes

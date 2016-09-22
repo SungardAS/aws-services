@@ -1,0 +1,32 @@
+---
+allowedMethods: "'OPTIONS'"
+---
+"IntegrationResponses": [
+  {
+    "SelectionPattern": "",
+    "StatusCode": "200",
+    "ResponseParameters": {
+      "method.response.header.Access-Control-Allow-Methods": {{helper "m:core" "propertyValue" allowedMethods}},
+      "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
+      "method.response.header.Access-Control-Allow-Origin": "'*'"
+    }
+  },
+  {
+    "SelectionPattern": "not permitted.*",
+    "StatusCode": "403",
+    "ResponseParameters": {
+      "method.response.header.Access-Control-Allow-Methods": {{helper "m:core" "propertyValue" allowedMethods}},
+      "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
+      "method.response.header.Access-Control-Allow-Origin": "'*'"
+    }
+  },
+  {
+    "SelectionPattern": "unauthorized.*",
+    "StatusCode": "401",
+    "ResponseParameters": {
+      "method.response.header.Access-Control-Allow-Methods": {{helper "m:core" "propertyValue" allowedMethods}},
+      "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
+      "method.response.header.Access-Control-Allow-Origin": "'*'"
+    }
+  }
+]

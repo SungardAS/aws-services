@@ -1,8 +1,6 @@
 {{#resource}}
-  "Type": "Custom::CloudTrailRemoverFunctionInfo",
+  "Type": "AWS::Lambda::Function",
   "Properties": {
-    "ServiceToken": { "Fn::GetAtt" : ["DeployerLambdaFunction", "Arn"] },
-    "Region": { "Ref": "AWS::Region" },
     "FunctionName": "cloudtrail-remover",
     "Code": {
       "S3Bucket": "{{s3.bucket}}",
