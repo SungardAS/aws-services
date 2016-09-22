@@ -6,6 +6,7 @@
   {{resource "awsconfigrules_role_federation" logicalId="AWSConfigRulesRoleFederation"}}
   {{resource "federation_lambda_function" logicalId="FederationLambdaFunction"}}
   {{resource "enable_rules_lambda" logicalId="EnableRulesLambda"}}
+  {{resource "delete_rules_lambda" logicalId="DeleteRulesLambda"}}
   {{resource "fetch_rules_lambda" logicalId="FetchRulesLambda"}}
   {{resource "sg_portrange_lambda" logicalId="SGPortRangeLambda"}}
 
@@ -13,6 +14,7 @@
   {{output "stacks_region" logicalId="StacksRegion"}}
   {{output "security_group_lambda_arn" logicalId="SecurityGroupLambdaArn"}}
   {{output "enable_rules_lambda_arn" logicalId="EnablerRulesLambdaArn"}}
+  {{output "delete_rules_lambda_arn" logicalId="DeleteRulesLambdaArn"}}
   {{output "fetch_rules_lambda_arn" logicalId="FetchRulesLambdaArn"}}
   {{output "sg_portrange_lambda_arn" logicalId="SGPortRangeLambdaArn"}}
 {{/layout}}
