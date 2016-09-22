@@ -23,10 +23,73 @@
 
   {{
      parameter "m:core" "base"
-     logicalId="PostLambdaArn"
+     logicalId="EC2GetLambdaArn"
      type="String"
-     description="ARN of lambda function for post method"
+     description="ARN of lambda function for get method of ec2 resource"
   }}
+
+  {{
+     parameter "m:core" "base"
+     logicalId="SpotinstPostLambdaArn"
+     type="String"
+     description="ARN of lambda function for post method of spotinst resource"
+  }}
+
+  {{#resource logicalId="EC2"}}
+    "Type" : "AWS::ApiGateway::Resource",
+    "Properties" : {
+      "RestApiId": { "Ref": "RestApiId" },
+      "ParentId": { "Ref": "ParentResourceId" },
+      "PathPart": "ec2"
+    }
+  {{/resource}}
+
+  {{#resource logicalId="EC2Get"}}
+    "Type" : "AWS::ApiGateway::Method",
+    "Properties" : {
+      "RestApiId": { "Ref": "RestApiId" },
+      "ResourceId": { "Ref": "EC2" },
+      "HttpMethod": "GET",
+      "AuthorizationType": "NONE",
+      "Integration": {
+        "Credentials": { "Ref": "LambdaInvokeRoleArn" },
+        "IntegrationHttpMethod": "POST",
+        "Type": "AWS",
+        "Uri": {"Fn::Join": ["", ["arn:aws:apigateway:", {"Ref": "AWS::Region"}, ":lambda:path/2015-03-31/functions/", { "Ref": "EC2GetLambdaArn" }, "/invocations"]]},
+        "RequestTemplates": {
+          "application/json": {"Fn::Join": ["", [
+            "{\n    \"account_id\": \"",
+            {"Ref": "AWS::AccountId"},
+            "\",\n   \"region\": \"",
+            {"Ref": "AWS::Region"},
+            "\",\n   \"federateRoleArn\": \"$input.path('$').federateRoleArn\",\n  \"accountRoleArn\": \"$input.path('$').accountRoleArn\",\n  \"externalId\": \"$input.path('$').externalId\"\n    }\n"
+          ]]}
+        },
+        {{{ partial 'm:api-gateway' 'integration_responses' }}}
+      },
+      {{{ partial 'm:api-gateway' 'method_responses' }}}
+    }
+  {{/resource}}
+
+  {{#resource logicalId="EC2Options"}}
+    "Type" : "AWS::ApiGateway::Method",
+    "Properties" : {
+      "RestApiId": { "Ref": "RestApiId" },
+      "ResourceId": { "Ref": "EC2" },
+      "HttpMethod": "OPTIONS",
+      "AuthorizationType": "NONE",
+      "Integration": {
+        "Type": "MOCK",
+        "RequestTemplates": {"application/json": "{\"statusCode\": 200}" },
+        {{{ partial 'm:api-gateway' 'integration_responses_options'
+          allowedMethods="'GET,OPTIONS'"
+        }}}
+      },
+      {{{ partial 'm:api-gateway' 'method_responses_options'
+        allowedMethods="'GET,OPTIONS'"
+      }}}
+    }
+  {{/resource}}
 
   {{#resource logicalId="Spotinst"}}
     "Type" : "AWS::ApiGateway::Resource",
@@ -48,7 +111,7 @@
         "Credentials": { "Ref": "LambdaInvokeRoleArn" },
         "IntegrationHttpMethod": "POST",
         "Type": "AWS",
-        "Uri": {"Fn::Join": ["", ["arn:aws:apigateway:", {"Ref": "AWS::Region"}, ":lambda:path/2015-03-31/functions/", { "Ref": "PostLambdaArn" }, "/invocations"]]},
+        "Uri": {"Fn::Join": ["", ["arn:aws:apigateway:", {"Ref": "AWS::Region"}, ":lambda:path/2015-03-31/functions/", { "Ref": "SpotinstPostLambdaArn" }, "/invocations"]]},
         "RequestTemplates": {
           "application/json": "{\n  \"federateRoleArn\": \"$input.path('$').federateRoleArn\",\n  \"accountRoleArn\": \"$input.path('$').accountRoleArn\",\n  \"externalId\": \"$input.path('$').externalId\",\n  \"region\": \"$input.path('$').region\",\n  \"account\": \"$input.path('$').account\",\n  \"dryRun\": $input.path('$').dryRun,\n  \"instanceId\": \"$input.path('$').instanceId\",\n  \"name\": \"$input.path('$').name\",\n  \"description\": \"$input.path('$').description\",\n  \"tags\": \"$input.path('$').tags\",\n  \"keyPairName\": \"$input.path('$').keyPairName\",\n  \"spotinstAccessKey\": \"$input.path('$').spotinstAccessKey\"\n}\n"
         },

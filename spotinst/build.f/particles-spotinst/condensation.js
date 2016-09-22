@@ -9,7 +9,7 @@ module.exports.initialize = function(cb) {
     if (error) return cb(error);
   });
 
-  vfs.src(['spotinst/*.js', 'spotinst/config/*.json', 'spotinst/node_modules/**/*'],{cwd:'../../..', base:'../../..'})
+  vfs.src(['spotinst/*.js', 'spotinst/node_modules/**/*'],{cwd:'../../..', base:'../../..'})
   .pipe(zip('spotinst.zip'))
   .pipe(gulp.dest('./particles/assets'))
   .on('end', cb);
