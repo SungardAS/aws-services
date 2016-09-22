@@ -50,8 +50,8 @@ exports.handler = function (event, context) {
        Ami:event.Ami,
        account:event.account
     };
-    if(event.type == "createStack"){
-        var policy = "{\"Id\": \"Policy1474458972817\",\"Version\": \"2012-10-17\",\"Statement\": [{\"Sid\": \""+event.uid+"\",\"Action\": [ \"s3:GetObject\" ],\"Effect\": \"Allow\",\"Resource\": \"arn:aws:s3:::"+event.bucketName+"/*\",\"Principal\": {\"AWS\":\""+event.account+"\"}}]}";
+    if(event.actionType == "createStack"){
+        var policy = "{\"Id\": \"Policy1474458972817\",\"Version\": \"2012-10-17\",\"Statement\": [{\"Sid\": \""+event.uuid+"\",\"Action\": [ \"s3:GetObject\" ],\"Effect\": \"Allow\",\"Resource\": \"arn:aws:s3:::"+event.bucketName+"/*\",\"Principal\": {\"AWS\":\""+event.account+"\"}}]}";
         input.bucketName = event.bucketName;
         input.policyDocument = policy;
      
@@ -63,7 +63,17 @@ exports.handler = function (event, context) {
         ];
         aws_ec2.flows = flows;
         aws_s3.flows = flows;
-    }else if(event.type == "getStackStatus"){
+    }else if(event.actionType == "deleteStack"){
+        input.bucketName = event.bucketName;
+        var flows = [
+           {func:aws_s3.deletePolicy, success:aws_ec2.deleteLaunchAMIPermission, failure:failed, error:errored},
+           {func:aws_ec2.deleteLaunchAMIPermission, success:aws_sts.assumeRoles, failure:failed, error:errored},
+           {func:aws_sts.assumeRoles, success:aws_cfn.deleteStack, failure:failed, error:errored},
+           {func:aws_cfn.deleteStack, success:succeeded, failure:failed, error:errored},
+        ];
+        aws_ec2.flows = flows;
+        aws_s3.flows = flows;
+    }else if(event.actionType == "getStackStatus"){
         var flows = [
            {func:aws_sts.assumeRoles, success:aws_cfn.getStackStatus, failure:failed, error:errored},
            {func:aws_cfn.getStackStatus, success:succeeded, failure:failed, error:errored},
