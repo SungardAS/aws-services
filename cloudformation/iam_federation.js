@@ -65,7 +65,6 @@ function addStatement(input, callback) {
   var federationRoleName = input.federationRoleName;
   var lambdaRoleArn = input.roleArn;
 
-  console.log("*********************addStatement 111111111111111111 *************************");
   console.log(assumeDoc.Statement);
   var statements = assumeDoc.Statement.filter(function(statement) {
     var s = statement.Principal.AWS;
@@ -79,6 +78,7 @@ function addStatement(input, callback) {
         }
     }
   });
+
   console.log(statements.length);
   if (statements.length == 0) {
     // pick the first statement and append to it
@@ -88,7 +88,8 @@ function addStatement(input, callback) {
         assumeStatement = [assumeStatement];
     }
     assumeStatement.push(lambdaRoleArn);
-    console.log("assumeStatement = " + JSON.stringify(assumeStatement));
+    assumeDoc.Statement[0].Principal.AWS = assumeStatement;
+    console.log("assumeDoc = " + JSON.stringify(assumeDoc));
     updateAssumeRolePolicy(input, callback);
   }
   else {
