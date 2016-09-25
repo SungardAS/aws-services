@@ -250,7 +250,7 @@ module.exports = {
     return this.buildJSON(instance, name, description, capacityTarget, capacityMin, capacityMax, spotTypes, null, keyPairName, tags);
   },
 
-  buildCF: function(accessKey, instance, name, description, keyPairName, nameTag, templateFilePath) {
+  buildCF: function(serviceTokenArn, accessKey, instance, name, description, keyPairName, nameTag, templateFilePath) {
     var cf_name = {"Ref": "ElastiGroupName"};
     var cf_description = {"Ref": "ElastiGroupDescription"};
     var cf_capacityTarget = {"Ref": "CapacityTarget"};
@@ -268,6 +268,7 @@ module.exports = {
 
     var fs = require("fs");
     var cf = JSON.parse(fs.readFileSync(templateFilePath));
+    cf.Resources.SpotinstElastigroup.Properties.ServiceToken = serviceTokenArn;
     cf.Parameters.AccessKey.Default = accessKey;
     cf.Parameters.ElastiGroupName.Default = name;
     cf.Parameters.ElastiGroupDescription.Default = description;

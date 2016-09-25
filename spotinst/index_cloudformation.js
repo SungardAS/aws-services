@@ -7,7 +7,11 @@ var request = require('request');
 var querystring = require('querystring');
 var collector = require('./instance_attr_collector');
 var builder = require('./spotinst_json_builder');
+var s3Bucket = require('./s3bucket');
 var awsLambda = require('./lambda');
+
+var s3 = new s3Bucket();
+var lambda = new awsLambda();
 
 var federatedCreds = null;
 
@@ -29,10 +33,9 @@ exports.handler = (event, context, callback) => {
   var templateFilePath = config.get('templateFilePath');
   var serviceTokenFunctionName = config.get('serviceTokenFunctionName');
   // "arn:aws:lambda:us-east-1:089476987273:function:SSOProxyElastigroup-SpotinstLambdaFunction-15P3UDNPADGF4"
-  var serviceTokenArn = "arn:aws:lambda:" + region + ":" + account + "function:" + serviceTokenFunctionName;
+  var serviceTokenArn = "arn:aws:lambda:" + region + ":" + account + ":function:" + serviceTokenFunctionName;
 
   // first check if the target account has a permission to call the service token lambda and add a permission if it doesn't have yet
-  var lambda = new awsLambda();
   var input = { region:region, functionName: serviceTokenFunctionName, account: instanceAccount };
   lambda.findAccountPolicy(input).then(data => {
     console.log(data);
@@ -65,8 +68,17 @@ exports.handler = (event, context, callback) => {
       var description = name;
       var keyPairName = '';
       var nameTag = name;
-      var cfJson = builder.buildCF(spotinstAccessKey, instance, name, description, keyPairName, nameTag, templateFilePath);
+      var cfJson = builder.buildCF(serviceTokenArn, spotinstAccessKey, instance, name, description, keyPairName, nameTag, templateFilePath);
       console.log(JSON.stringify(cfJson, null, 2));
+      return cfJson;
+    }).catch(err => {
+      console.log(err);
+      callback(err);
+    });
+  }).then(cfJson => {
+    // find the target bucket and create it if not exists
+    return s3.createBucket({ region: instanceRegion, bucketName: bucketName }).then(res => {
+      console.log(res);
       return cfJson;
     }).catch(err => {
       console.log(err);
@@ -75,14 +87,14 @@ exports.handler = (event, context, callback) => {
   }).then(cfJson => {
     // upload the generated cloudformation template in s3 bucket
     var templateName = instanceAccount + '.' + cfJson.Parameters.ElastiGroupName.Default.replace(/ /g, '-') + '.cf.json';
-    var s3 = new AWS.S3(params);
     var params = {
-      ACL: 'public-read',
-      Bucket: bucketName,
-      Key: templateName,
-      Body: JSON.stringify(cfJson),
+      region: instanceRegion,
+      acl: 'public-read',
+      bucketName: bucketName,
+      keyName: templateName,
+      data: JSON.stringify(cfJson),
     };
-    return s3.putObject(params).promise().then(res => {
+    return s3.putObject(params).then(res => {
       return templateName;
     }).catch(err => {
       console.log(err);
@@ -99,7 +111,7 @@ exports.handler = (event, context, callback) => {
       }
       else {
         console.log(url);
-        callback(null, url);
+        callback(null, {consoleUrl: url});
       }
     });
   }).catch(err => {
