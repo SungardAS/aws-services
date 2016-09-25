@@ -97,7 +97,7 @@ var defaultScheduling = {
 
 module.exports = {
 
-  build: function(instance, name, description, keyPairName, tags) {
+  buildJSON: function(instance, name, description, capacityTarget, capacityMin, capacityMax, spotTypes, iamRoleArn, keyPairName, tags) {
 
     var group = {
       "name": name,
@@ -105,15 +105,15 @@ module.exports = {
     };
 
     var capacity = {
-      "target": 1,
-      "minimum": 1,
-      "maximum": 1,
+      "target": capacityTarget,
+      "minimum": capacityMin,
+      "maximum": capacityMax,
       "unit": "instance"
     };
 
     var strategy = {
       "risk": 100,
-      "onDemandCount": null,
+      "onDemandCount": 0,
       "drainingTimeout": 0,
       "availabilityVsCost": "balanced",
       "fallbackToOd": true,
@@ -123,12 +123,7 @@ module.exports = {
     var compute = {
       "instanceTypes": {
         "ondemand": instance.InstanceType,
-        "spot": [
-          "c3.large",
-          "c4.large",
-          "m3.large",
-          "r3.large"
-        ]
+        "spot": (typeof(spotTypes) == 'string') ? spotTypes.split(','): spotTypes,
       },
       /*"availabilityZones": [
         {
@@ -138,7 +133,7 @@ module.exports = {
       ],*/
       "availabilityZones": instance.Subnets.map(function(subnet) { return { name: subnet.AvailabilityZone, subnetId: subnet.SubnetId}; }),
       "product": instance.Platform == "Windows" ? "Windows" : "Linux/UNIX",
-      /*"elasticIps" : [],*/
+      //"elasticIps" : [],
       "launchSpecification": {
         "loadBalancerNames": (instance.AutoScalingGroups.length > 0) ? _.flatten(instance.AutoScalingGroups.map(function(group) { return group.LoadBalancerNames })): null,
         "healthCheckType": (instance.AutoScalingGroups.length > 0) ? "ELB": null,
@@ -148,8 +143,7 @@ module.exports = {
         "imageId": instance.ImageId,
         //"keyPair": (instance.KeyName) ? instance.KeyName: null,
         "keyPair": keyPairName,
-        ///"iamRole" : {"name": instance.IamInstanceProfile.Arn.split('/')[instance.IamInstanceProfile.Arn.split('/').length-1]},
-        "iamRole" : (instance.IamInstanceProfile) ? {"arn": instance.IamInstanceProfile.Arn}: null,
+        "iamRole" : (iamRoleArn) ? {"arn": iamRoleArn}: ((instance.IamInstanceProfile) ? {"arn": instance.IamInstanceProfile.Arn}: ""),
         /*"blockDeviceMappings": [
           {
             "deviceName": "/dev/sdm",
@@ -177,8 +171,7 @@ module.exports = {
           }
         ],*/
         "userData": instance.UserData,
-        //"tags": instance.Tags.map(function(tag) { return {tagKey: tag.Key.replace('aws:', ''), tagValue: tag.Value}; }),
-        "tags": tags.map(function(tag) { return {tagKey: tag.Key, tagValue: tag.Value}; }),
+        "tags": (typeof(tags) == 'string') ? [{tagKey: 'Name', tagValue: tags}] : tags.map(function(tag) { return {tagKey: tag.Key, tagValue: tag.Value}; }),
         "networkInterfaces": instance.NetworkInterfaces.map(function(interface) {
             return {
               deviceIndex: interface.Attachment.DeviceIndex,
@@ -205,6 +198,16 @@ module.exports = {
         }
       ]*/
     };
+
+    // remove attributes whose value is null
+    if (!compute.launchSpecification.loadBalancerNames) delete compute.launchSpecification.loadBalancerNames;
+    if (!compute.launchSpecification.healthCheckType) delete compute.launchSpecification.healthCheckType;
+    if (!compute.launchSpecification.healthCheckGracePeriod) delete compute.launchSpecification.healthCheckGracePeriod;
+
+    // The associatePublicIPAddress parameter cannot be specified when launching with multiple network interfaces.
+    if (compute.launchSpecification.networkInterfaces.length > 1) {
+      compute.launchSpecification.networkInterfaces.map(networkInterface => delete networkInterface.associatePublicIpAddress)
+    }
 
     // compute.launchSpecification.blockDeviceMappings
     var rootVolume = instance.BlockDeviceMappings.find(function(dev) { return dev.DeviceName == instance.RootDeviceName; });
@@ -239,9 +242,47 @@ module.exports = {
     return spotInstJSON;
   },
 
+  build: function(instance, name, description, keyPairName, tags) {
+    var capacityTarget = 1;
+    var capacityMin = 1;
+    var capacityMax = 1;
+    var spotTypes = "c3.large,c4.large,m3.large,r3.large";
+    return this.buildJSON(instance, name, description, capacityTarget, capacityMin, capacityMax, spotTypes, null, keyPairName, tags);
+  },
+
+  buildCF: function(accessKey, instance, name, description, keyPairName, nameTag, templateFilePath) {
+    var cf_name = {"Ref": "ElastiGroupName"};
+    var cf_description = {"Ref": "ElastiGroupDescription"};
+    var cf_capacityTarget = {"Ref": "CapacityTarget"};
+    var cf_capacityMin = {"Ref": "CapacityMin"};
+    var cf_capacityMax = {"Ref": "CapacityMax"};
+    var cf_spotTypes = {"Ref": "ComputeSpotInstanceTypes"};
+    var cf_iamRoleArn = {"Ref": "IAMRoleArn"};
+    var cf_keyPairName = {"Ref": "KeypairName"};
+    var json = this.buildJSON(instance, cf_name, cf_description, cf_capacityTarget, cf_capacityMin, cf_capacityMax, cf_spotTypes, cf_iamRoleArn, cf_keyPairName, nameTag);
+    //console.log(JSON.stringify(json));
+
+    // remove 'scaling' and 'scheduling'
+    delete json.group.scaling;
+    delete json.group.scheduling;
+
+    var fs = require("fs");
+    var cf = JSON.parse(fs.readFileSync(templateFilePath));
+    cf.Parameters.AccessKey.Default = accessKey;
+    cf.Parameters.ElastiGroupName.Default = name;
+    cf.Parameters.ElastiGroupDescription.Default = description;
+    cf.Parameters.KeypairName.Default = keyPairName;
+    cf.Parameters.IAMRoleArn.Default = (instance.IamInstanceProfile) ? instance.IamInstanceProfile.Arn: "";
+    cf.Parameters.NameTag.Default = nameTag;
+    cf.Resources.SpotinstElastigroup.Properties.group = json.group;
+    //console.log(JSON.stringify(cf, null, 2));
+
+    return cf;
+  },
+
   deploy: function(spotInstJSON, accessKey) {
 
-    // curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer d04821bde138802e17d3b4cbda1283b2193f79e419341bfb3b51073d9187185f" -d @json/i-79dea6e4-dbaccessor.json https://api.spotinst.io/aws/ec2/group
+    // curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <access_key>" -d @json/i-79dea6e4-dbaccessor.json https://api.spotinst.io/aws/ec2/group
 
     var rp = require('request-promise');
     var options = {
@@ -259,32 +300,5 @@ module.exports = {
       console.log(parsedBody);
       return parsedBody;
     });
-  }
+  },
 }
-
-/*
-var rp = require('request-promise');
-var options = {
-  method: 'POST',
-  uri: 'https://t9d2i86pud.execute-api.us-east-1.amazonaws.com/v1/cloudtrail',
-  body: {
-    "federateAccount": "089476987273",
-    "account": "089476987273",
-    "federateRoleName": "federate",
-    "roleName": "sgas_dev_admin",
-    "sessionName": "abcde",
-    "region": "ap-south-1"
-  },
-  headers: {
-    "content-type": "application/json",
-    "roleExternalId": "88df904d-c597-40ef-8b29-b767aba1eaa4"
-  },
-  json: true // Automatically stringifies the body to JSON
-};
-
-rp(options).then(function (parsedBody) {
-  console.log(parsedBody);
-}).catch(function (err) {
-  console.log(err);
-});
-*/
