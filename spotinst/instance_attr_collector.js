@@ -8,23 +8,27 @@ module.exports = {
   getEC2InstanceAttrs: function(instanceId, region, creds) {
     var self = this;
     return self.getEC2Instance(instanceId, region, creds).then(function(instance) {
+      console.log(instance);
       return self.getEC2InstanceUserData(instance, region, creds).then(function(userData) {
         instance.UserData = userData;
         return instance;
       });
     }).then(function(instance) {
       return self.getVolumeDetails(instance, region, creds).then(function(volumes) {
+        console.log("volumes: " + JSON.stringify(volumes, null, 2));
         instance.Volumes = volumes;
         return instance;
       });
     }).then(function(instance) {
       return self.getAutoScalingInstances(instance, region, creds).then(function(autoScalingGroups) {
+        console.log("autoScalingGroups: " + JSON.stringify(autoScalingGroups, null, 2));
         instance.AutoScalingGroups = autoScalingGroups;
         return instance;
       });
     }).then(function(instance) {
       if (instance.AutoScalingGroups.length == 0) return instance;
       return self.getAutoScalingGroupDetails(instance, region, creds).then(function(autoScalingGroups) {
+        console.log("autoScalingGroupDetails: " + JSON.stringify(autoScalingGroups, null, 2));
         instance.AutoScalingGroups = autoScalingGroups;
         return instance;
       });
@@ -278,12 +282,14 @@ module.exports = {
   },
 
   getSubnetDetails: function(instance, region, creds) {
-    var subnets = [];
-    if (instance.AutoScalingGroups.length == 0) {
-      subnets.push(instance.SubnetId);
-    }
-    else {
-      subnets = instance.AutoScalingGroups[0].VPCZoneIdentifier.split(',');
+    var subnets = instance.NetworkInterfaces.map(networkInterface => networkInterface.subnetId);
+    if (subnets.length == 0) {
+      if (instance.AutoScalingGroups.length == 0) {
+        subnets.push(instance.SubnetId);
+      }
+      else {
+        subnets = instance.AutoScalingGroups[0].VPCZoneIdentifier.split(',');
+      }
     }
     var p = {region: region};
     if (creds)  p.credentials = creds;

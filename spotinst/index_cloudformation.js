@@ -61,7 +61,7 @@ exports.handler = (event, context, callback) => {
   }).then(creds => {
     federatedCreds = creds;
     // get the attributes of the given instance
-    return collector.getEC2InstanceAttrs(instanceId, region, creds).then(instance => {
+    return collector.getEC2InstanceAttrs(instanceId, instanceRegion, creds).then(instance => {
       console.log(JSON.stringify(instance, null, 2));
       // now build the cloudformation template
       var name = instance.InstanceId + '-elastigroup';

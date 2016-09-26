@@ -6,7 +6,6 @@ const App = ({ children }) => (
     <header>
       <h3>SpotInstances</h3>
       <Link to="/ec2">EC2 With Low Usages</Link>
-      <Link to="/spot">SpontInst Builder</Link>
     </header>
     <section>
       {children}

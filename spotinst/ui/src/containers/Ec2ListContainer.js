@@ -11,6 +11,16 @@ class Ec2ListContainer extends React.Component {
       ],
       accountRoleArns: {},
       externalIds: {},
+      spotinstAccessKeys: {
+        "089476987273": "",
+        "290093585298": "",
+        "876224653878": "",
+        "054649790173": "",
+        "546276914724": "",
+        "607481993316": "",
+        "714270045944": "",
+        "897824193103": ""
+      },
       federateRoleArn: '',
       account: ''
     };
@@ -88,6 +98,40 @@ class Ec2ListContainer extends React.Component {
     });
   }
 
+  handleCloudformation(e) {
+    e.preventDefault();
+    const instanceId = e.target.value;
+    const region = e.target.name;
+    const accountRoleArn = this.state.accountRoleArns[this.state.account];
+    const externalId = this.state.externalIds[this.state.account];
+    const spotinstAccessKey = this.state.spotinstAccessKeys[this.state.account];
+    const params = {
+      federateRoleArn: this.state.federateRoleArn,
+      accountRoleArn: accountRoleArn,
+      externalId: externalId,
+      instanceId: instanceId,
+      region: region,
+      spotinstAccessKey: spotinstAccessKey
+    };
+    const self = this;
+    const url = API.get_api_url() + '/cloudformation';
+    const method = 'POST';
+    API.send_request(url, method, params).
+    then(function(data) {
+      if (data.errorMessage) {
+        alert(JSON.stringify(data));
+        return;
+      }
+      //self.setState({output: JSON.stringify(data, null, 2)});
+      alert(data.consoleUrl);
+      window.open(data.consoleUrl, '_aws');
+    })
+    .catch(function(err) {
+      alert(err);
+    });
+    // this.setState({account: '', role: ''});
+  }
+
   handlePrice(e) {
     if(e) e.preventDefault();
     const self = this;
@@ -121,8 +165,9 @@ class Ec2ListContainer extends React.Component {
   render() {
     let changeHandler = this.handleChange.bind(this);
     let submitHandler = this.handleSubmit.bind(this);
+    let cloudformationHandler = this.handleCloudformation.bind(this);
     let priceHandler = this.handlePrice.bind(this);
-    return (<Ec2List data={this.state.data} accounts={this.state.accounts} changeHandler={changeHandler} submitHandler={submitHandler}  priceHandler={priceHandler}/>);
+    return (<Ec2List data={this.state.data} accounts={this.state.accounts} changeHandler={changeHandler} submitHandler={submitHandler} cloudformationHandler={cloudformationHandler} priceHandler={priceHandler}/>);
   }
 }
 
