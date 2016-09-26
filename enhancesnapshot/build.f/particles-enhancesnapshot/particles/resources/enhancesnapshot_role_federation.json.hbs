@@ -1,0 +1,10 @@
+{{#resource}}
+  "Type": "Custom::EnhanceSnapshotRoleFederation",
+  "Properties": {
+    "ServiceToken": { "Fn::GetAtt" : ["FederationLambdaFunction", "Arn"] },
+    "AWSAccountId": { "Ref": "AWS::AccountId" },
+    "Region": { "Ref": "AWS::Region" },
+    "RoleArn": { "Fn::GetAtt" : [ "LambdaExecutionRole", "Arn" ]},
+    "FederationRoleName": "federate"
+  }
+{{/resource}}
