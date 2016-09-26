@@ -67,6 +67,9 @@ function addStatement(input, callback) {
 
   console.log(assumeDoc.Statement);
   var statements = assumeDoc.Statement.filter(function(statement) {
+    if (! statement.Effect == 'Allow' && ! statement.Action == 'sts:AssumeRole'){
+        return false;
+    }
     var s = statement.Principal.AWS;
     if(typeof(s) == "string"){
         if(lambdaRoleArn == s) return true;
