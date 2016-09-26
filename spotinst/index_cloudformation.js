@@ -36,7 +36,7 @@ exports.handler = (event, context, callback) => {
   var serviceTokenArn = "arn:aws:lambda:" + region + ":" + account + ":function:" + serviceTokenFunctionName;
 
   // first check if the target account has a permission to call the service token lambda and add a permission if it doesn't have yet
-  var input = { region:region, functionName: serviceTokenFunctionName, account: instanceAccount };
+  var input = { region: region, account: account, functionName: serviceTokenFunctionName, instanceAccount: instanceAccount };
   lambda.findAccountPolicy(input).then(data => {
     console.log(data);
     if (!data) {

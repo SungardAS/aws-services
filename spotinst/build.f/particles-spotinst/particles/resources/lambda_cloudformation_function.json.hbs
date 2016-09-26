@@ -5,9 +5,9 @@
       "S3Bucket": "{{s3.bucket}}",
       "S3Key": "{{assetPath 'spotinst.zip'}}"
     },
-    "Handler": "index_ec2_with_low_usages.handler",
+    "Handler": "index_cloudformation.handler",
     "Runtime": "nodejs4.3",
-    "Timeout": "60",
+    "Timeout": "300",
     "Role": { "Fn::GetAtt" : ["LambdaExecutionRole", "Arn"] }
   }
 {{/resource}}

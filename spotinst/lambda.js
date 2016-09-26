@@ -23,13 +23,18 @@ function AWSLambda() {
     };
     return lambda.getPolicy(params).promise().then(data => {
       // { Policy: '{"Version":"2012-10-17","Statement":[{"Action":"lambda:InvokeFunction","Resource":"arn:aws:lambda:us-east-1:089476987273:function:SSOProxyElastigroup-SpotinstLambdaFunction-15P3UDNPADGF4","Effect":"Allow","Principal":{"AWS":"arn:aws:iam::290093585298:root"},"Sid":"Id-133"}],"Id":"default"}' }
-      var lambdaArn = "arn:aws:lambda:us-east-1:089476987273:function:" + input.functionName
+      console.log(data);
+      var lambdaArn = "arn:aws:lambda:" + input.region + ":" + input.account + ":function:" + input.functionName
+      console.log(lambdaArn);
       var policy = JSON.parse(data.Policy)
       return policy.Statement.filter(statement =>
-        statement.Action == 'lambda:InvokeFunction'
+        statement.Action == 'lambda:invokeFunction'
         && statement.Resource == lambdaArn
         && statement.Effect == 'Allow'
-        && statement.Principal.AWS == 'arn:aws:iam::' + input.account + ':root').length > 0;
+        && statement.Principal.AWS == 'arn:aws:iam::' + input.instanceAccount + ':root').length > 0;
+    }).catch(err => {
+      console.log(err);
+      return Promise.resolve(false);
     });
   }
 
@@ -49,7 +54,7 @@ function AWSLambda() {
     if (input.sourceArn) {
       params['SourceArn'] = input.sourceArn;
     }
-    lambda.addPermission(params).promise();
+    return lambda.addPermission(params).promise();
   }
 }
 
