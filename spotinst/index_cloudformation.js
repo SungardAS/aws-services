@@ -150,11 +150,7 @@ function assumeRole(federateRoleArn, accountRoleArn, externalId) {
         sessionToken: data.Credentials.SessionToken
       });
       return creds;
-    }).catch(function(err){
-      console.log(err);
     });
-  }).catch(function(err){
-    console.log(err);
   });
 }
 

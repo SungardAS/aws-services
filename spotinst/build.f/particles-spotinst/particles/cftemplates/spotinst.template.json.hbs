@@ -64,13 +64,7 @@
         "Type": "AWS",
         "Uri": {"Fn::Join": ["", ["arn:aws:apigateway:", {"Ref": "AWS::Region"}, ":lambda:path/2015-03-31/functions/", { "Ref": "EC2GetLambdaArn" }, "/invocations"]]},
         "RequestTemplates": {
-          "application/json": {"Fn::Join": ["", [
-            "{\n    \"account_id\": \"",
-            {"Ref": "AWS::AccountId"},
-            "\",\n   \"region\": \"",
-            {"Ref": "AWS::Region"},
-            "\",\n   \"federateRoleArn\": \"$input.path('$').federateRoleArn\",\n  \"accountRoleArn\": \"$input.path('$').accountRoleArn\",\n  \"externalId\": \"$input.path('$').externalId\"\n    }\n"
-          ]]}
+          "application/json": "{\n  \"federateRoleArn\": \"$input.params('federateRoleArn')\",\n  \"accountRoleArn\": \"$input.params('accountRoleArn')\",\n  \"externalId\": \"$input.params('externalId')\"\n}\n"
         },
         {{{ partial 'm:api-gateway' 'integration_responses' }}}
       },
