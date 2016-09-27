@@ -9,7 +9,7 @@ exports.handler = function(event, context ) {
     var getEvaluation = function getEvaluationParam(userId,value,timeStamp) {
         var eval = [];
         complianceType= EVALUATION_TYPES.COMPLAINT
-        if(value > 0){
+        if(value){
             complianceType= EVALUATION_TYPES.NON_COMPLIANT
         }
         eval.push({
@@ -21,8 +21,7 @@ exports.handler = function(event, context ) {
         return eval;
     }
 
-    var aws_sts = new (require('../lib/aws/sts2.js'))();
-    var aws_ec2 = new (require('../lib/aws/ec2.js'))();
+    var aws_sts = new (require('../lib/aws-promise/sts.js'))();
     var aws_config = new (require('../lib/aws/awsconfig.js'))();
     if (event.ruleParameters){
         var ruleParameters = JSON.parse(event.ruleParameters);
@@ -72,8 +71,8 @@ exports.handler = function(event, context ) {
     };
     var stsAssumeRolePromise = aws_sts.assumeRoles(input);
     stsAssumeRolePromise.then(function (data) {
-        iamService = new (require('../lib/aws/iam.js'))();
-        global.creds = data.creds;
+        iamService = new (require('../lib/aws-promise/iam.js'))();
+        global.creds = data;
         return iamService.getUsersWithPolicies(data);
     }).then(function(data) {
         evaluations = [];
@@ -86,7 +85,7 @@ exports.handler = function(event, context ) {
             evalresult.resultToken = resultToken;
             evalresult.creds = global.creds;
             //TODO: Remove hardcoded region
-            evalresult.region = "us-west-2";
+            evalresult.region = ruleParameters.region;
             aws_config.sendEvaluations(evalresult, function(data){});
         }
     }).catch( function (err) {
