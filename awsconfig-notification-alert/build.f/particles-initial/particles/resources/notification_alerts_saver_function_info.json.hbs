@@ -1,0 +1,15 @@
+{{#resource}}
+ "Type": "AWS::Lambda::Function",
+  "Properties": {
+    "FunctionName": "notificationalert_saver",
+    "Code": {
+      "S3Bucket": "{{s3.bucket}}",
+      "S3Key": "{{assetPath 'notificationalert.zip'}}"
+    },
+    "Handler":"awsconfig-notification-alert/index_saver.handler",
+    "Runtime": "nodejs",
+    "Timeout": "60",
+    "MemorySize": "128",
+    "Role": { "Fn::GetAtt" : [ "AlertMessagesFunctionRoleInfo", "Arn" ]}
+  }
+{{/resource}}

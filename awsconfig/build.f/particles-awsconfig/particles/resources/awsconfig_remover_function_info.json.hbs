@@ -1,8 +1,6 @@
 {{#resource}}
-"Type": "Custom::AWSConfigFunction",
+"Type": "AWS::Lambda::Function",
 "Properties": {
-  "ServiceToken": { "Fn::GetAtt" : ["DeployerLambdaFunction", "Arn"] },
-  "Region": { "Ref": "AWS::Region" },
   "FunctionName": "awsconfig-remover",
   "Code": {
     "S3Bucket": "{{s3.bucket}}",

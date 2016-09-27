@@ -8,6 +8,6 @@
     "Handler": "cloudformation/index_iam_federation.handler",
     "Runtime": "nodejs",
     "Timeout": "60",
-    "Role": { "Fn::GetAtt" : ["DeployerLambdaExecutionRole", "Arn"] }
+    "Role": { "Fn::GetAtt" : ["FederationLambdaExecutionRole", "Arn"] }
   }
 {{/resource}}

@@ -1,0 +1,23 @@
+"IntegrationResponses": [
+  {
+    "SelectionPattern": "",
+    "StatusCode": "200",
+    "ResponseParameters": {
+      "method.response.header.Access-Control-Allow-Origin": "'*'"
+    }
+  },
+  {
+    "SelectionPattern": "not permitted.*",
+    "StatusCode": "403",
+    "ResponseParameters": {
+      "method.response.header.Access-Control-Allow-Origin": "'*'"
+    }
+  },
+  {
+    "SelectionPattern": "unauthorized.*",
+    "StatusCode": "401",
+    "ResponseParameters": {
+      "method.response.header.Access-Control-Allow-Origin": "'*'"
+    }
+  }
+]

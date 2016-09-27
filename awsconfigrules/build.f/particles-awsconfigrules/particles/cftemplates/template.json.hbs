@@ -8,10 +8,11 @@
   {{resource "enable_rules_lambda" logicalId="EnableRulesLambda"}}
   {{resource "fetch_rules_lambda" logicalId="FetchRulesLambda"}}
   {{resource "iam_user_policy_checker_lambda" logicalId="IAMUserPolicyCheckerLambda"}}
-
+  {{resource "sg_portrange_lambda" logicalId="SGPortRangeLambda"}}
   {{output "account_id" logicalId="AccountId"}}
   {{output "stacks_region" logicalId="StacksRegion"}}
   {{output "security_group_lambda_arn" logicalId="SecurityGroupLambdaArn"}}
   {{output "enable_rules_lambda_arn" logicalId="EnablerRulesLambdaArn"}}
   {{output "fetch_rules_lambda_arn" logicalId="FetchRulesLambdaArn"}}
+  {{output "sg_portrange_lambda_arn" logicalId="SGPortRangeLambdaArn"}}
 {{/layout}}
