@@ -115,6 +115,14 @@ function removeStatement(input, callback) {
       break;
     }
   }
+  if (found < 0) {
+      for (var i = 0; i < assumeDoc.Statement.length; i++) {
+          if (assumeDoc.Statement[i].Principal.AWS == lambdaRoleArn) {
+              found = i;
+              break;
+          }
+      }
+  }
   if (found >= 0) {
     assumeStatement.splice(found, 1);
     console.log(assumeStatement);
