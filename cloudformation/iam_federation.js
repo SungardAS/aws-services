@@ -102,36 +102,43 @@ function addStatement(input, callback) {
 }
 
 function removeStatement(input, callback) {
-  var assumeDoc = input.assumeDoc;
-  var federationRoleName = input.federationRoleName;
-  var lambdaRoleArn = input.roleArn;
-  console.log(assumeDoc.Statement);
-  console.log(input.roleArn);
-  var found = -1;
-  var assumeStatement = assumeDoc.Statement[0].Principal.AWS;
-  for (var i = 0; i < assumeStatement.length; i++) {
-    if (assumeStatement[i] == lambdaRoleArn) {
-      found = i;
-      break;
+    var assumeDoc = input.assumeDoc;
+    var federationRoleName = input.federationRoleName;
+    var lambdaRoleArn = input.roleArn;
+    console.log(assumeDoc.Statement);
+    console.log(input.roleArn);
+    var found = -1;
+    for (var i = 0; i < assumeDoc.Statement.length; i++) {
+        if (assumeDoc.Statement[i].Principal.AWS == lambdaRoleArn) {
+            found = i;
+            break;
+        }
     }
-  }
-  if (found < 0) {
-      for (var i = 0; i < assumeDoc.Statement.length; i++) {
-          if (assumeDoc.Statement[i].Principal.AWS == lambdaRoleArn) {
-              found = i;
-              break;
-          }
-      }
-  }
-  if (found >= 0) {
-    assumeStatement.splice(found, 1);
-    console.log(assumeStatement);
-    updateAssumeRolePolicy(input, callback);
-  }
-  else {
-    console.log("policy was already removed from 'federate' role for '" + lambdaRoleArn + "'");
-    callback(null, true);
-  }
+    if (found >= 0) {
+        assumeDoc.Statement.splice(found, 1);
+        console.log(assumeDoc.Statement);
+        updateAssumeRolePolicy(input, callback);
+    }
+    else {
+        //check if the policy is in the array
+        for (var j = 0; j < assumeDoc.Statement.length; j++) {
+            var assumeStatement = assumeDoc.Statement[j].Principal.AWS;
+            for (var i = 0; i < assumeStatement.length; i++) {
+                if (assumeStatement[i] == lambdaRoleArn) {
+                    found = i;
+                    break;
+                }
+            }
+        }
+        if (found >= 0) {
+            assumeStatement.splice(found, 1);
+            console.log(assumeStatement);
+            updateAssumeRolePolicy(input, callback);
+        }else {
+            console.log("policy was already removed from 'federate' role for '" + lambdaRoleArn + "'");
+            callback(null, true);
+        }
+    }
 }
 
 function updateAssumeRolePolicy(input, callback) {
