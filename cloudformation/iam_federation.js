@@ -110,36 +110,47 @@ function removeStatement(input, callback) {
     var found = -1;
     for (var i = 0; i < assumeDoc.Statement.length; i++) {
         if (assumeDoc.Statement[i].Principal.AWS == lambdaRoleArn) {
+            assumeDoc.Statement.splice(i, 1);
             found = i;
             break;
         }
     }
-    if (found >= 0) {
-        assumeDoc.Statement.splice(found, 1);
-        console.log(assumeDoc.Statement);
-        updateAssumeRolePolicy(input, callback);
+    if (found == -1) {
+        var statement = assumeDoc.Statement[0].Principal.AWS;
+        for (var k = 0; k < statement.length; k++) {
+            if (statement[k] == lambdaRoleArn) {
+                statement.splice(k, 1);
+                found = k;
+                break;
+            }
+        }
     }
-    else {
-        //check if the policy is in the array
-        for (var j = 0; j < assumeDoc.Statement.length; j++) {
-            var assumeStatement = assumeDoc.Statement[j].Principal.AWS;
-            for (var i = 0; i < assumeStatement.length; i++) {
-                if (assumeStatement[i] == lambdaRoleArn) {
-                    found = i;
-                    break;
+    if (found >= 0) {
+        console.log(assumeDoc.Statement);
+        //check before updating if there is a malformed arn
+        for (var i = 0; i < assumeDoc.Statement.length; i++) {
+            var statement = assumeDoc.Statement[i].Principal.AWS;
+            if (! statement == "*" && typeof(statement) == "string" && ! statement.startsWith("arn:aws:iam::")){
+                assumeDoc.Statement.splice(i,1);
+            }else{
+                for (var k = 0; k < statement.length; k++) {
+                    if (! statement == "*" && typeof(statement[k]) == "string" && ! statement[k].startsWith("arn:aws:iam::")) {
+                        statement.splice(k, 1);
+                    }
                 }
             }
         }
-        if (found >= 0) {
-            assumeStatement.splice(found, 1);
-            console.log(assumeStatement);
-            updateAssumeRolePolicy(input, callback);
-        }else {
-            console.log("policy was already removed from 'federate' role for '" + lambdaRoleArn + "'");
-            callback(null, true);
-        }
+        console.log("***********************************");
+        console.log(input.assumeDoc);
+        console.log("***********************************");
+        updateAssumeRolePolicy(input, callback);
+    }
+    else {
+        console.log("policy was already removed from 'federate' role for '" + lambdaRoleArn + "'");
+        callback(null, true);
     }
 }
+
 
 function updateAssumeRolePolicy(input, callback) {
   var iam = findService(input);
