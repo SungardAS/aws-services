@@ -64,19 +64,35 @@ function addStatement(input, callback) {
   var assumeDoc = input.assumeDoc;
   var federationRoleName = input.federationRoleName;
   var lambdaRoleArn = input.roleArn;
-  var lambdaStatement = {
-    Sid: '',
-    Effect: 'Allow',
-    Principal: { AWS: lambdaRoleArn },
-    Action: 'sts:AssumeRole'
-  };
+
+  console.log(assumeDoc.Statement);
   var statements = assumeDoc.Statement.filter(function(statement) {
-    return statement.Principal.AWS == lambdaRoleArn;
+    if (! statement.Effect == 'Allow' && ! statement.Action == 'sts:AssumeRole'){
+        return false;
+    }
+    var s = statement.Principal.AWS;
+    if(typeof(s) == "string"){
+        if(lambdaRoleArn == s) return true;
+        else return false;
+    }
+    for (var idx = 0 ; idx < s.length ; idx ++){
+        if (lambdaRoleArn == s[idx]){
+            return true;
+        }
+    }
   });
+
   console.log(statements.length);
   if (statements.length == 0) {
-    assumeDoc.Statement.push(lambdaStatement);
-    console.log(assumeDoc.Statement);
+    // pick the first statement and append to it
+    var assumeStatement = assumeDoc.Statement[0].Principal.AWS;
+
+    if(typeof(assumeStatement) == "string"){
+        assumeStatement = [assumeStatement];
+    }
+    assumeStatement.push(lambdaRoleArn);
+    assumeDoc.Statement[0].Principal.AWS = assumeStatement;
+    console.log("assumeDoc = " + JSON.stringify(assumeDoc));
     updateAssumeRolePolicy(input, callback);
   }
   else {
@@ -86,28 +102,47 @@ function addStatement(input, callback) {
 }
 
 function removeStatement(input, callback) {
-  var assumeDoc = input.assumeDoc;
-  var federationRoleName = input.federationRoleName;
-  var lambdaRoleArn = input.roleArn;
-  console.log(assumeDoc.Statement);
-  console.log(input.roleArn);
-  var found = -1;
-  for (var i = 0; i < assumeDoc.Statement.length; i++) {
-    if (assumeDoc.Statement[i].Principal.AWS == lambdaRoleArn) {
-      found = i;
-      break;
-    }
-  }
-  if (found >= 0) {
-    assumeDoc.Statement.splice(found, 1);
+    var assumeDoc = input.assumeDoc;
+    var federationRoleName = input.federationRoleName;
+    var lambdaRoleArn = input.roleArn;
     console.log(assumeDoc.Statement);
+    console.log(input.roleArn);
+    var found = -1;
+    for (var i = 0; i < assumeDoc.Statement.length; i++) {
+        if (assumeDoc.Statement[i].Principal.AWS == lambdaRoleArn) {
+            assumeDoc.Statement.splice(i, 1);
+            found = i;
+            break;
+        }
+    }
+
+    if (found == -1) {
+        var statement = assumeDoc.Statement[0].Principal.AWS;
+        for (var k = 0; k < statement.length; k++) {
+            if (statement[k] == lambdaRoleArn) {
+                statement.splice(k, 1);
+                found = k;
+                break;
+            }
+        }
+    }
+
+    //check before updating if there is a malformed arn
+    for (var i = 0; i < assumeDoc.Statement.length; i++) {
+        var statement = assumeDoc.Statement[i].Principal.AWS;
+        if(typeof(statement) == "string"){
+            if (statement != "*" && !statement.startsWith("arn:aws:iam::")) assumeDoc.Statement.splice(i,1);
+        }
+        else if(typeof(statement) == "object"){
+            for (var k = 0; k < statement.length; k++) {
+                if (statement != "*" && !statement[k].startsWith("arn:aws:iam::")) statement.splice(k, 1);
+            }
+        }
+    }
+    console.log(JSON.stringify(input.assumeDoc));
     updateAssumeRolePolicy(input, callback);
-  }
-  else {
-    console.log("policy was already removed from 'federate' role for '" + lambdaRoleArn + "'");
-    callback(null, true);
-  }
 }
+
 
 function updateAssumeRolePolicy(input, callback) {
   var iam = findService(input);
