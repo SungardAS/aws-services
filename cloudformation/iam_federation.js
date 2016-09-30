@@ -115,6 +115,7 @@ function removeStatement(input, callback) {
             break;
         }
     }
+
     if (found == -1) {
         var statement = assumeDoc.Statement[0].Principal.AWS;
         for (var k = 0; k < statement.length; k++) {
@@ -125,30 +126,21 @@ function removeStatement(input, callback) {
             }
         }
     }
-    if (found >= 0) {
-        console.log(assumeDoc.Statement);
-        //check before updating if there is a malformed arn
-        for (var i = 0; i < assumeDoc.Statement.length; i++) {
-            var statement = assumeDoc.Statement[i].Principal.AWS;
-            if (! statement == "*" && typeof(statement) == "string" && ! statement.startsWith("arn:aws:iam::")){
-                assumeDoc.Statement.splice(i,1);
-            }else{
-                for (var k = 0; k < statement.length; k++) {
-                    if (! statement == "*" && typeof(statement[k]) == "string" && ! statement[k].startsWith("arn:aws:iam::")) {
-                        statement.splice(k, 1);
-                    }
-                }
+
+    //check before updating if there is a malformed arn
+    for (var i = 0; i < assumeDoc.Statement.length; i++) {
+        var statement = assumeDoc.Statement[i].Principal.AWS;
+        if(typeof(statement) == "string"){
+            if (statement != "*" && !statement.startsWith("arn:aws:iam::")) assumeDoc.Statement.splice(i,1);
+        }
+        else if(typeof(statement) == "object"){
+            for (var k = 0; k < statement.length; k++) {
+                if (statement != "*" && !statement[k].startsWith("arn:aws:iam::")) statement.splice(k, 1);
             }
         }
-        console.log("***********************************");
-        console.log(input.assumeDoc);
-        console.log("***********************************");
-        updateAssumeRolePolicy(input, callback);
     }
-    else {
-        console.log("policy was already removed from 'federate' role for '" + lambdaRoleArn + "'");
-        callback(null, true);
-    }
+    console.log(JSON.stringify(input.assumeDoc));
+    updateAssumeRolePolicy(input, callback);
 }
 
 
