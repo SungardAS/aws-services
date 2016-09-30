@@ -131,11 +131,11 @@ function removeStatement(input, callback) {
     for (var i = 0; i < assumeDoc.Statement.length; i++) {
         var statement = assumeDoc.Statement[i].Principal.AWS;
         if(typeof(statement) == "string"){
-            if (statement != "*" && !statement.startsWith("arn:aws:iam::")) assumeDoc.Statement.splice(i,1);
+            if (statement != "*" && statement.indexOf("arn:aws:iam::") == -1) assumeDoc.Statement.splice(i,1);
         }
         else if(typeof(statement) == "object"){
             for (var k = 0; k < statement.length; k++) {
-                if (statement != "*" && !statement[k].startsWith("arn:aws:iam::")) statement.splice(k, 1);
+                if (statement[k] != "*" && statement[k].indexOf("arn:aws:iam::") == -1) statement.splice(k, 1);
             }
         }
     }
