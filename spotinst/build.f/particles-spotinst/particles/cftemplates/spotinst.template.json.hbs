@@ -42,55 +42,8 @@
      description="ARN of lambda function for post method of spotinst resource"
   }}
 
-  {{#resource logicalId="EC2"}}
-    "Type" : "AWS::ApiGateway::Resource",
-    "Properties" : {
-      "RestApiId": { "Ref": "RestApiId" },
-      "ParentId": { "Ref": "ParentResourceId" },
-      "PathPart": "ec2"
-    }
-  {{/resource}}
-
-  {{#resource logicalId="EC2Get"}}
-    "Type" : "AWS::ApiGateway::Method",
-    "Properties" : {
-      "RestApiId": { "Ref": "RestApiId" },
-      "ResourceId": { "Ref": "EC2" },
-      "HttpMethod": "GET",
-      "AuthorizationType": "NONE",
-      "Integration": {
-        "Credentials": { "Ref": "LambdaInvokeRoleArn" },
-        "IntegrationHttpMethod": "POST",
-        "Type": "AWS",
-        "Uri": {"Fn::Join": ["", ["arn:aws:apigateway:", {"Ref": "AWS::Region"}, ":lambda:path/2015-03-31/functions/", { "Ref": "EC2GetLambdaArn" }, "/invocations"]]},
-        "RequestTemplates": {
-          "application/json": "{\n  \"federateRoleArn\": \"$input.params('federateRoleArn')\",\n  \"accountRoleArn\": \"$input.params('accountRoleArn')\",\n  \"externalId\": \"$input.params('externalId')\"\n}\n"
-        },
-        {{{ partial 'm:api-gateway' 'integration_responses' }}}
-      },
-      {{{ partial 'm:api-gateway' 'method_responses' }}}
-    }
-  {{/resource}}
-
-  {{#resource logicalId="EC2Options"}}
-    "Type" : "AWS::ApiGateway::Method",
-    "Properties" : {
-      "RestApiId": { "Ref": "RestApiId" },
-      "ResourceId": { "Ref": "EC2" },
-      "HttpMethod": "OPTIONS",
-      "AuthorizationType": "NONE",
-      "Integration": {
-        "Type": "MOCK",
-        "RequestTemplates": {"application/json": "{\"statusCode\": 200}" },
-        {{{ partial 'm:api-gateway' 'integration_responses_options'
-          allowedMethods="'GET,OPTIONS'"
-        }}}
-      },
-      {{{ partial 'm:api-gateway' 'method_responses_options'
-        allowedMethods="'GET,OPTIONS'"
-      }}}
-    }
-  {{/resource}}
+  {{ set 'm:api-gateway' 'resource'
+  }}
 
   {{#resource logicalId="Cloudformation"}}
     "Type" : "AWS::ApiGateway::Resource",
@@ -116,9 +69,9 @@
         "RequestTemplates": {
           "application/json": "{\n  \"federateRoleArn\": \"$input.path('$').federateRoleArn\",\n  \"accountRoleArn\": \"$input.path('$').accountRoleArn\",\n  \"externalId\": \"$input.path('$').externalId\",\n  \"region\": \"$input.path('$').region\",\n  \"account\": \"$input.path('$').account\",\n  \"dryRun\": $input.path('$').dryRun,\n  \"instanceId\": \"$input.path('$').instanceId\",\n  \"name\": \"$input.path('$').name\",\n  \"description\": \"$input.path('$').description\",\n  \"tags\": \"$input.path('$').tags\",\n  \"keyPairName\": \"$input.path('$').keyPairName\",\n  \"spotinstAccessKey\": \"$input.path('$').spotinstAccessKey\"\n}\n"
         },
-        {{{ partial 'm:api-gateway' 'integration_responses' }}}
+        {{{ set 'm:api-gateway' 'integration_responses' }}}
       },
-      {{{ partial 'm:api-gateway' 'method_responses' }}}
+      {{{ set 'm:api-gateway' 'method_responses' }}}
     }
   {{/resource}}
 
@@ -132,12 +85,14 @@
       "Integration": {
         "Type": "MOCK",
         "RequestTemplates": {"application/json": "{\"statusCode\": 200}" },
-        {{{ partial 'm:api-gateway' 'integration_responses_options'
+        {{{ set 'm:api-gateway' 'integration_responses'
           allowedMethods="'POST,OPTIONS'"
+          allowedHeaders="'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,external-id'"
         }}}
       },
-      {{{ partial 'm:api-gateway' 'method_responses_options'
+      {{{ set 'm:api-gateway' 'method_responses'
         allowedMethods="'POST,OPTIONS'"
+        allowedHeaders="'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,external-id'"
       }}}
     }
   {{/resource}}
@@ -168,9 +123,9 @@
         "RequestTemplates": {
           "application/json": "{\n  \"federateRoleArn\": \"$input.path('$').federateRoleArn\",\n  \"accountRoleArn\": \"$input.path('$').accountRoleArn\",\n  \"externalId\": \"$input.path('$').externalId\",\n  \"region\": \"$input.path('$').region\",\n  \"account\": \"$input.path('$').account\",\n  \"dryRun\": $input.path('$').dryRun,\n  \"instanceId\": \"$input.path('$').instanceId\",\n  \"name\": \"$input.path('$').name\",\n  \"description\": \"$input.path('$').description\",\n  \"tags\": \"$input.path('$').tags\",\n  \"keyPairName\": \"$input.path('$').keyPairName\",\n  \"spotinstAccessKey\": \"$input.path('$').spotinstAccessKey\"\n}\n"
         },
-        {{{ partial 'm:api-gateway' 'integration_responses' }}}
+        {{{ set 'm:api-gateway' 'integration_responses' }}}
       },
-      {{{ partial 'm:api-gateway' 'method_responses' }}}
+      {{{ set 'm:api-gateway' 'method_responses' }}}
     }
   {{/resource}}
 
@@ -184,12 +139,14 @@
       "Integration": {
         "Type": "MOCK",
         "RequestTemplates": {"application/json": "{\"statusCode\": 200}" },
-        {{{ partial 'm:api-gateway' 'integration_responses_options'
+        {{{ set 'm:api-gateway' 'integration_responses'
           allowedMethods="'POST,OPTIONS'"
+          allowedHeaders="'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,external-id'"
         }}}
       },
-      {{{ partial 'm:api-gateway' 'method_responses_options'
+      {{{ set 'm:api-gateway' 'method_responses'
         allowedMethods="'POST,OPTIONS'"
+        allowedHeaders="'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,external-id'"
       }}}
     }
   {{/resource}}
