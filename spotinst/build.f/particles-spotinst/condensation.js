@@ -9,7 +9,7 @@ module.exports.initialize = function(cb) {
     if (error) return cb(error);
   });
 
-  vfs.src(['*.js', 'cloudformation.template.json', 'node_modules/**/*', 'config/*.json'],{cwd:'../..', base:'../..'})
+  vfs.src(['*.js', 'lib/*', 'cloudformation.template.json', 'node_modules/**/*', 'config/*.json'],{cwd:'../..', base:'../..'})
   .pipe(zip('spotinst.zip'))
   .pipe(gulp.dest('./particles/assets'))
   .on('end', function(err, data) {

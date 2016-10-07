@@ -16,7 +16,7 @@ var Api = {
     return GLOBAL.pricerApiUrl;
   },
 
-  send_request: function (url, method, data, anonymous) {
+  send_request: function (url, method, data, refresh_token) {
     const self = this;
     if (data) {
       data = JSON.stringify(data);
@@ -26,6 +26,7 @@ var Api = {
       request.open(method || 'GET', url);
       request.setRequestHeader('Content-Type', 'application/json');
       //request.setRequestHeader('x-api-key', '');
+      if (refresh_token)  request.setRequestHeader('refresh_token', refresh_token);
       request.onload = function () {
         if (request.status >= 200 && request.status < 300) {
            var data = 'response' in request ? request.response : request.responseText;

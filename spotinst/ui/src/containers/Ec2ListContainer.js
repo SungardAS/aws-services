@@ -73,10 +73,18 @@ class Ec2ListContainer extends React.Component {
     const self = this;
     const accountRoleArn = this.state.accountRoleArns[this.state.account];
     const externalId = this.state.externalIds[this.state.account];
-    const url = API.get_api_url() + '/ec2?federateRoleArn=' + this.state.federateRoleArn + '&accountRoleArn=' + accountRoleArn + '&externalId=' + externalId ;
-    const method = 'GET';
-    const params = {};
-    API.send_request(url, method, params).
+    //const url = API.get_api_url() + '/ec2?federateRoleArn=' + this.state.federateRoleArn + '&accountRoleArn=' + accountRoleArn + '&externalId=' + externalId ;
+    //const method = 'GET';
+    //const params = {};
+    const url = API.get_api_url() + '/ec2';
+    const method = 'POST';
+    const params = {
+      "federateRoleArn": this.state.federateRoleArn,
+      "accountRoleArn": accountRoleArn,
+      "externalId": externalId,
+      "region": "us-east-1"
+    };
+    API.send_request(url, method, params, 'refresh_token').
     then(function(data) {
       if (data.errorMessage) {
         alert(JSON.stringify(data));
@@ -116,7 +124,7 @@ class Ec2ListContainer extends React.Component {
     const self = this;
     const url = API.get_api_url() + '/cloudformation';
     const method = 'POST';
-    API.send_request(url, method, params).
+    API.send_request(url, method, params, 'refresh_token').
     then(function(data) {
       if (data.errorMessage) {
         alert(JSON.stringify(data));
@@ -140,7 +148,7 @@ class Ec2ListContainer extends React.Component {
     const url = API.get_price_api_url() + '/ec2?federate_role_arn=' + this.state.federateRoleArn + '&account_role_arn=' + accountRoleArn + '&external_id=' + externalId ;
     const method = 'GET';
     const params = {};
-    API.send_request(url, method, params).
+    API.send_request(url, method, params, 'refresh_token').
     then(function(data) {
       if (data.errorMessage) {
         alert(JSON.stringify(data));
