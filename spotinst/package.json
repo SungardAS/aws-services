@@ -10,6 +10,9 @@
   "license": "ISC",
   "dependencies": {
     "aws-sdk": "^2.1.41",
+    "config": "^1.21.0",
+    "lodash": "^4.15.0",
+    "q": "^1.4.1",
     "request": "^2.74.0",
     "request-promise": "^4.1.1"
   }

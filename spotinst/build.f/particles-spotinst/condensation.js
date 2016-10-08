@@ -9,8 +9,17 @@ module.exports.initialize = function(cb) {
     if (error) return cb(error);
   });
 
-  vfs.src(['spotinst/*.js', 'spotinst/config/*.json', 'spotinst/node_modules/**/*'],{cwd:'../../..', base:'../../..'})
+  vfs.src(['*.js', 'lib/*', 'cloudformation.template.json', 'node_modules/**/*', 'config/*.json'],{cwd:'../..', base:'../..'})
   .pipe(zip('spotinst.zip'))
   .pipe(gulp.dest('./particles/assets'))
-  .on('end', cb);
+  .on('end', function(err, data) {
+    vfs.src(['cloudformation/index_lambda_deployer.js', 'cloudformation/lambda_deployer.js', 'cloudformation/index_iam_federation.js', 'cloudformation/iam_federation.js'],{cwd:'../../..', base:'../../..'})
+    .pipe(zip('cloudformation_builder.zip'))
+    .pipe(gulp.dest('./particles/assets'))
+    .on('end', function(err, data) {
+      vfs.src(['spotinst-lambda.zip'],{cwd:'../../../../spotinst-lambda/dist', base:'../../../../spotinst-lambda/dist'})
+      .pipe(gulp.dest('./particles/assets'))
+      .on('end', cb);
+    });
+  });
 };
