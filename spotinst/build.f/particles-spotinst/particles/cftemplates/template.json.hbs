@@ -1,0 +1,55 @@
+{{#layout}}
+
+  {{
+     parameter "m:core" "base"
+     logicalId="StageName"
+     type="String"
+     description="Deployment stage name"
+  }}
+
+  {{resource "lambda_ec2_function" logicalId="LambdaEC2Function"}}
+  {{resource "lambda_cloudformation_function" logicalId="LambdaCloudformationFunction"}}
+  {{resource "lambda_spotinst_function" logicalId="LambdaSpotinstFunction"}}
+  {{resource "lambda_execution_role" logicalId="LambdaExecutionRole"}}
+
+  {{resource "federation_lambda_function" logicalId="FederationLambdaFunction"}}
+  {{resource "federation_lambda_execution_role" logicalId="FederationLambdaExecutionRole"}}
+
+  {{resource "spotinst_lambda_function" logicalId="SpotinstLambdaFunction"}}
+  {{resource "spotinst_lambda_execution_role" logicalId="SpotinstLambdaExecutionRole"}}
+
+  {{resource "m:api-gateway" "invoke_function_role" logicalId="InvokeFunctionRole"}}
+  {{#resource logicalId="SpotinstRestApi"}}
+    "Type" : "AWS::ApiGateway::RestApi",
+    "Properties" : {
+      "Description" : "Spotinst API",
+      "Name" : "SpotinstAPI"
+    }
+  {{/resource}}
+  {{#resource logicalId="SpotinstRes"}}
+    "Type": "AWS::CloudFormation::Stack",
+    "Properties": {
+      "TemplateURL": "{{templateS3Url 'spotinst.template.json'}}",
+      "Parameters": {
+        "RestApiId": { "Ref": "SpotinstRestApi" },
+        "ParentResourceId": { "Fn::GetAtt": ["SpotinstRestApi", "RootResourceId"] },
+        "LambdaInvokeRoleArn": {"Fn::GetAtt" : [ "InvokeFunctionRole", "Arn" ]},
+        "EC2GetLambdaArn": { "Fn::GetAtt" : [ "LambdaEC2Function", "Arn" ]},
+        "CloudformationPostLambdaArn": { "Fn::GetAtt" : [ "LambdaCloudformationFunction", "Arn" ]},
+        "SpotinstPostLambdaArn": { "Fn::GetAtt" : [ "LambdaSpotinstFunction", "Arn" ]}
+      }
+    }
+  {{/resource}}
+  {{#resource logicalId="SpotinstApiDeployment"}}
+    "DependsOn": "SpotinstRes",
+    "Type" : "AWS::ApiGateway::Deployment",
+    "Properties" : {
+      "RestApiId": { "Ref": "SpotinstRestApi" },
+      "Description": "Stage Deployment",
+      "StageName": { "Ref": "StageName" }
+    }
+  {{/resource}}
+
+  {{output "spotinst_api_uri" logicalId="APIUri"}}
+
+{{/layout}}
