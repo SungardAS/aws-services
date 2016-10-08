@@ -6,7 +6,7 @@ var body = {
 };
 var event = {
     "resource": "/{proxy+}",
-    "path": "/auth",
+    "path": "/spotinst/auth",
     "httpMethod": "POST",
     "headers": {
         "external-id":

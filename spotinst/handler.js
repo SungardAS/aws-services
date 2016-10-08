@@ -46,12 +46,13 @@ exports.handler = (event, context) => {
   }*/
 
   var method = event.httpMethod;
-  var path = event.path;
+  var paths = event.path.split('/');
+  var path = paths[paths.length-1];
   var headers = event.headers;
   var queryParams = event.queryStringParameters;
   var postData = (event.body) ? JSON.parse(event.body) : null;
 
-  if (path == '/auth' && method == 'POST') {
+  if (path == 'auth' && method == 'POST') {
     auth.authenticate(postData.username, postData.password).then(data => {
       console.log(data);
       var ret = JSON.parse(data);
@@ -81,7 +82,6 @@ exports.handler = (event, context) => {
 
     // now find the target controller
     method = method.toLowerCase();
-    path = path.substring(1);
     var params = null;
     if (method == 'get') {
       params = queryParams;
@@ -139,6 +139,7 @@ function sendFailureResponse(err, statusCode, context) {
 function sendResponse(responseBody, statusCode, context) {
   var response = {
       statusCode: statusCode,
+      headers: { "Access-Control-Allow-Origin": "*" },
       body: JSON.stringify(responseBody)
   };
   console.log("response: " + JSON.stringify(response))

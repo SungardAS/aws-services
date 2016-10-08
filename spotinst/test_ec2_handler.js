@@ -8,7 +8,7 @@ var body = {
 };
 var event = {
     "resource": "/{proxy+}",
-    "path": "/ec2",
+    "path": "/spotinst/ec2",
     "httpMethod": "POST",
     "headers": {
         "refresh_token":"87716f2b-4bd3-4eb9-b33a-4749637e3273"
