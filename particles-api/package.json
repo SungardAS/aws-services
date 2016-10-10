@@ -14,6 +14,7 @@
     "gulp-git": "^1.7.0",
     "gulp-zip": "^3.2.0",
     "particles-core": "^0.4.5",
+    "particles-api-gateway": "0.0.0",
     "vinyl-fs": "^2.3.1"
   }
 }
