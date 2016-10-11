@@ -15,7 +15,6 @@
     "gulp-zip": "^3.2.0",
     "particles-core": "^0.4.5",
     "vinyl-fs": "^2.3.1",
-    "particles-vpc": "^0.5.0",
-    "particles-api-gateway": "0.0.0"
+    "particles-vpc": "^0.5.0"
   }
 }
