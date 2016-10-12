@@ -1,6 +1,6 @@
 
 var AWS = require('aws-sdk');
-var sts = require('./lib/sts');
+var sts = require('../lib/aws_promise/sts');
 
 var trustedAdvisorCheckInput = {
   checkId: 'Qch7DwouX1',
@@ -23,7 +23,12 @@ module.exports = {
     var regionDict = {};
     var credentials = null;
 
-    return sts.assumeRole(federateRoleArn, accountRoleArn, externalId).then(function(creds) {
+    var input = {
+      federateRoleArn: federateRoleArn,
+      accountRoleArn: accountRoleArn,
+      externalId: externalId
+    }
+    return sts.assumeRole(input).then(function(creds) {
       credentials = creds;
       support = new AWS.Support({credentials: creds, region: main_region});
       autoscaling = new AWS.AutoScaling({credentials: creds, region: main_region});

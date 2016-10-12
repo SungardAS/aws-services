@@ -3,11 +3,11 @@
   "Properties": {
     "Code": {
       "S3Bucket": "{{s3.bucket}}",
-      "S3Key": "{{assetPath 'spotinst.zip'}}"
+      "S3Key": "{{assetPath 'cloudformation_builder.zip'}}"
     },
-    "Handler": "spotinst/handler.handler",
-    "Runtime": "nodejs4.3",
-    "Timeout": "300",
+    "Handler": "cloudformation/index_iam_federation.handler",
+    "Runtime": "nodejs",
+    "Timeout": "60",
     "Role": { "Fn::GetAtt" : ["LambdaExecutionRole", "Arn"] }
   }
 {{/resource}}

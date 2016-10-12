@@ -1,18 +1,14 @@
 {
-  "name": "ec2",
+  "name": "aws_promise",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "authorizer.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "aws-sdk": "^2.1.41",
-    "lodash": "^4.15.0",
-    "q": "^1.4.1",
-    "request": "^2.74.0",
-    "request-promise": "^4.1.1"
+    "aws-sdk": "^2.6.7"
   }
 }

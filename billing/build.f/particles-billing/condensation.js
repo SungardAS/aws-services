@@ -9,17 +9,13 @@ module.exports.initialize = function(cb) {
     if (error) return cb(error);
   });
 
-  vfs.src(['spotinst/*handler.js', 'spotinst/*controller.js', 'spotinst/lib/*.js', 'spotinst/cloudformation.template.json', 'lib/aws_promise/*.js', 'spotinst/node_modules/**/*', 'spotinst/json/*.json'],{cwd:'../../..', base:'../../..'})
-  .pipe(zip('spotinst.zip'))
+  vfs.src(['billing/*_controller.js', 'billing/*handler.js', 'billing/lib/*.js', 'lib/aws_promise/*.js', 'billing/node_modules/**/*', 'billing/json/*.json'],{cwd:'../../..', base:'../../..'})
+  .pipe(zip('billing.zip'))
   .pipe(gulp.dest('./particles/assets'))
   .on('end', function(err, data) {
     vfs.src(['cloudformation/index_lambda_deployer.js', 'cloudformation/lambda_deployer.js', 'cloudformation/index_iam_federation.js', 'cloudformation/iam_federation.js'],{cwd:'../../..', base:'../../..'})
     .pipe(zip('cloudformation_builder.zip'))
     .pipe(gulp.dest('./particles/assets'))
-    .on('end', function(err, data) {
-      vfs.src(['spotinst-lambda.zip'],{cwd:'../../../../spotinst-lambda/dist', base:'../../../../spotinst-lambda/dist'})
-      .pipe(gulp.dest('./particles/assets'))
-      .on('end', cb);
-    });
+    .on('end', cb);
   });
 };

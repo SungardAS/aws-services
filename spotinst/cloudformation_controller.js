@@ -1,14 +1,13 @@
 
-var config = require('config');
 var request = require('request');
 var querystring = require('querystring');
 var Q = require("q");
 
+var sts = require('../lib/aws_promise/sts');
+var s3 = require('../lib/aws_promise/s3bucket');
+var lambda = require('../lib/aws_promise/lambda');
 var collector = require('./lib/instance_attr_collector');
 var builder = require('./lib/spotinst_json_builder');
-var sts = require('./lib/sts');
-var s3 = require('./lib/s3bucket');
-var lambda = require('./lib/lambda');
 
 var federatedCreds = null;
 
@@ -23,10 +22,14 @@ module.exports = {
     var instanceId = params.instanceId;
     var instanceRegion = params.instanceRegion;
 
-    var region = config.get('region');
-    var bucketPrefix = config.get('bucketNamePrefix');
-    var templateFilePath = config.get('templateFilePath');
-    var serviceTokenFunctionName = config.get('serviceTokenFunctionName');
+    var fs = require("fs");
+    var data = fs.readFileSync(__dirname + '/json/default.json', {encoding:'utf8'});
+    var data_json = JSON.parse(data);
+    console.log("data : " + data);
+    var region = data_json.region;
+    var bucketPrefix = data_json.bucketNamePrefix;
+    var templateFilePath = __dirname + '/' + data_json.templateFilePath;
+    var serviceTokenFunctionName = data_json.serviceTokenFunctionName;
 
     var instanceAccount = accountRoleArn.split(":")[4];
     var account = federateRoleArn.split(":")[4];
@@ -48,7 +51,12 @@ module.exports = {
       else return data;
     }).then(data => {
       // federate to the target account
-      return sts.assumeRole(federateRoleArn, accountRoleArn, externalId).then(creds => {
+      input = {
+        federateRoleArn: federateRoleArn,
+        accountRoleArn: accountRoleArn,
+        externalId: externalId
+      }
+      return sts.assumeRole(input).then(creds => {
         return creds;
       });
     }).then(creds => {

@@ -11,6 +11,7 @@
   "dependencies": {
     "aws-sdk": "^2.5.4",
     "dateformat": "^1.0.12",
-    "pg-promise": "^5.3.3"
+    "pg-promise": "^5.3.3",
+    "q": "^1.4.1"
   }
 }

@@ -9,6 +9,13 @@
 
   {{
      parameter "m:core" "base"
+     logicalId="BillingLambdaArn"
+     type="String"
+     description="ARN of lambda function for billing"
+  }}
+
+  {{
+     parameter "m:core" "base"
      logicalId="StageName"
      type="String"
      description="Deployment stage name"
@@ -32,6 +39,19 @@
         "RestApiId": { "Ref": "RestApi" },
         "ParentResourceId": { "Fn::GetAtt": ["RestApi", "RootResourceId"] },
         "LambdaArn": { "Ref" : "SpotinstLambdaArn" },
+        "InvokeFunctionRoleArn": { "Fn::GetAtt": ["InvokeFunctionRole", "Arn"] }
+      }
+    }
+  {{/resource}}
+
+  {{#resource logicalId="BillingRes"}}
+    "Type": "AWS::CloudFormation::Stack",
+    "Properties": {
+      "TemplateURL": "{{templateS3Url 'billing.template.json'}}",
+      "Parameters": {
+        "RestApiId": { "Ref": "RestApi" },
+        "ParentResourceId": { "Fn::GetAtt": ["RestApi", "RootResourceId"] },
+        "LambdaArn": { "Ref" : "BillingLambdaArn" },
         "InvokeFunctionRoleArn": { "Fn::GetAtt": ["InvokeFunctionRole", "Arn"] }
       }
     }

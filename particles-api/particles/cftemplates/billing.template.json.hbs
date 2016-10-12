@@ -28,21 +28,12 @@
      description="ARN of IAM role that can invoke lambda functions"
   }}
 
-  {{#resource logicalId="Spotinst"}}
-    "Type" : "AWS::ApiGateway::Resource",
-    "Properties" : {
-      "RestApiId": { "Ref": "RestApiId" },
-      "ParentId": { "Ref": "ParentResourceId" },
-      "PathPart": "spotinst"
-    }
-  {{/resource}}
-
   {{
     set "m:api-gateway" "resource_proxy"
     restApiId="RestApiId"
-    parentResourceId="Spotinst"
-    resourceId="SpotinstProxy"
-    resourcePath="{proxy+}"
+    parentResourceId="ParentResourceId"
+    resourceId="Billing"
+    resourcePath="billing"
     lambdaArn="LambdaArn"
     invokeFunctionRoleArn="InvokeFunctionRoleArn"
     allowedHeaders="'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,refresh_token'"

@@ -3,9 +3,9 @@
   "Properties": {
     "Code": {
       "S3Bucket": "{{s3.bucket}}",
-      "S3Key": "{{assetPath 'spotinst.zip'}}"
+      "S3Key": "{{assetPath 'billing.zip'}}"
     },
-    "Handler": "spotinst/handler.handler",
+    "Handler": "billing/import_handler.handler",
     "Runtime": "nodejs4.3",
     "Timeout": "300",
     "Role": { "Fn::GetAtt" : ["LambdaExecutionRole", "Arn"] }

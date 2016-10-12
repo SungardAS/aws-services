@@ -1,8 +1,7 @@
 
-var sts = require('./lib/sts');
+var sts = require('../lib/aws_promise/sts');
 var collector = require('./lib/instance_attr_collector');
 var builder = require('./lib/spotinst_json_builder');
-
 
 module.exports = {
 
@@ -13,7 +12,12 @@ module.exports = {
     var externalId = params.externalId;
     var accessKey = params.spotinstAccessKey;
 
-    return sts.assumeRole(federateRoleArn, accountRoleArn, externalId).then(function(creds) {
+    var input = {
+      federateRoleArn: federateRoleArn,
+      accountRoleArn: accountRoleArn,
+      externalId: externalId
+    }
+    return sts.assumeRole(input).then(function(creds) {
       return collector.getEC2InstanceAttrs(params.instanceId, params.instanceRegion, creds).then(function(instance) {
         console.log(JSON.stringify(instance, null, 2));
         var json = builder.build(instance, params.name, params.description, params.keyPairName, JSON.parse(params.tags));

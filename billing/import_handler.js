@@ -1,23 +1,27 @@
 'use strict';
 
-let AWS = require('aws-sdk');
-let s3 = new AWS.S3({ apiVersion: '2006-03-01' });
-let pg = require('pg');
-let PgPromise = require('pgpromise');
+let pgp = require('pg-promise')();
+let kms = require('../lib/aws_promise/kms');
+let sts = require('../lib/aws_promise/sts');
+let s3 = require('../lib/aws_promise/s3bucket');
 
 exports.handler = (event, context, callback) => {
 
   console.log('Received event:', JSON.stringify(event, null, 2));
 
-  var fs = require("fs");
-  var data = fs.readFileSync(__dirname + '/json/default.json', {encoding:'utf8'});
-  var data_json = JSON.parse(data);
+  let fs = require("fs");
+  let data = fs.readFileSync(__dirname + '/json/default.json', {encoding:'utf8'});
+  let data_json = JSON.parse(data);
 
   let billingBucketName = data_json.billingBucketName;
   let billingFileKeyPrefix = data_json.billingFileKeyPrefix;
   let bucketIAMRoleArn = data_json.bucketIAMRoleArn;
   let bucketRegion = data_json.bucketRegion;
-  let dynamoDBTableName = data_json.dynamoDBTableName;
+  let kmsRegion = data_json.kmsRegion;
+  let federateRoleArn = data_json.federateRoleArn;
+  let accountRoleArn = data_json.accountRoleArn;
+  let externalId = data_json.externalId;
+  //let dynamoDBTableName = data_json.dynamoDBTableName;
   let redshiftConnectionString = data_json.redshiftConnectionString;
   let redshiftUser = data_json.redshiftUser;
   let redshiftPass = data_json.redshiftPass;
@@ -45,22 +49,34 @@ exports.handler = (event, context, callback) => {
   else {
     console.log("We've got a new billing file, " + key);
     var yearMonth = tokens[2].split('-')[0].substring(0, 6);
-
     var connection = null;
-    var kms = new AWS.KMS({region:bucketRegion});
     var params = {
-      CiphertextBlob: new Buffer(redshiftPass, 'base64')
+      region: kmsRegion,
+      password: redshiftPass
     };
-    kms.decrypt(params).promise().then(function(data) {
+    kms.decrypt(params).then(function(data) {
       redshiftPass = data.Plaintext.toString();
       redshiftConnectionString = 'pg:' + redshiftUser + ':' + redshiftPass + '@' + redshiftConnectionString;
     }).then(function() {
-      // get sqls first
-      var params = {
-        Bucket: bucket,
-        Key: key
+      params = {
+        federateRoleArn: federateRoleArn,
+        accountRoleArn: accountRoleArn,
+        externalId: externalId
       }
-      return s3.getObject(params).promise().then(function(data) {
+      return sts.assumeRole(params).then(function(creds) {
+        return creds;
+      }).catch(function(err) {
+        console.log(err);
+        callback(err);
+      });
+    }).then(function(creds) {
+      // get sqls first
+      params = {
+        creds: creds,
+        bucket: bucket,
+        key: key
+      }
+      return s3.getObject(params).then(function(data) {
         //console.log(data.Body.toString());
         var sqlStr = data.Body.toString().replace('<AWS_ROLE>', bucketIAMRoleArn).replace("<S3_BUCKET_REGION>", "'" + bucketRegion + "'");
         console.log(sqlStr);
@@ -70,22 +86,13 @@ exports.handler = (event, context, callback) => {
         callback(err);
       });
     }).then(function(sqlStr) {
-      // now run the sql in the redshift
-    	var db = new PgPromise(pg, redshiftConnectionString);
-    	return db.connect().then(function(conn) {
-        connection = conn;
-        console.log("We've got a connection");
-        return sqlStr;
-      }).catch(function(err) {
-        console.log(err);
-        if (connection) connection.client.end();
-        callback(err);
-      });
-    }).then(function(sqlStr) {
+      // get the connection to redshit
+      connection = pgp(redshiftConnectionString);
+      // drop the current month table first if exists
       var redshiftDropTableSqlString = "drop table AWSBilling<Year_Month>; drop table AWSBilling<Year_Month>_tagMapping;";
       redshiftDropTableSqlString = redshiftDropTableSqlString.replace("<Year_Month>", yearMonth).replace("<Year_Month>", yearMonth);
       console.log("dropping existing billing tables : " + redshiftDropTableSqlString);
-      return connection.client.queryP(redshiftDropTableSqlString).then(function(result) {
+      return connection.query(redshiftDropTableSqlString).then(function(result) {
   			console.log(result);
         return sqlStr;
   		}).catch(function(err) {
@@ -93,16 +100,19 @@ exports.handler = (event, context, callback) => {
         return sqlStr;
       });
     }).then(function(sqlStr) {
+      // now run the sql in the redshift
   		console.log("importing billing data");
-  	  return connection.client.queryP(sqlStr).then(function(result) {
+      return connection.query(sqlStr).then(function(result) {
   			console.log(result);
+        pgp.end();
         return result;
       }).catch(function(err) {
         console.log(err);
-        if (connection) connection.client.end();
+        pgp.end();
         callback(err);
       });
-    }).then(function(result) {
+    // do not export to dynamodb now and restore exporting when necessary
+    /*}).then(function(result) {
       console.log("\n Now importing to DynamoDB");
       return exportToDynamoDB(connection, yearMonth, bucketRegion, dynamoDBTableName).then(function(result) {
         console.log(result);
@@ -112,7 +122,7 @@ exports.handler = (event, context, callback) => {
         console.log(err);
         if (connection) connection.client.end();
         callback(err);
-      });
+      });*/
     }).catch(function(err) {
       console.log(err);
       callback(err);
@@ -122,7 +132,8 @@ exports.handler = (event, context, callback) => {
 
 function exportToDynamoDB(connection, yearMonth, bucketRegion, dynamoDBTableName) {
 
-	var docClient = new AWS.DynamoDB.DocumentClient({region: bucketRegion});
+  var AWS = require('aws-sdk');
+  var docClient = new AWS.DynamoDB.DocumentClient({region: bucketRegion});
 
 	var queryMaxEndDate = "select MAX(lineitem_usageenddate) \
 		from AWSBilling<year_month> \
