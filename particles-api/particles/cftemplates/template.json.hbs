@@ -9,6 +9,48 @@
 
   {{
      parameter "m:core" "base"
+     logicalId="CloudtrailGetLambdaArn"
+     type="String"
+     description="ARN of lambda function for Cloudtrail get method"
+  }}
+
+  {{
+     parameter "m:core" "base"
+     logicalId="CloudtrailPostLambdaArn"
+     type="String"
+     description="ARN of lambda function for Cloudtrail post method"
+  }}
+
+  {{
+     parameter "m:core" "base"
+     logicalId="CloudtrailDeleteLambdaArn"
+     type="String"
+     description="ARN of lambda function for Cloudtrail delete method"
+  }}
+
+  {{
+     parameter "m:core" "base"
+     logicalId="AWSConfigGetLambdaArn"
+     type="String"
+     description="ARN of lambda function for AWSConfig get method"
+  }}
+
+  {{
+     parameter "m:core" "base"
+     logicalId="AWSConfigPostLambdaArn"
+     type="String"
+     description="ARN of lambda function for AWSConfig post method"
+  }}
+
+  {{
+     parameter "m:core" "base"
+     logicalId="AWSConfigDeleteLambdaArn"
+     type="String"
+     description="ARN of lambda function for AWSConfig delete method"
+  }}
+
+  {{
+     parameter "m:core" "base"
      logicalId="BillingLambdaArn"
      type="String"
      description="ARN of lambda function for billing"
@@ -28,6 +70,36 @@
     "Properties" : {
       "Description" : "AWS Services API",
       "Name" : "AWS-Services-API"
+    }
+  {{/resource}}
+
+  {{#resource logicalId="CloudtrailRes"}}
+    "Type": "AWS::CloudFormation::Stack",
+    "Properties": {
+      "TemplateURL": "{{templateS3Url 'cloudtrail.template.json'}}",
+      "Parameters": {
+        "RestApiId": { "Ref": "RestApi" },
+        "ParentResourceId": { "Fn::GetAtt": ["RestApi", "RootResourceId"] },
+        "GetLambdaArn": { "Ref" : "CloudtrailGetLambdaArn" },
+        "PostLambdaArn": { "Ref" : "CloudtrailPostLambdaArn" },
+        "DeleteLambdaArn": { "Ref" : "CloudtrailDeleteLambdaArn" },
+        "InvokeFunctionRoleArn": { "Fn::GetAtt": ["InvokeFunctionRole", "Arn"] }
+      }
+    }
+  {{/resource}}
+
+  {{#resource logicalId="AWSConfigRes"}}
+    "Type": "AWS::CloudFormation::Stack",
+    "Properties": {
+      "TemplateURL": "{{templateS3Url 'awsconfig.template.json'}}",
+      "Parameters": {
+        "RestApiId": { "Ref": "RestApi" },
+        "ParentResourceId": { "Fn::GetAtt": ["RestApi", "RootResourceId"] },
+        "GetLambdaArn": { "Ref" : "AWSConfigGetLambdaArn" },
+        "PostLambdaArn": { "Ref" : "AWSConfigPostLambdaArn" },
+        "DeleteLambdaArn": { "Ref" : "AWSConfigDeleteLambdaArn" },
+        "InvokeFunctionRoleArn": { "Fn::GetAtt": ["InvokeFunctionRole", "Arn"] }
+      }
     }
   {{/resource}}
 

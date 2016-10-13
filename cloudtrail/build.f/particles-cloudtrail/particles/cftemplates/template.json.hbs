@@ -1,12 +1,5 @@
 {{#layout}}
 
-  {{
-     parameter "m:core" "base"
-     logicalId="StageName"
-     type="String"
-     description="Deployment stage name"
-  }}
-
   {{resource "federation_lambda_function" logicalId="FederationLambdaFunction"}}
   {{resource "federation_lambda_execution_role" logicalId="FederationLambdaExecutionRole"}}
   {{resource "cloudtrail_checker_function_info" logicalId="CloudTrailCheckerFunctionInfo"}}
@@ -15,38 +8,8 @@
   {{resource "cloudtrail_function_role_info" logicalId="CloudTrailFunctionRoleInfo"}}
   {{resource "cloudtrail_role_federation" logicalId="CloudTrailRoleFederation"}}
 
-  {{resource "m:api-gateway" "invoke_function_role" logicalId="InvokeFunctionRole"}}
-  {{#resource logicalId="CloudTrailRestApi"}}
-    "Type" : "AWS::ApiGateway::RestApi",
-    "Properties" : {
-      "Description" : "CloudTrail API",
-      "Name" : "CloudTrailAPI"
-    }
-  {{/resource}}
-  {{#resource logicalId="CloudTrailRes"}}
-    "Type": "AWS::CloudFormation::Stack",
-    "Properties": {
-      "TemplateURL": "{{templateS3Url 'cloudtrail.template.json'}}",
-      "Parameters": {
-        "RestApiId": { "Ref": "CloudTrailRestApi" },
-        "ParentResourceId": { "Fn::GetAtt": ["CloudTrailRestApi", "RootResourceId"] },
-        "LambdaInvokeRoleArn": {"Fn::GetAtt" : [ "InvokeFunctionRole", "Arn" ]},
-        "GetLambdaArn": { "Fn::GetAtt" : [ "CloudTrailCheckerFunctionInfo", "Arn" ]},
-        "PostLambdaArn": { "Fn::GetAtt" : [ "CloudTrailEnablerFunctionInfo", "Arn" ]},
-        "DeleteLambdaArn": { "Fn::GetAtt" : [ "CloudTrailRemoverFunctionInfo", "Arn" ]}
-      }
-    }
-  {{/resource}}
-  {{#resource logicalId="CloudTrailApiDeployment"}}
-    "DependsOn": "CloudTrailRes",
-    "Type" : "AWS::ApiGateway::Deployment",
-    "Properties" : {
-      "RestApiId": { "Ref": "CloudTrailRestApi" },
-      "Description": "Stage Deployment",
-      "StageName": { "Ref": "StageName" }
-    }
-  {{/resource}}
-
-  {{output "cloudtrail_api_uri" logicalId="APIUri"}}
+  {{output "cloudtrail_checker_function_arn" logicalId="CloudTrailCheckerFunctionArn"}}
+  {{output "cloudtrail_enabler_function_arn" logicalId="CloudTrailEnablerFunctionArn"}}
+  {{output "cloudtrail_remover_function_arn" logicalId="CloudTrailRemoverFunctionArn"}}
 
 {{/layout}}

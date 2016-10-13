@@ -1,3 +1,0 @@
-{{#output}}
-  "Value": {"Fn::Join": ["", ["https://", {"Ref" : "AwsConfigRestApi"}, ".execute-api.", {"Ref": "AWS::Region"}, ".amazonaws.com/", { "Ref": "StageName" }]]}
-{{/output}}
