@@ -38,7 +38,8 @@ exports.handler = function (event, context) {
        VolumeIOps:event.VolumeIOps,
        VolumeSize:event.VolumeSize,
        VpcId:event.VpcId,
-       Eip:event.Eip
+       Eip:event.Eip,
+       UUID:event.uuid
   };
     var input = {
        sessionName: sessionName,
