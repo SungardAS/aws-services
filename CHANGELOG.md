@@ -1,6 +1,19 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [1.4.1] -
+### Added
+- New projects
+  - billing : provides billing data for each account/service
+  - spotinst : provides list of low usage EC2 instances and interface to convert them to spot instances
+  - particles-api : provides API interfaces for all aws-services that are invoked from outside Apps
+
+### Changed
+- Moved API Gateways for AWSConfig & CloudTrail to 'particles-api'
+
+### Removed
+- None
+
 ## [1.4] - 2016-09-30
 ### Added
 - AWSConfig & CloudTrail
