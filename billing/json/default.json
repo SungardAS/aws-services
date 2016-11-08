@@ -1,6 +1,6 @@
 {
-  "billingBucketName": "billing.cto.sungardas.com.test.redshift",
-  "billingFileKeyPrefix": "/FeedToRedshift/",
+  "billingBucketName": "billing.cto.sungardas.com.test.redshift.res",
+  "billingFileKeyPrefix": "/ToRedshitWithResourceIds/",
   "bucketIAMRoleArn": "arn:aws:iam::054649790173:role/RedshiftAccessS3",
   "bucketRegion": "us-east-1",
   "kmsRegion": "us-east-1",
