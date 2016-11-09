@@ -6,18 +6,7 @@
     "commands": {
       "001": {
         "command": {"Fn::Join" : ["", [
-          "docker run ",
-          " -e CATTLE_AGENT_IP=`ec2-metadata-value -o` ",
-          " -e CATTLE_HOST_LABELS=\"provider=aws&region=",
-          {{ref "AWS::Region"}},
-          "&account=",{{ref "AWS::AccountId"}},
-          "&stack-name=",{{ref "AWS::StackName"}},
-          "&",{"Fn::Join" : ["&",{{helper "m:core" "propertyValue" cattleHostLabels}}]},
-          "\"",
-          " -d --privileged -v /var/run/docker.sock:/var/run/docker.sock ",
-          {{helper "m:core" "propertyValue" rancherAgentImage}},
-          " ",
-          {{helper "m:core" "propertyValue" rancherRegistrationUrl}}
+          "echo 'Hello'"
         ]]}
       }
     }
