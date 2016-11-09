@@ -1,0 +1,17 @@
+{{#resource "ec2_instance"}}
+"Metadata": {
+  "AWS::CloudFormation::Init": {{partial "cf_init"}}
+},
+"Properties": {
+  "BlockDeviceMappings": [
+    {
+      "DeviceName": "/dev/sda1",
+      "Ebs": {
+        "DeleteOnTermination": "true",
+        "VolumeSize": {{helper "m:core" "propertyValue" volumeSize}},
+        "VolumeType": "gp2"
+      }
+    }
+  ]
+}
+{{/resource}}

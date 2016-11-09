@@ -1,0 +1,13 @@
+{{parameter "m:core" "base" logicalId="SubnetId" type="AWS::EC2::Subnet::Id" description="Subnet for the ec2 instance"}}
+
+{{
+  resource "instance"
+  logicalId="Instance"
+  imageId=imageId
+  instanceType=(ref "InstanceType")
+  keyName=(ref "KeyPairName")
+  securityGroupIds=(ref "SecurityGroupIds")
+  subnetId=(ref "SubnetId")
+  userData=userData
+  volumeSize=(ref "VolumeSize")
+}}

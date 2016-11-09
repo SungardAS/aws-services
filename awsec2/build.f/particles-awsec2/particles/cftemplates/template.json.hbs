@@ -1,3 +1,8 @@
 {{#layout}}
+    {{mapping "windows_ami" logicalId="AmiMap"}}
 
+    {{
+        set "instance"
+        imageId='{"Fn::FindInMap": ["AmiMap", {"Ref": "AWS::Region"}, "32"]}'
+      }}
 {{/layout}}
