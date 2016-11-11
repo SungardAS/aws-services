@@ -1,5 +1,7 @@
 
-{{parameter "m:core" "base" logicalId="InstanceType" type="String" description="ec2 Instance Type"}}
+{{parameter "m:core" "base" logicalId="InstanceType" type="String" description="ec2 Instance Type" allowedValues=["t2.micro", "m1.small", "m1.large"]}}
 {{parameter "m:vpc" "security_group/id_list" logicalId="SecurityGroupIds" description="Security Group to associate with ec2 instance"}}
 {{parameter "m:ec2" "key_pair/key_name" logicalId="KeyPairName"}}
 {{parameter "m:core" "base" type="Number" logicalId="VolumeSize" default=8 description="Volume size for the ec2 instance"}}
+{{parameter "m:vpc" "vpc/id" logicalId="VPCId" description="Vpc Id in which the ec2 instance is to be created"}}
+{{parameter "m:vpc" "availability_zone/list" logicalId="AvailabilityZoneId"}}
