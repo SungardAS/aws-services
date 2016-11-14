@@ -1,0 +1,9 @@
+{{
+  resource "m:core" "base"
+  type="AWS::CloudFormation::WaitConditionHandle"
+}}
+{{
+  resource "manage_vm_wait"
+  Handle=(ref "ManagedVMWaitHandle")
+  Timeout="3600"
+}}
