@@ -6,10 +6,10 @@
       "",
       [
         "<script>\n",
-        "cfn-init.exe -v -s ", { "Ref" : "AWS::StackId" },
-        " -r ManagedVM",
-        " --region ", { "Ref" : "AWS::Region" }, "\n",
-        "cfn-signal.exe -e %ERRORLEVEL% ", { "Fn::Base64" : { "Ref" : "ManagedVMWaitHandle" }}, "\n",
+        "cfn-init.exe -v -s ", {{helper "m:core" "propertyValue" stackId}},
+        " -r Instance",
+        " --region ", {{helper "m:core" "propertyValue" awsRegion}}, "\n",
+        "cfn-signal.exe -e %ERRORLEVEL% ", {{helper "m:core" "propertyValue" vmHandle}}, "\n",
         "</script>"
        ]
     ]

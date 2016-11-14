@@ -12,9 +12,9 @@
         "content": { "Fn::Join" : ["", [
           "[cfn-auto-reloader-hook]\n",
           "triggers=post.update\n",
-          "path=Resources.ManagedVM.Metadata.AWS::CloudFormation::Init\n",
+          "path=Resources.Instance.Metadata.AWS::CloudFormation::Init\n",
           "action=cfn-init.exe -v -s ", { "Ref" : "AWS::StackId" },
-                                         " -r ManagedVM",
+                                         " -r Instance",
                                          " --region ", { "Ref" : "AWS::Region" }, "\n"
         ]]}
       },

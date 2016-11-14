@@ -1,0 +1,11 @@
+"ManagedVMWaitHandle" : {
+  "Type" : "AWS::CloudFormation::WaitConditionHandle"
+},
+"ManagedVMWaitCondition" : {
+  "Type" : "AWS::CloudFormation::WaitCondition",
+  "DependsOn" : "Instance",
+  "Properties" : {
+    "Handle" : {"Ref" : "ManagedVMWaitHandle"},
+    "Timeout" : "3600"
+  }
+}

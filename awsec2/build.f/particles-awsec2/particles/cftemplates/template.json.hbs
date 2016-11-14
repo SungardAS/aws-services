@@ -4,7 +4,14 @@
 
     {{
       set "instance"
-      imageId='{"Fn::FindInMap": ["AmiMap", {"Ref": "AWS::Region"}, "Windows2012r2"]}',
-      userData=(partial "user_data")
+      imageId='{"Fn::FindInMap": ["AmiMap", {"Ref": "AWS::Region"}, "Windows2012r2"]}'
+      userData=(partial "user_data"
+        vmHandle='{ "Fn::Base64" : { "Ref" : "ManagedVMWaitHandle" }}'
+        stackId={ "Ref" : "AWS::StackId" }
+        awsRegion={ "Ref" : "AWS::Region" }
+      )
+    }}
+    {{
+      resource "manage_vm_handle"
     }}
 {{/layout}}
