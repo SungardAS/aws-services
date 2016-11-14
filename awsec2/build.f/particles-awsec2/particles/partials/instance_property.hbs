@@ -1,0 +1,8 @@
+{
+  "BlockDeviceMappings": {{partial "device_mapping"}},
+  "InstanceType" : { "Ref" : "InstanceType" },
+  "ImageId" : imageId,
+  "SecurityGroups" : {"Ref" : "SecurityGroupIds"},
+  "KeyName" : { "Ref" : "KeyPairName" },
+  "UserData" : {{partial "user_data"}}
+}

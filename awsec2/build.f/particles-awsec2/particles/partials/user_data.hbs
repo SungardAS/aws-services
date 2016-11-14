@@ -1,0 +1,17 @@
+{
+  "Fn::Base64" :
+  {
+    "Fn::Join" :
+    [
+      "",
+      [
+        "<script>\n",
+        "cfn-init.exe -v -s ", { "Ref" : "AWS::StackId" },
+        " -r ManagedVM",
+        " --region ", { "Ref" : "AWS::Region" }, "\n",
+        "cfn-signal.exe -e %ERRORLEVEL% ", { "Fn::Base64" : { "Ref" : "ManagedVMWaitHandle" }}, "\n",
+        "</script>"
+       ]
+    ]
+  }
+}
