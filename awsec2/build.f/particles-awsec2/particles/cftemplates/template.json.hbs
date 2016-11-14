@@ -4,6 +4,7 @@
 
     {{
       set "instance"
-      imageId='{"Fn::FindInMap": ["AmiMap", {"Ref": "AWS::Region"}, "Windows2012r2"]}'
+      imageId='{"Fn::FindInMap": ["AmiMap", {"Ref": "AWS::Region"}, "Windows2012r2"]}',
+      userData=(partial "user_data")
     }}
 {{/layout}}

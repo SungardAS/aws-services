@@ -1,8 +1,8 @@
 {{#resource "ec2_instance"}}
-"Metadata": {
-  "AWS::CloudFormation::Init": {{partial "cf_init"}}
-},
-"Properties": {{partial "instance_property"
-  imageId=imageId
-}}
+  "Metadata": {
+    "AWS::CloudFormation::Init": {{partial "cf_init"}}
+  },
+  "Properties": {
+    "BlockDeviceMappings": {{partial "device_mapping"}}
+  }
 {{/resource}}
