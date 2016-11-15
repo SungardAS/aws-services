@@ -1,6 +1,7 @@
 {{#resource "m:core" "base" type="AWS::CloudFormation::WaitCondition"}}
-  {{#helper "m:core" "properties"}}
-    {{helper "m:core" "property" "Handle"}}
-    {{helper "m:core" "property" "Timeout"}}
-  {{/helper}}
+  "Properties": {
+    "Handle" : {"Ref" : "ManagedVMWaitHandle"},
+    "Timeout" : "3600"
+  },
+  "DependsOn": "Instance"
 {{/resource}}
