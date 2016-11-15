@@ -11,14 +11,10 @@
 }}
 {{
   parameter "m:core" "base" logicalId="InstanceType"
-  type="CommaDelimitedList"
+  type="String"
   description="ec2 Instance Type"
-  default=["t2.micro",
-           "t2.small",
-           "t2.medium",
-           "m1.small",
-           "m1.medium",
-           "m4.large"]
+  allowedValues=["t2.micro", "m1.small", "m1.large"]
+  default="m1.large"
 }}
 {{
   parameter "m:core" "base" logicalId="PSecurityGroup"
