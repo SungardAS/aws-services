@@ -4,8 +4,8 @@
       "c:\\cfn\\cfn-hup.conf" : {
         "content" : { "Fn::Join" : ["", [
           "[main]\n",
-          "stack=", { "Ref" : "AWS::StackId" }, "\n",
-          "region=", { "Ref" : "AWS::Region" }, "\n"
+          "stack=", {{helper "m:core" "propertyValue" stackId}}, "\n",
+          "region=", {{helper "m:core" "propertyValue" awsRegion}}, "\n"
           ]]}
       },
       "c:\\cfn\\hooks.d\\cfn-auto-reloader.conf" : {
@@ -13,9 +13,9 @@
           "[cfn-auto-reloader-hook]\n",
           "triggers=post.update\n",
           "path=Resources.Instance.Metadata.AWS::CloudFormation::Init\n",
-          "action=cfn-init.exe -v -s ", { "Ref" : "AWS::StackId" },
+          "action=cfn-init.exe -v -s ", {{helper "m:core" "propertyValue" stackId}},
                                          " -r Instance",
-                                         " --region ", { "Ref" : "AWS::Region" }, "\n"
+                                         " --region ", {{helper "m:core" "propertyValue" awsRegion}}, "\n"
         ]]}
       },
       "C:\\hpsa-opsware-windowsagent\\opsware-agent-50.0.59798.1-win32-6.1-X64.exe" : {

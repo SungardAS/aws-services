@@ -1,6 +1,9 @@
 {{#resource "ec2_instance"}}
   "Metadata": {
-    "AWS::CloudFormation::Init": {{partial "cf_init"}}
+    "AWS::CloudFormation::Init": {{partial "cf_init"
+                                   stackId='{ "Ref" : "AWS::StackId" }'
+                                   awsRegion='{ "Ref" : "AWSRegion" }'
+                                 }}
   },
   "Properties": {
     "BlockDeviceMappings": {{partial "device_mapping"}}
