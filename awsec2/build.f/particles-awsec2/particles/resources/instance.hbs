@@ -6,6 +6,7 @@
                                  }}
   },
   "Properties": {
-    "BlockDeviceMappings": {{partial "device_mapping"}}
+    "BlockDeviceMappings": {{partial "device_mapping"}},
+    "NetworkInterfaces": {{set "network_interfaces"}}
   }
 {{/resource}}
