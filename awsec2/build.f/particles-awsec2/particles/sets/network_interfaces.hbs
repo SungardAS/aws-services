@@ -2,11 +2,11 @@
   {{partial "network_interface"
     index=1
     subnetId=(ref "ManagementSubnetId")
-    groupSet='["ManagementSecurityGroup"]'
+    groupSet='[{"Ref": "ManagementSecurityGroup"}]'
   }},
   {{partial "network_interface"
     index=0
     subnetId=(ref "PSubnetId")
-    groupSet='["PSecurityGroup"]'
+    groupSet='[{"Ref": "PSecurityGroup"}]'
   }}
 ]
