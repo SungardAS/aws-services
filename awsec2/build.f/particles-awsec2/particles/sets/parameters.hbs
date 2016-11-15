@@ -17,11 +17,6 @@
   default="m1.large"
 }}
 {{
-  parameter "m:core" "base" logicalId="AWSRegion"
-  type="AWS::Region"
-  description="AWS Region where the ec2 instance is to be created"
-}}
-{{
   parameter "m:vpc" "security_group/id_list" logicalId="SecurityGroupIds"
   description="Security Group to associate with ec2 instance"
 }}

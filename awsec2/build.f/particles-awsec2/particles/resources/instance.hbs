@@ -2,7 +2,7 @@
   "Metadata": {
     "AWS::CloudFormation::Init": {{partial "cf_init"
                                    stackId='{ "Ref" : "AWS::StackId" }'
-                                   awsRegion='{ "Ref" : "AWSRegion" }'
+                                   awsRegion='{ "Ref" : "AWS::Region" }'
                                  }}
   },
   "Properties": {
