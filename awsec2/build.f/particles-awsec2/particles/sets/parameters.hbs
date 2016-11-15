@@ -39,6 +39,10 @@
   parameter "m:vpc" "vpc/id" logicalId="VPCId"
   description="Vpc Id in which the ec2 instance is to be created"
 }}
+{{
+  parameter "m:vpc" "availability_zone/list" logicalId="AvailabilityZoneId"
+}}
+
 {{!-- parameter "m:core" "base" type="String" logicalId="SourceCidrForRDP"
   description="IP Cidr from which you are likely to RDP into the instances."
   allowedPattern="^([0-9]+\\.){3}[0-9]+\\/[0-9]+$"
