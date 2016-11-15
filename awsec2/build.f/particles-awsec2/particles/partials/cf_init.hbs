@@ -1,74 +1,64 @@
 {
-  "configSets": {
-    "stuff": ["install_cfn", "hpsaagentinstall", "rename"]
-  },
-  "install_cfn": {
-    "files": {
-      "c:\\cfn\\cfn-hup.conf": {
-        "content": {
-          "Fn::Join": [
-            "",
-            [
-              "[main]\n",
-              "stack=",
-              {{helper "m:core" "propertyValue" stackId}},
-              "\n",
-              "region=",
-              {{helper "m:core" "propertyValue" awsRegion}},
-              "\n"
-            ]
-          ]
-        }
-      },
-      "c:\\cfn\\hooks.d\\cfn-auto-reloader.conf": {
-        "content": {
-          "Fn::Join": [
-            "",
-            [
-              "[cfn-auto-reloader-hook]\n",
-              "triggers=post.update\n",
-              "path=Resources.ManagedVM.Metadata.AWS::CloudFormation::Init\n",
-              "action=cfn-init.exe -v -s ",
-              {{helper "m:core" "propertyValue" stackId}},
-              " -r ManagedVM ",
-              " --configsets stuff ",
-              " --region ",
-              {{helper "m:core" "propertyValue" awsRegion}},
-              "\n"
-            ]
-          ]
-        }
-      },
-      "C:\\hpsa-opsware-windowsagent\\opsware-agent-50.0.59798.1-win32-6.1-X64.exe": {
-        "source": "https://s3.amazonaws.com/hpsa-opsware-windowsagent/opsware-agent-50.0.59798.1-win32-6.1-X64.exe"
-      }
+    "configSets": {
+        "stuff": ["install_cfn", "hpsaagentinstall", "rename"]
     },
-    "services": {
-      "windows": {
-        "cfn-hup": {
-          "enabled": "true",
-          "ensureRunning": "true",
-          "files": [
-            "c:\\cfn\\cfn-hup.conf",
-            "c:\\cfn\\hooks.d\\cfn-auto-reloader.conf"
-          ]
+    "install_cfn" : {
+        "files" : {
+            "c:\\cfn\\cfn-hup.conf" : {
+                "content" : {
+                    "Fn::Join" : [
+                        "",
+                        [
+                            "[main]\n",
+                            "stack=", {{helper "m:core" "propertyValue" stackId}}, "\n",
+                            "region=", {{helper "m:core" "propertyValue" awsRegion}}, "\n"
+                        ]
+                    ]
+                }
+            },
+            "c:\\cfn\\hooks.d\\cfn-auto-reloader.conf" : {
+                "content": {
+                    "Fn::Join" : [
+                        "",
+                        [
+                            "[cfn-auto-reloader-hook]\n",
+                            "triggers=post.update\n",
+                            "path=Resources.Instance.Metadata.AWS::CloudFormation::Init\n",
+                            "action=cfn-init.exe -v -s ", {{helper "m:core" "propertyValue" stackId}},
+                            " -r Instance",
+                            " --configsets stuff ",
+                            " --region ", {{helper "m:core" "propertyValue" awsRegion}}, "\n"
+                        ]
+                    ]
+                }
+            },
+            "C:\\hpsa-opsware-windowsagent\\opsware-agent-50.0.59798.1-win32-6.1-X64.exe" : {
+                "source" : "https://s3.amazonaws.com/hpsa-opsware-windowsagent/opsware-agent-50.0.59798.1-win32-6.1-X64.exe"
+            }
+        },
+        "services" : {
+            "windows" : {
+                "cfn-hup" : {
+                    "enabled" : "true",
+                    "ensureRunning" : "true",
+                    "files" : ["c:\\cfn\\cfn-hup.conf", "c:\\cfn\\hooks.d\\cfn-auto-reloader.conf"]
+                }
+            }
         }
-      }
+    },
+    "rename": {
+        "commands": {
+            "rename-computer": {
+                "command": "powershell.exe -Command Rename-Computer -NewName {{helper 'm:core' 'propertyValue' hostname}} -Restart",
+                "waitAfterCompletion": "forever"
+            }
+        }
+    },
+    "hpsaagentinstall": {
+        "commands": {
+            "1-HPSAAgent-Install": {
+                "command": "C:\\hpsa-opsware-windowsagent\\opsware-agent-50.0.59798.1-win32-6.1-X64.exe --no_opsw_gw -f"
+            }
+        }
     }
-  },
-  "rename": {
-    "commands": {
-      "rename-computer": {
-        "command": "powershell.exe -Command Rename-Computer -NewName {{helper "m:core" "propertyValue" hostname}} -Restart",
-        "waitAfterCompletion": "forever"
-      }
-    }
-  },
-  "hpsaagentinstall": {
-    "commands": {
-      "1-HPSAAgent-Install": {
-        "command": "C:\\hpsa-opsware-windowsagent\\opsware-agent-50.0.59798.1-win32-6.1-X64.exe --no_opsw_gw -f"
-      }
-    }
-  }
 }
