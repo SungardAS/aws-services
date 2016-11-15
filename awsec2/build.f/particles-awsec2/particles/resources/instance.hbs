@@ -3,7 +3,7 @@
     "AWS::CloudFormation::Init": {{partial "cf_init"
                                    stackId='{ "Ref" : "AWS::StackId" }'
                                    awsRegion='{ "Ref" : "AWS::Region" }'
-                                   hostname='{ "Ref" : "Hostname" }'
+                                   hostname="{ 'Ref' : 'Hostname' }"
                                  }}
   },
   "Properties": {

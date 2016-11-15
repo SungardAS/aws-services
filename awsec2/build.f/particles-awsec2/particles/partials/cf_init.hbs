@@ -49,7 +49,7 @@
     "rename": {
         "commands": {
             "rename-computer": {
-                "command": "powershell.exe -Command Rename-Computer -NewName {{helper 'm:core' 'propertyValue' hostname}} -Restart",
+                "command": "powershell.exe -Command Rename-Computer -NewName {{hostname}} -Restart",
                 "waitAfterCompletion": "forever"
             }
         }
