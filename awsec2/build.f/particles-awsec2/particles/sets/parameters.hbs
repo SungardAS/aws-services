@@ -17,8 +17,14 @@
   default="m1.large"
 }}
 {{
-  parameter "m:vpc" "security_group/id_list" logicalId="SecurityGroupIds"
-  description="Security Group to associate with ec2 instance"
+  parameter "m:core" "base" logicalId="PSecurityGroup"
+  type="AWS::EC2::SecurityGroup::Id"
+  description="Production /Public SecurityGroup for the ec2 instance"
+}}
+{{
+  parameter "m:core" "base" logicalId="ManagementSecurityGroup"
+  type="AWS::EC2::SecurityGroup::Id"
+  description="Management SecurityGroup for the ec2 instance"
 }}
 {{
   parameter "m:ec2" "key_pair/key_name" logicalId="KeyPairName"
