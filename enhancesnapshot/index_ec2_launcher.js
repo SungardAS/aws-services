@@ -42,7 +42,6 @@ exports.handler = function (event, context) {
   };
     var input = {
        sessionName: sessionName,
-       stackName: event.stackName,
        roles: roles,
        region: event.region,
        params:params,
