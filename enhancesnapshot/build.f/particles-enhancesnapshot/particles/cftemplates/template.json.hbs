@@ -5,8 +5,10 @@
   {{resource "enhancesnapshot_role_federation" logicalId="EnhanceSnapshotRoleFederation"}}
   {{resource "federation_lambda_function" logicalId="FederationLambdaFunction"}}
   {{resource "enhance_snapshot_launcher_lambda" logicalId="EnhanceSnapshotLauncherLambda"}}
+  {{resource "ec2_launcher_lambda" logicalId="Ec2LauncherLambda"}}
 
   {{output "account_id" logicalId="AccountId"}}
   {{output "stacks_region" logicalId="StacksRegion"}}
   {{output "enhance_snapshot_launcher_lambda_arn" logicalId="EnhanceSnapshotLauncherLambdaArn"}}
+  {{output "ec2_launcher_lambda_arn" logicalId="Ec2LauncherLambdaArn"}}
 {{/layout}}
