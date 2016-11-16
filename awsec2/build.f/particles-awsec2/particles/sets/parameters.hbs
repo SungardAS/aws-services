@@ -13,8 +13,11 @@
   parameter "m:core" "base" logicalId="InstanceType"
   type="String"
   description="ec2 Instance Type"
-  allowedValues=["t2.micro", "m1.small", "m1.large"]
-  default="m1.large"
+  allowedValues=["t2.micro",
+                 "t2.small",
+                 "t2.medium",
+                 "m4.large"]
+  default="m4.large"
 }}
 {{
   parameter "m:core" "base" logicalId="PSecurityGroup"
@@ -38,9 +41,6 @@
 {{
   parameter "m:vpc" "vpc/id" logicalId="VPCId"
   description="Vpc Id in which the ec2 instance is to be created"
-}}
-{{
-  parameter "m:vpc" "availability_zone/list" logicalId="AvailabilityZoneId"
 }}
 {{
   parameter "m:core" "base" logicalId="Hostname"

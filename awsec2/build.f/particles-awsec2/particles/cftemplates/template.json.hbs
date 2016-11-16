@@ -6,12 +6,12 @@
       set "instance"
       imageId='{"Fn::FindInMap": ["AmiMap", {"Ref": "AWS::Region"}, "Windows2012r2"]}'
       userData=(partial "user_data"
-        vmHandle='{ "Fn::Base64" : { "Ref" : "ManagedVMWaitHandle" }}'
         stackId='{ "Ref" : "AWS::StackId" }'
         awsRegion='{ "Ref" : "AWS::Region" }'
       )
     }}
     {{
-      set "manage_vm_handle"
+      resource "manage_vm_wait"
+      logicalId="ManagedVMWaitCondition"
     }}
 {{/layout}}

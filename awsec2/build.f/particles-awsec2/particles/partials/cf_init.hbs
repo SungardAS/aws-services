@@ -1,6 +1,6 @@
 {
     "configSets": {
-        "stuff": ["install_cfn", "hpsaagentinstall", "rename"]
+        "default": ["install_cfn", "hpsaagentinstall", "rename"]
     },
     "install_cfn" : {
         "files" : {
@@ -26,7 +26,6 @@
                             "path=Resources.Instance.Metadata.AWS::CloudFormation::Init\n",
                             "action=cfn-init.exe -v -s ", {{helper "m:core" "propertyValue" stackId}},
                             " -r Instance",
-                            " --configsets stuff ",
                             " --region ", {{helper "m:core" "propertyValue" awsRegion}}, "\n"
                         ]
                     ]
@@ -49,7 +48,7 @@
     "rename": {
         "commands": {
             "rename-computer": {
-                "command": "powershell.exe -Command Rename-Computer -NewName {{hostname}} -Restart",
+                "command": { "Fn::Join" : ["", ["powershell.exe -Command Rename-Computer -NewName ", {{helper "m:core" "propertyValue" hostname}}, " -Restart"]]},
                 "waitAfterCompletion": "forever"
             }
         }
