@@ -38,6 +38,7 @@ exports.handler = function (event, context) {
        ebsVolume:event.ebsVolume,
        vpcId:event.vpcId,
        subnetId:event.subnetId,
+       stackName:event.stackName,
        uuid:event.uuid
   };
     var input = {
@@ -55,8 +56,8 @@ exports.handler = function (event, context) {
      
         var flows = [
            {func:aws_s3.addPolicy, success:aws_sts.assumeRoles, failure:failed, error:errored},
-           {func:aws_sts.assumeRoles, success:aws_cfn.createESnapShotCFNStack, failure:failed, error:errored},
-           {func:aws_cfn.createESnapShotCFNStack, success:succeeded, failure:failed, error:errored},
+           {func:aws_sts.assumeRoles, success:aws_cfn.createEc2CFNStack, failure:failed, error:errored},
+           {func:aws_cfn.createEc2CFNStack, success:succeeded, failure:failed, error:errored},
         ];
         aws_s3.flows = flows;
     }else if(event.actionType == "deleteStack"){
