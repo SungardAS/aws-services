@@ -34,10 +34,12 @@ exports.handler = function (event, context) {
        hostName:event.hostName,
        instanceType:event.instanceType,
        osType:event.osType,
-       sgId:event.sgId,
+       pSgId:event.sgId,
+       mSgId:event.managementSecurityGroupId,
        ebsVolume:event.ebsVolume,
        vpcId:event.vpcId,
-       subnetId:event.subnetId,
+       pSubnetId:event.subnetId,
+       mSubnetId:event.managementSubnetId,
        stackName:event.stackName,
        uuid:event.uuid
   };
