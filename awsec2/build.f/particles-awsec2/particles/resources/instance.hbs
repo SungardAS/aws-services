@@ -8,6 +8,7 @@
   },
   "Properties": {
     "BlockDeviceMappings": {{partial "device_mapping"}},
-    "NetworkInterfaces": {{set "network_interfaces"}}
+    "NetworkInterfaces": {{set "network_interfaces"}},
+    "Tags": [{"Key": "Name", "Value": {"Ref" : "Hostname"} }, {"Key": "Managed", "Value": ""}]
   }
 {{/resource}}
