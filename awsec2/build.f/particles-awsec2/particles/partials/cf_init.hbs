@@ -1,6 +1,6 @@
 {
     "configSets": {
-        "default": ["install_cfn", "hpsaagentinstall", "rename"]
+        "default": ["install_cfn", "routes", "hpsaagentinstall", "rename"]
     },
     "install_cfn" : {
         "files" : {
@@ -31,8 +31,11 @@
                     ]
                 }
             },
-            "C:\\hpsa-opsware-windowsagent\\opsware-agent-50.0.59798.1-win32-6.1-X64.exe" : {
-                "source" : "https://s3.amazonaws.com/hpsa-opsware-windowsagent/opsware-agent-50.0.59798.1-win32-6.1-X64.exe"
+            "C:\\hpsa-opsware-windowsagent\\opsware-agent-50.0.59798.1-win32-6.1-X64.exe": {
+                "source": "https://s3.amazonaws.com/hpsa-opsware-windowsagent/opsware-agent-50.0.59798.1-win32-6.1-X64.exe"
+            },
+            "C:\\sgas\\Windows.ps1": {
+                "source": "https://s3.amazonaws.com/hpsa-opsware-windowsagent/Windows.ps1"
             }
         },
         "services" : {
@@ -53,11 +56,20 @@
             }
         }
     },
+    "routes": {
+        "commands": {
+            "add-routes": {
+                "command": { "Fn::Join": ["", ["powershell.exe -executionpolicy unrestricted -Command C:\\sgas\\Windows.ps1"]]},
+                "waitAfterCompletion": 0
+            }
+        }
+    },
     "hpsaagentinstall": {
         "commands": {
             "1-HPSAAgent-Install": {
-                "command": "C:\\hpsa-opsware-windowsagent\\opsware-agent-50.0.59798.1-win32-6.1-X64.exe --no_opsw_gw -f"
+                "command": "C:\\hpsa-opsware-windowsagent\\opsware-agent-50.0.59798.1-win32-6.1-X64.exe --opsw_gw_addr 65.79.161.92:3001"
             }
-        }
+        },
+        "waitAfterCompletion": 0
     }
 }
