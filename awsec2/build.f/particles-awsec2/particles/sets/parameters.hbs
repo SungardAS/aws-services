@@ -1,0 +1,57 @@
+
+{{
+  parameter "m:core" "base" logicalId="PSubnetId"
+  type="AWS::EC2::Subnet::Id"
+  description="Production /Public Subnet for the ec2 instance"
+}}
+{{
+  parameter "m:core" "base" logicalId="ManagementSubnetId"
+  type="AWS::EC2::Subnet::Id"
+  description="Management Subnet for the ec2 instance"
+}}
+{{
+  parameter "m:core" "base" logicalId="InstanceType"
+  type="String"
+  description="ec2 Instance Type"
+  allowedValues=["t2.micro",
+                 "t2.small",
+                 "t2.medium",
+                 "m4.large"]
+  default="m4.large"
+}}
+{{
+  parameter "m:core" "base" logicalId="PSecurityGroup"
+  type="AWS::EC2::SecurityGroup::Id"
+  description="Production /Public SecurityGroup for the ec2 instance"
+}}
+{{
+  parameter "m:core" "base" logicalId="ManagementSecurityGroup"
+  type="AWS::EC2::SecurityGroup::Id"
+  description="Management SecurityGroup for the ec2 instance"
+}}
+{{
+  parameter "m:ec2" "key_pair/key_name" logicalId="KeyPairName"
+}}
+{{
+  parameter "m:core" "base" logicalId="VolumeSize"
+  type="Number"
+  default=8
+  description="EBS(gp2 type) volume size for the ec2 instance"
+}}
+{{
+  parameter "m:vpc" "vpc/id" logicalId="VPCId"
+  description="Vpc Id in which the ec2 instance is to be created"
+}}
+{{
+  parameter "m:core" "base" logicalId="Hostname"
+  type="String"
+  description="Hostname to the ec2 Instance"
+}}
+
+{{!-- parameter "m:core" "base" type="String" logicalId="SourceCidrForRDP"
+  description="IP Cidr from which you are likely to RDP into the instances."
+  allowedPattern="^([0-9]+\\.){3}[0-9]+\\/[0-9]+$"
+  default="0.0.0.0/0"
+  maxLength="18"
+  minLength="9"
+--}}
