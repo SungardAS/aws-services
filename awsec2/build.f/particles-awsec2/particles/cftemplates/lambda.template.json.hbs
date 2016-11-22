@@ -1,0 +1,7 @@
+{{#layout}}
+
+  {{resource "lambda_execution_role" logicalId="LambdaExecutionRole"}}
+  {{resource "ec2_launcher_lambda" logicalId="Ec2LauncherLambda"}}
+
+  {{output "ec2_launcher_lambda_arn" logicalId="Ec2LauncherLambdaArn"}}
+{{/layout}}

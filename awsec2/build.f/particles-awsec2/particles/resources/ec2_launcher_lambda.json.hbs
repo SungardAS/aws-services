@@ -4,9 +4,9 @@
     "FunctionName": "ec2-launcher",
     "Code": {
       "S3Bucket": "{{s3.bucket}}",
-      "S3Key": "{{assetPath 'enhancesnapshot.zip'}}"
+      "S3Key": "{{assetPath 'awsec2.zip'}}"
     },
-    "Handler": "enhancesnapshot/index_ec2_launcher.handler",
+    "Handler": "awsec2/index_ec2_launcher.handler",
     "Runtime": "nodejs",
     "Timeout": "60",
     "MemorySize": "128",
