@@ -9,8 +9,8 @@ module.exports.initialize = function(cb) {
     if (error) return cb(error);
   });
 
-  vfs.src(['awsconfigrules/index_*.js', 'awsconfigrules/json/*.json', 'lib/flow_controller.js', 'lib/aws/*.js' , 'lib/aws-promise/*.js'],{cwd:'../../..', base:'../../..'})
-  .pipe(zip('awsconfigrules.zip'))
+  vfs.src(['awsec2/index_*.js', 'awsec2/json/*.json', 'lib/flow_controller.js', 'lib/aws/*.js' , 'lib/aws-promise/*.js'],{cwd:'../../..', base:'../../..'})
+  .pipe(zip('awsec2.zip'))
   .pipe(gulp.dest('./particles/assets'))
   .on('end', function(err, data) {
     vfs.src(['cloudformation/index_lambda_deployer.js', 'cloudformation/lambda_deployer.js', 'cloudformation/index_iam_federation.js', 'cloudformation/iam_federation.js'],{cwd:'../../..', base:'../../..'})
