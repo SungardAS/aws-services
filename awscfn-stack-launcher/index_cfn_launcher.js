@@ -42,8 +42,7 @@ exports.handler = function (event, context) {
         input.policyDocument = policy;
      
         var flows = [
-           {func:aws_s3.addPolicy, success:aws_ec2.enableLaunchAMIPermission, failure:failed, error:errored},
-           {func:aws_ec2.enableLaunchAMIPermission, success:aws_sts.assumeRoles, failure:failed, error:errored},
+           {func:aws_s3.addPolicy, success:aws_sts.assumeRoles, failure:failed, error:errored},
            {func:aws_sts.assumeRoles, success:aws_cfn.createESnapShotCFNStack, failure:failed, error:errored},
            {func:aws_cfn.createESnapShotCFNStack, success:succeeded, failure:failed, error:errored},
         ];
@@ -52,8 +51,7 @@ exports.handler = function (event, context) {
   }else if(event.actionType == "deleteStack"){
         input.bucketName = event.bucketName;
         var flows = [
-           {func:aws_s3.deletePolicy, success:aws_ec2.deleteLaunchAMIPermission, failure:failed, error:errored},
-           {func:aws_ec2.deleteLaunchAMIPermission, success:aws_sts.assumeRoles, failure:failed, error:errored},
+           {func:aws_s3.deletePolicy, success:aws_sts.assumeRoles, failure:failed, error:errored},
            {func:aws_sts.assumeRoles, success:aws_cfn.deleteStack, failure:failed, error:errored},
            {func:aws_cfn.deleteStack, success:succeeded, failure:failed, error:errored},
         ];
