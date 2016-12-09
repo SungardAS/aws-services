@@ -17,9 +17,9 @@ update:
 	cd build.f; node run_update_code;
 
 setup:
-	cd build.f/particles-enhancesnapshot; npm install; ./node_modules/.bin/gulp condensation:build; ./node_modules/.bin/gulp condensation:deploy;
-	cd build.f; node run_stack launch --region $(AWS_REGION) --name EnhanceSnapshot --particles enhancesnapshot;
+	cd build.f/particles-awscfn-stack-launcher; npm install; ./node_modules/.bin/gulp condensation:build; ./node_modules/.bin/gulp condensation:deploy;
+	cd build.f; node run_stack launch --region $(AWS_REGION) --name AwsCfnStackLauncher --particles awscfn-stack-launcher;
 
 clean:
 	npm install;
-	cd build.f; node run_stack drop --region $(AWS_REGION) --name EnhanceSnapshot;
+	cd build.f; node run_stack drop --region $(AWS_REGION) --name AwsCfnStackLauncher;
