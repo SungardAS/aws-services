@@ -1,5 +1,5 @@
 {
-  "name": "manage-vpc",
+  "name": "managed-vpc",
   "version": "0.0.1",
   "description": "Condensation particles for building AWS VPC CloudFormation templates.",
   "scripts": {

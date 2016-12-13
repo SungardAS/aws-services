@@ -9,11 +9,11 @@ module.exports.initialize = function(cb) {
     if (error) return cb(error);
   });
 
-  vfs.src(["manage-vpc/index_*.js",  "manage-vpc/json/*.json", "lib/flow_controller.js", "lib/aws/*.js"],{cwd:'../../../..', base:'../../../..'})
-  .pipe(zip('manage-vpc.zip'))
+  vfs.src(["managed-os/index_*.js",  "lib/flow_controller.js", "lib/aws/*.js"],{cwd:'../../..', base:'../../..'})
+  .pipe(zip('managed-os.zip'))
   .pipe(gulp.dest('./particles/assets'))
   .on('end', function(err, data) {
-    vfs.src(['cloudformation/*.js'],{cwd:'../../../..', base:'../../../..'})
+    vfs.src(['cloudformation/*.js'],{cwd:'../../..', base:'../../..'})
     .pipe(zip('cloudformation_builder.zip'))
     .pipe(gulp.dest('./particles/assets'))
       .on('end', cb);
