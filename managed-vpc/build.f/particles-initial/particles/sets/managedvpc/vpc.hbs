@@ -1,6 +1,6 @@
 {{!-- VPC --}}
 
-{{parameter "m:vpc" "vpc/cidr" logicalId="VpcCidr" default="10.0.0.1/24"}}
+{{parameter "m:vpc" "vpc/cidr" logicalId="VpcCidr" default="10.0.0.0/16"}}
 {{parameter "enablednshostnames" logicalId="Enablednshostnames"}}
 
 {{#resource "m:vpc" "vpc" logicalId="ManagedVpc01" cidrBlock=(ref "VpcCidr") nameTag=(ref "NameTag")}}
