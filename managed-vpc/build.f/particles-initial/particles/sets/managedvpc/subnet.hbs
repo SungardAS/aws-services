@@ -6,12 +6,13 @@
   description="Valid availability zone for the Subnet."
   optional=false
 }}
+{{parameter "m:vpc" "vpc/id" logicalId="VpcId" description="VPC ID for Subnet"}}
 
 {{#
   resource "m:vpc" "subnet"
   logicalId="Subnet"
   cidrBlock=(ref "SubnetCidr")
-  vpcId=vpcId
+  vpcId=(ref "VpcId")
   availabilityZone=(ref "AvailabilityZone")
 }}
   "Properties": {

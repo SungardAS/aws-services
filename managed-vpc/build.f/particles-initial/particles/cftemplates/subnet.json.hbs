@@ -1,13 +1,6 @@
-{{#layout templateDescription="This template creates VPC"}}
+{{#layout templateDescription="This template creates Subnet"}}
 
 {{parameter "m:vpc" "name_tag" logicalId="NameTag"}}
-{{!--
-  parameter "base"
-  type="String"
-  description="Existing Amazon Resource Name (ARN)"
-  allowedPattern="arn:aws:([a-zA-Z0-9\\-])+:([a-z]{2}-[a-z]+-\\d{1})?:(\\d{12})?:(.*)"
--- }}
-{{!-- condition "m:core" "is_not_equal_to" parameterLogicalId= --}}
 
 {{set "managedvpc/subnet" nameTag=(ref "NameTag")}}
 
