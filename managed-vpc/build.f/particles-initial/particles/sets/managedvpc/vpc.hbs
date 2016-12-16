@@ -1,0 +1,30 @@
+{{!-- VPC --}}
+
+{{parameter "m:vpc" "vpc/cidr" logicalId="VpcCidr" default="10.0.0.0/16"}}
+{{parameter "enablednshostnames" logicalId="Enablednshostnames"}}
+
+{{#resource "m:vpc" "vpc" logicalId="ManagedVpc01" cidrBlock=(ref "VpcCidr") nameTag=(ref "NameTag")}}
+  "Properties": {
+    "InstanceTenancy": "default",
+    "EnableDnsSupport": "true",
+    "EnableDnsHostnames": {{ref "Enablednshostnames"}}
+    {{#if nameTag}},"Tags": [{"Key": "Name", "Value": {{helper "m:core" "propertyValue" nameTag}} }]{{/if}}
+  }
+{{/resource}}
+
+{{output "m:core" "base" logicalId="ManagedVpcId01" value=(ref "ManagedVpc01") description="ID of the VPC"}}
+
+{{!-- FlowLog --}}
+
+{{parameter "m:vpc" "flowlogs/arn" logicalId="Arn"}}
+{{parameter "m:vpc" "flowlogs/loggroup" logicalId="Loggroupname" default="FlowLogsGroup01"}}
+
+{{#resource "m:vpc" "flowlog" logicalId="flowlog01"}}
+  "Properties": {
+    "DeliverLogsPermissionArn": {{ref "Arn"}},
+    "LogGroupName": {{ref "Loggroupname"}},
+    "ResourceId": {{ref "ManagedVpc01"}},
+    "ResourceType": "VPC",
+    "TrafficType": "ALL"
+  }
+{{/resource}}
