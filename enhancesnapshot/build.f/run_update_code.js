@@ -5,18 +5,18 @@ var environment = process.env.NODE_ENV;
 var configFile = 'default';
 if (environment)  configFile = environment;
 
-var config = require('./particles-awscfn-stack-launcher/config/' + configFile);
+var config = require('./particles-enhancesnapshot/config/' + configFile);
 console.log(config.s3[0].aws.bucket);
 
-var functionNames = ['awscfn-stack-launcher'];
+var functionNames = ['enhance-snapshot-launcher'];
 
 var input = {
   "region": null,
   "bucketName": null,
-  "keyName": "particles/assets/awscfn-stack-launcher.zip",
-  "zipFile" : "awscfn-stack-launcher.zip",
+  "keyName": "particles/assets/enhancesnapshot.zip",
+  "zipFile" : "enhancesnapshot.zip",
   "sourceFolder" : "../..",
-  "src" : ["awscfn-stack-launcher/index_*.js", "awscfn-stack-launcher/json/*.json", "lib/flow_controller.js", "lib/aws/*.js"]
+  "src" : ["enhancesnapshot/index_*.js", "enhancesnapshot/json/*.json", "lib/flow_controller.js", "lib/aws/*.js"]
 }
 console.log(input);
 

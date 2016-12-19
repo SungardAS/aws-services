@@ -1,0 +1,12 @@
+{{#layout}}
+
+  {{resource "lambda_execution_role" logicalId="LambdaExecutionRole"}}
+  {{resource "deployer_lambda_execution_role" logicalId="DeployerLambdaExecutionRole"}}
+  {{resource "awscfn-stack-launcher_role_federation" logicalId="AwsCfnStackLauncherRoleFederation"}}
+  {{resource "federation_lambda_function" logicalId="FederationLambdaFunction"}}
+  {{resource "awscfn_stack_launcher_lambda" logicalId="AwsCfnStackLauncherLambda"}}
+
+  {{output "account_id" logicalId="AccountId"}}
+  {{output "stacks_region" logicalId="StacksRegion"}}
+  {{output "awscfn_stack_launcher_lambda_arn" logicalId="AwsCfnStackLauncherLambdaArn"}}
+{{/layout}}
