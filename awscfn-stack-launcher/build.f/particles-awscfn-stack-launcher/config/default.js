@@ -3,7 +3,7 @@ var config = {
     {
       aws: {
         region: 'us-east-1',
-        bucket: 'sgas.particles-cfn-launch.442294194136.us-west-2'
+        bucket: 'sgas.particles-cfn-launch.442294194136.us-east-1'
       },
       clean: true,
       validate: true,

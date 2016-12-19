@@ -43,8 +43,8 @@ exports.handler = function (event, context) {
      
         var flows = [
            {func:aws_s3.addPolicy, success:aws_sts.assumeRoles, failure:failed, error:errored},
-           {func:aws_sts.assumeRoles, success:aws_cfn.createESnapShotCFNStack, failure:failed, error:errored},
-           {func:aws_cfn.createESnapShotCFNStack, success:succeeded, failure:failed, error:errored},
+           {func:aws_sts.assumeRoles, success:aws_cfn.createCfnStack, failure:failed, error:errored},
+           {func:aws_cfn.createCFNStack, success:succeeded, failure:failed, error:errored},
         ];
         aws_ec2.flows = flows;
         aws_s3.flows = flows;
