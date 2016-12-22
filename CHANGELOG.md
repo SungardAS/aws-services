@@ -1,6 +1,18 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [1.5.0] - 2016-12-22
+### Added
+- Services
+  - AWS ConfigRules
+  - Enhanced Snapshot
+- Lib
+  - Promise based iam and sts library
+### Changed
+- None
+### Removed
+- None
+
 ## [1.4] - 2016-09-30
 ### Added
 - AWSConfig & CloudTrail
