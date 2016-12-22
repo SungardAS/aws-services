@@ -8,8 +8,10 @@ All notable changes to this project will be documented in this file.
   - Enhanced Snapshot
 - Lib
   - Promise based iam and sts library
+
 ### Changed
 - None
+
 ### Removed
 - None
 
