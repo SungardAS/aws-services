@@ -1,13 +1,5 @@
 {{#layout}}
 
-  {{
-     parameter "m:core" "base"
-     logicalId="StageName"
-     type="String"
-     default="v1"
-     description="Deployment stage name"
-  }}
-
   {{resource "federation_lambda_function" logicalId="FederationLambdaFunction"}}
   {{resource "federation_lambda_execution_role" logicalId="FederationLambdaExecutionRole"}}
   {{resource "awsconfig_checker_function_info" logicalId="AWSConfigCheckerFunctionInfo"}}
@@ -16,38 +8,8 @@
   {{resource "awsconfig_function_role_info" logicalId="AWSConfigFunctionRoleInfo"}}
   {{resource "awsconfig_role_federation" logicalId="AWSConfigRoleFederation"}}
 
-  {{resource "m:api-gateway" "invoke_function_role" logicalId="InvokeFunctionRole"}}
-  {{#resource logicalId="AwsConfigRestApi"}}
-    "Type" : "AWS::ApiGateway::RestApi",
-    "Properties" : {
-      "Description" : "AwsConfig API",
-      "Name" : "AwsConfigAPI"
-    }
-  {{/resource}}
-  {{#resource logicalId="AwsConfigRes"}}
-    "Type": "AWS::CloudFormation::Stack",
-    "Properties": {
-      "TemplateURL": "{{templateS3Url 'awsconfig.template.json'}}",
-      "Parameters": {
-        "RestApiId": { "Ref": "AwsConfigRestApi" },
-        "ParentResourceId": { "Fn::GetAtt": ["AwsConfigRestApi", "RootResourceId"] },
-        "LambdaInvokeRoleArn": {"Fn::GetAtt" : [ "InvokeFunctionRole", "Arn" ]},
-        "GetLambdaArn": { "Fn::GetAtt" : [ "AWSConfigCheckerFunctionInfo", "Arn" ]},
-        "PostLambdaArn": { "Fn::GetAtt" : [ "AWSConfigEnablerFunctionInfo", "Arn" ]},
-        "DeleteLambdaArn": { "Fn::GetAtt" : [ "AWSConfigRemoverFunctionInfo", "Arn" ]}
-      }
-    }
-  {{/resource}}
-  {{#resource logicalId="AwsConfigApiDeployment"}}
-    "DependsOn": "AwsConfigRes",
-    "Type" : "AWS::ApiGateway::Deployment",
-    "Properties" : {
-      "RestApiId": { "Ref": "AwsConfigRestApi" },
-      "Description": "Stage Deployment",
-      "StageName": { "Ref": "StageName" }
-    }
-  {{/resource}}
-
-  {{output "awsconfig_api_uri" logicalId="APIUri"}}
+  {{output "awsconfig_checker_function_arn" logicalId="AWSConfigCheckerFunctionArn"}}
+  {{output "awsconfig_enabler_function_arn" logicalId="AWSConfigEnablerFunctionArn"}}
+  {{output "awsconfig_remover_function_arn" logicalId="AWSConfigRemoverFunctionArn"}}
 
 {{/layout}}
