@@ -1,0 +1,15 @@
+{{#resource}}
+  "Type": "AWS::Lambda::Function",
+  "Properties": {
+    "FunctionName": "awscfn-stack-launcher",
+    "Code": {
+      "S3Bucket": "{{s3.bucket}}",
+      "S3Key": "{{assetPath 'awscfn-stack-launcher.zip'}}"
+    },
+    "Handler": "awscfn-stack-launcher/index_cfn_launcher.handler",
+    "Runtime": "nodejs",
+    "Timeout": "60",
+    "MemorySize": "128",
+    "Role": { "Fn::GetAtt" : ["LambdaExecutionRole", "Arn"] }
+  }
+{{/resource}}
