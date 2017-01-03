@@ -1,0 +1,37 @@
+
+How to register the UI site in Google credentials
+
+  - Goto https://console.developers.google.com/apis/credentials with "cto.sungardas" account
+
+  - Choose the project, "Cognito"
+
+  - Click "Web client 1" under "OAuth 2.0 client IDs"
+
+    * Confirm 'Client ID' with the value of 'google-signin-client_id' meta data in index.html
+
+  - Add new UI site in
+
+    > "Authorized JavaScript origins"
+    > "Authorized redirect URIs"
+
+  - Save
+
+
+https://developer.github.com/v3/oauth/
+
+
+1. where 'redirect_uri' needs to be changed for SSO authentication
+
+  - ui : in utilities/global.js
+      apiUrl : new api gateway url
+      githubAuthUrl : new client_id in github oauth app
+
+  - api/lambda : config.json for both sso & github
+
+  - sso server registration
+
+  - github - OAuth applications - Developer applications - 'charreada' - Authorization callback URL
+
+  - google - API Manager - Credentials - 'Web client 1' - 'Authorized JavaScript origins' & 'Authorized redirect URIs'
+
+  - 'GET' method of '/callback' in API Gateway

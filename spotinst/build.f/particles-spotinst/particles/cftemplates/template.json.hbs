@@ -1,0 +1,14 @@
+{{#layout}}
+
+  {{resource "lambda_function" logicalId="LambdaFunction"}}
+  {{resource "lambda_execution_role" logicalId="LambdaExecutionRole"}}
+
+  {{resource "federation_lambda_function" logicalId="FederationLambdaFunction"}}
+  {{resource "federation_lambda_execution_role" logicalId="FederationLambdaExecutionRole"}}
+
+  {{resource "spotinst_lambda_function" logicalId="SpotinstLambdaFunction"}}
+  {{resource "spotinst_lambda_execution_role" logicalId="SpotinstLambdaExecutionRole"}}
+
+  {{output "lambda_arn" logicalId="LambdaArn"}}
+
+{{/layout}}

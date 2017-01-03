@@ -21,12 +21,17 @@ All notable changes to this project will be documented in this file.
   - Implemented API Gateway to provide api interfaces to public
 - CloudTrail
   - Added 'ap-south-1' region support
+- New projects
+  - billing : provides billing data for each account/service
+  - spotinst : provides list of low usage EC2 instances and interface to convert them to spot instances
+  - particles-api : provides API interfaces for all aws-services that are invoked from outside Apps
 
 ### Changed
 - AWSConfig & CloudTrail
   - Changed Lambda function deployment using "AWS::Lambda::Function" from the custom Lambda function
 - CloudTrail
   - Changed to create a new trail with 'Default' even if there is already one with a different name
+- Moved API Gateways for AWSConfig & CloudTrail to 'particles-api'
 
 ### Removed
 - None

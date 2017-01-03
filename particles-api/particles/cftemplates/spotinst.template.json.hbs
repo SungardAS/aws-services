@@ -1,0 +1,50 @@
+{{#layout}}
+
+  {{
+    parameter "m:core" "base"
+    logicalId="RestApiId"
+    type="String"
+    description="API Id"
+  }}
+
+  {{
+    parameter "m:core" "base"
+    logicalId="ParentResourceId"
+    type="String"
+    description="Parent Resource Id"
+  }}
+
+  {{
+     parameter "m:core" "base"
+     logicalId="LambdaArn"
+     type="String"
+     description="ARN of lambda function"
+  }}
+
+  {{
+     parameter "m:core" "base"
+     logicalId="InvokeFunctionRoleArn"
+     type="String"
+     description="ARN of IAM role that can invoke lambda functions"
+  }}
+
+  {{#resource logicalId="Spotinst"}}
+    "Type" : "AWS::ApiGateway::Resource",
+    "Properties" : {
+      "RestApiId": { "Ref": "RestApiId" },
+      "ParentId": { "Ref": "ParentResourceId" },
+      "PathPart": "spotinst"
+    }
+  {{/resource}}
+
+  {{
+    set "m:api-gateway" "resource_any"
+    restApiId="RestApiId"
+    parentResourceId="Spotinst"
+    resourceId="SpotinstProxy"
+    resourcePath="{proxy+}"
+    lambdaArn="LambdaArn"
+    allowedHeaders="'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,refresh_token'"
+  }}
+
+{{/layout}}

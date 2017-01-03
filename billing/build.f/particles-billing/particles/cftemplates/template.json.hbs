@@ -1,0 +1,38 @@
+{{#layout}}
+
+  {{
+     parameter "m:core" "base"
+     logicalId="BillingReportS3BucketArn"
+     type="String"
+     description="ARN of S3 bucket where the billing reports are generated"
+  }}
+
+  {{
+     parameter "m:core" "base"
+     logicalId="BillingAccountId"
+     type="String"
+     description="Billing account id"
+  }}
+
+  {{resource "lambda_function" logicalId="LambdaFunction"}}
+  {{resource "lambda_import_function" logicalId="LambdaImportFunction"}}
+  {{resource "lambda_execution_role" logicalId="LambdaExecutionRole"}}
+
+  {{resource "federation_lambda_function" logicalId="FederationLambdaFunction"}}
+  {{resource "federation_lambda_execution_role" logicalId="FederationLambdaExecutionRole"}}
+
+  {{#resource logicalId="LambdaInvokePermission"}}
+    "Type": "AWS::Lambda::Permission",
+    "Properties": {
+      "FunctionName" : { "Fn::GetAtt" : ["LambdaImportFunction", "Arn"] },
+      "Action": "lambda:InvokeFunction",
+      "Principal": "s3.amazonaws.com",
+      "SourceAccount": { "Ref" : "BillingAccountId" },
+      "SourceArn": { "Ref" : "BillingReportS3BucketArn" }
+    }
+  {{/resource}}
+
+  {{output "lambda_arn" logicalId="LambdaArn"}}
+  {{output "lambda_import_arn" logicalId="LambdaImportArn"}}
+
+{{/layout}}
