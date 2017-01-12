@@ -1,0 +1,7 @@
+{{#layout templateDescription="This template creates VPC"}}
+
+{{parameter "m:vpc" "name_tag" logicalId="NameTag"}}
+
+{{set "managedvpc/vpc" nameTag=(ref "NameTag")}}
+
+{{/layout}}

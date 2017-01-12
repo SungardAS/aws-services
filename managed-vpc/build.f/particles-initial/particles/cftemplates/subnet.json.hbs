@@ -1,0 +1,7 @@
+{{#layout templateDescription="This template creates Subnet"}}
+
+{{parameter "m:vpc" "name_tag" logicalId="NameTag"}}
+
+{{set "managedvpc/subnet" nameTag=(ref "NameTag")}}
+
+{{/layout}}
