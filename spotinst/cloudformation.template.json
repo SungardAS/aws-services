@@ -1,0 +1,70 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Parameters": {
+    "AccessKey": {
+      "Type": "String",
+      "Description": "Spotinst AccessKey",
+      "NoEcho": "true",
+      "Default": ""
+    },
+    "ElastiGroupName": {
+      "Type": "String",
+      "Description": "Elastigroup Name",
+      "Default": ""
+    },
+    "ElastiGroupDescription": {
+      "Type": "String",
+      "Description": "Elastigroup Description",
+      "Default": ""
+    },
+    "CapacityTarget": {
+      "Type": "String",
+      "Description": "Number of target instances in this Elastigroup",
+      "Type": "Number",
+      "Default": "1"
+    },
+    "CapacityMin": {
+      "Type": "String",
+      "Description": "Number of minimum instances in this Elastigroup",
+      "Type": "Number",
+      "Default": "1"
+    },
+    "CapacityMax": {
+      "Type": "String",
+      "Description": "Number of maximum instances in this Elastigroup",
+      "Type": "Number",
+      "Default": "1"
+    },
+    "ComputeSpotInstanceTypes": {
+      "Type": "String",
+      "Description": "Spot instance types in this Elastigroup",
+      "Type": "CommaDelimitedList",
+      "Default": "c3.large,c4.large,m3.large,r3.large"
+    },
+    "KeypairName": {
+      "Type": "String",
+      "Description": "Spot instance key pair name",
+      "Default": ""
+    },
+    "IAMRoleArn": {
+      "Type": "String",
+      "Description": "Spot instance iam role arn",
+      "Default": ""
+    },
+    "NameTag": {
+      "Type": "String",
+      "Description": "Spot instance name tag",
+      "Default": ""
+    }
+  },
+  "Resources": {
+    "SpotinstElastigroup": {
+      "Type": "Custom::elasticgroup",
+      "Properties": {
+        "ServiceToken": "",
+        "accessToken": {"Ref": "AccessKey"},
+        "group": null
+      }
+    }
+  }
+}

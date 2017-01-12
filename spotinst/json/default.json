@@ -1,0 +1,6 @@
+{
+  "region": "us-east-1",
+  "bucketNamePrefix": "sgas.particles-spotinstbuilder.",
+  "templateFilePath": "./cloudformation.template.json",
+  "serviceTokenFunctionName": "spotinst-builder"
+}

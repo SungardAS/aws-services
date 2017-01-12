@@ -1,0 +1,1 @@
+def lambda_handler(event, context):\n    print "Received event: %s" % event\n    return event
