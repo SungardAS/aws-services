@@ -1,0 +1,43 @@
+{{!-- Route Tables --}}
+
+{{parameter "m:vpc" "vpc/id" logicalId="VpcId" description="ID of VPC"}}
+{{parameter "m:core" "base" type="AWS::EC2::Subnet::Id" logicalId="SubnetId" description="ID of Subnet"}}
+
+{{#
+  resource "m:vpc" "route_table"
+  logicalId="RouteTable01"
+  vpcId=(ref "VpcId")
+}}
+  "Properties": {
+    {{#if nameTag}}"Tags": [{"Key": "Name", "Value": {{helper "m:core" "propertyValue" nameTag}} }]{{/if}}
+  }
+{{/resource}}
+
+{{
+  parameter "m:core" "base"
+  default="private"
+  type="String"
+  allowedValues='["public","private"]'
+  constraintDescription="must specify mgmt, public, or private."
+  description="Route Type"
+  logicalId="RouteType"
+}}
+{{parameter "m:core" "base" type="String" description="Internet Gateway ID" logicalId="InternetGatewayId"}}
+
+{{condition "m:core" "is_equal_to" logicalId="IsRoutePublic" parameterLogicalId="RouteType" value="public"}}
+
+{{#
+  resource "m:vpc" "route" logicalId="PublicRoute"
+  condition="IsRoutePublic"
+}}
+  "Properties": {
+    "DestinationCidrBlock": "0.0.0.0/0",
+    "RouteTableId": {{ref "RouteTable01"}},
+    "GatewayId": {{ref "InternetGatewayId"}}
+  }
+{{/resource}}
+
+{{resource "m:vpc" "subnet/route_table_association" logicalId="RouteTableAssociation"
+  routeTableId=(ref "RouteTable01")
+  subnetId=(ref "SubnetId")
+}}
