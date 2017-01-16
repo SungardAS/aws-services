@@ -1,7 +1,7 @@
 
-# AWSConfigRules
+# AWSCFN Launcher
 
-AWS Lambda functions to manage the AWSConfig Rules
+AWS Lambda functions to manage the cfn stack
 
 
 ## How To Setup
