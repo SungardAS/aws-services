@@ -1,5 +1,5 @@
 {
-  "name": "enhancesnapshot",
+  "name": "awscfn-stack-launcher",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
