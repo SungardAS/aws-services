@@ -6,7 +6,7 @@
       "S3Key": "{{assetPath 'index_alertmessages.zip'}}"
     },
     "Handler": "lambda/index_alertmessages.handler",
-    "Runtime": "nodejs",
+    "Runtime": "nodejs4.34.34.3",
     "Timeout": "30",
     "Role": { "Fn::GetAtt" : ["AlertMessagesFunctionRoleInfo", "Arn"] }
   }

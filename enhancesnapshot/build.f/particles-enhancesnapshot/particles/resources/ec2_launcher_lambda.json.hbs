@@ -7,7 +7,7 @@
       "S3Key": "{{assetPath 'enhancesnapshot.zip'}}"
     },
     "Handler": "enhancesnapshot/index_ec2_launcher.handler",
-    "Runtime": "nodejs",
+    "Runtime": "nodejs4.34.3",
     "Timeout": "60",
     "MemorySize": "128",
     "Role": { "Fn::GetAtt" : ["LambdaExecutionRole", "Arn"] }
