@@ -1,0 +1,9 @@
+{{!-- VPN-GATEWAY --}}
+
+{{#resource "vpngateway" logicalId="Vpngateway" nameTag=(ref "NameTag") }}
+  "Properties": {
+    "Type": "ipsec.1",
+    "Tags" : [ { "Key" : "transitvpc:spoke", "Value" : "true" },{ "Key" : "Name", "Value" : {{helper "m:core" "propertyValue" nameTag}} } ]
+  }
+{{/resource}}
+

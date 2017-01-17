@@ -29,13 +29,3 @@
   }
 {{/resource}}
 
-
-{{parameter "vpngatewayname" logicalId="Vpngatewayname"}}
-
-{{#resource "vpngateway" logicalId="Vpngateway" }}
-  "Properties": {
-    "Type": "ipsec.1",
-    "Tags" : [ { "Key" : "transitvpc:spoke", "Value" : "true" },{ "Key" : "Name", "Value" : {"Ref": "Vpngatewayname"}} ]
-  }
-{{/resource}}
-

@@ -1,0 +1,7 @@
+{{#layout templateDescription="This template creates Virtaul Private Gateway"}}
+
+{{parameter "vpngatewayname" logicalId="NameTag"}}
+
+{{set "managedvpc/vpngateway" nameTag=(ref "NameTag")}}
+
+{{/layout}}
