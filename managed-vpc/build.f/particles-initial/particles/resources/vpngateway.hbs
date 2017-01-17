@@ -1,8 +1,2 @@
-{{#resource "m:core" "base"
- type="AWS::EC2::VPNGateway"
-}}
-"Properties": {
- "Type": "ipsec.1",
- "Tags" : [ { "Key" : "transitvpc:spoke", "Value" : "true" } ]
-}
+{{#resource "m:core" "base" type="AWS::EC2::VPNGateway" }}
 {{/resource}}
