@@ -1,0 +1,18 @@
+{{#layout}}
+  {{parameter  "security_group/id" logicalId="groupId" default=""}}
+  {{parameter  "cidrIp" logicalId="cidrIp" default="0.0.0.0/0"}}
+  {{parameter  "fromPortnumber" logicalId="FromPortnumber" default="22"}}
+  {{parameter  "toPortnumber" logicalId="ToPortnumber" default="22"}}
+  {{parameter  "ipProtocol" logicalId="IpProtocol" default="tcp"}}
+
+  {{#resource "security_group_egress" logicalId="SecurityGroupEgress"}}
+   "Properties": {
+    "FromPort":{"Ref": "FromPortnumber"},
+    "IpProtocol":{"Ref": "IpProtocol"},
+    "ToPort":{"Ref": "ToPortnumber"},
+    "GroupId":{"Ref": "groupId"},
+    "CidrIp":{"Ref": "cidrIp"}
+   }
+  {{/resource}}
+{{/layout}}
+
