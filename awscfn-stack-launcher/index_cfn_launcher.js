@@ -37,14 +37,14 @@ exports.handler = function (event, context) {
      account:event.account
   };
   if(event.actionType == "createStack"){
-        var policy = "{\"Id\": \"PolicyID-"+event.params.UUID+"\",\"Version\": \"2012-10-17\",\"Statement\": [{\"Sid\": \""+event.params.UUID+"\",\"Action\": [ \"s3:GetObject\" ],\"Effect\": \"Allow\",\"Resource\": \"arn:aws:s3:::"+event.bucketName+"/*\",\"Principal\": {\"AWS\":\""+event.account+"\"}}]}";
+        var policy = "{\"Id\": \"PolicyID-"+event.UUID+"\",\"Version\": \"2012-10-17\",\"Statement\": [{\"Sid\": \""+event.UUID+"\",\"Action\": [ \"s3:GetObject\" ],\"Effect\": \"Allow\",\"Resource\": \"arn:aws:s3:::"+event.bucketName+"/*\",\"Principal\": {\"AWS\":\""+event.account+"\"}}]}";
         input.bucketName = event.bucketName;
         input.policyDocument = policy;
      
         var flows = [
            {func:aws_s3.addPolicy, success:aws_sts.assumeRoles, failure:failed, error:errored},
            {func:aws_sts.assumeRoles, success:aws_cfn.createCfnStack, failure:failed, error:errored},
-           {func:aws_cfn.createCFNStack, success:succeeded, failure:failed, error:errored},
+           {func:aws_cfn.createCfnStack, success:succeeded, failure:failed, error:errored},
         ];
         aws_ec2.flows = flows;
         aws_s3.flows = flows;
