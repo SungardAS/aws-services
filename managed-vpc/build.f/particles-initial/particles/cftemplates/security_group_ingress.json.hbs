@@ -1,5 +1,5 @@
 {{#layout}}
-  {{parameter "m:vpc" "security_group/id_list" logicalId="groupId"}}
+  {{parameter  "security_group/id" logicalId="groupId" default="sg-aab66bd6"}}
   {{parameter  'cidrIp' logicalId="cidrIp" default="0.0.0.0/0"}}
   {{parameter  'fromPortnumber' logicalId="FromPortnumber" default="22"}}
   {{parameter  'toPortnumber' logicalId="ToPortnumber" default="22"}}
@@ -10,9 +10,8 @@
     "FromPort":{"Ref": "FromPortnumber"},
     "IpProtocol":{"Ref": "IpProtocol"},
     "ToPort":{"Ref": "ToPortnumber"},
-    "GroupId":{"Ref": "groupId"},
-    "CidrIp":{"Ref": "cidrIp"}
-
+    "CidrIp":{"Ref": "cidrIp"},
+    "GroupId":{"Ref": "groupId"}
    }
 {{/resource}}
 {{/layout}}

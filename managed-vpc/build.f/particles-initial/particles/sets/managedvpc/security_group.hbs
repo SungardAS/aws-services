@@ -10,23 +10,4 @@
   }
 {{/resource}}
 
-  {{parameter  'cidrIp' logicalId="cidrIp" default="0.0.0.0/0"}}
-  {{parameter  'fromPortnumber' logicalId="FromPortnumber" default="22"}}
-  {{parameter  'toPortnumber' logicalId="ToPortnumber" default="22"}}
-  {{parameter  'ipProtocol' logicalId="IpProtocol" default="tcp"}}
-
-{{#resource logicalId="SecurityGroupIngress"}}
-    "Type": "AWS::CloudFormation::Stack",  
-   "Properties": {
-   "TemplateURL": "{{templateS3Url 'security_group_ingress.json'}}",
-    "Parameters": {
-        "GroupId":{"Ref": "SecurityGroup"},
-	"FromPort": "22",
-        "IpProtocol":"22",
-        "ToPort":"tcp",
-        "CidrIp":"0.0.0.0/0"
-	}
-   }
-{{/resource}}
-
 {{set "m:vpc" "security_group/output_all" securityGroupLogicalId=(scopeId "SecurityGroup")}}

@@ -30,5 +30,5 @@ setup:
 clean:
 	npm install;
 	$(foreach ACCOUNT,$(ACCOUNTS), \
-		cd build.f; node run_stack drop --region $(AWS_REGION) --name ManageVPC-SubnetSetup-$(ACCOUNT))
+		cd build.f; node run_stack drop --region $(AWS_REGION) --name ManageVPC)
 	cd build.f; node run_stack drop --region $(AWS_REGION) --name ManagedVPC;
