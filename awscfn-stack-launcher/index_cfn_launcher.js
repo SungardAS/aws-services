@@ -23,7 +23,7 @@ exports.handler = function (event, context) {
   if (sessionName == null || sessionName == "") {
     sessionName = "session";
   }
-  function succeeded(input) { context.done(input.res,true);}
+  function succeeded(input) { context.done(null,true);}
   function failed(input) { context.done(null, false); }
   function errored(err) { context.fail(err, false); }
 
