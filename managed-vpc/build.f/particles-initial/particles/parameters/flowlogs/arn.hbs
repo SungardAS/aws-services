@@ -1,0 +1,9 @@
+---
+description: "The Amazon Resource Name (ARN) of an IAM role that permits
+Amazon EC2 to publish flow logs to a CloudWatch Logs log group"
+---
+{{
+  parameter 'm:core' 'base'
+  type="String"
+  allowedPattern="arn:aws:([a-zA-Z0-9\\-])+:([a-z]{2}-[a-z]+-\\d{1})?:(\\d{12})?:(.*)"
+}}

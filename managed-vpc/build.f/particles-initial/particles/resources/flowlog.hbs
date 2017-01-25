@@ -1,0 +1,9 @@
+{{#resource "m:core" "base" type="AWS::EC2::FlowLog"}}
+  {{#helper "m:core" "properties"}}
+    {{helper "m:core" "property" "DeliverLogsPermissionArn"}}
+    {{helper "m:core" "property" "LogGroupName"}}
+    {{helper "m:core" "property" "ResourceId"}}
+    {{helper "m:core" "property" "ResourceType"}}
+    {{helper "m:core" "property" "TrafficType"}}
+  {{/helper}}
+{{/resource}}
