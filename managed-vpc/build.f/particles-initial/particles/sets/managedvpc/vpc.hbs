@@ -16,10 +16,10 @@
 
 {{!-- FlowLog --}}
 
-{{parameter "m:vpc" "flowlogs/arn" logicalId="Arn"}}
-{{parameter "m:vpc" "flowlogs/loggroup" logicalId="Loggroupname" default="FlowLogsGroup01"}}
+{{parameter "flowlogs/arn" logicalId="Arn"}}
+{{parameter "flowlogs/log_group" logicalId="Loggroupname" default="FlowLogsGroup01"}}
 
-{{#resource "m:vpc" "flowlog" logicalId="flowlog01"}}
+{{#resource "flowlog" logicalId="flowlog01"}}
   "Properties": {
     "DeliverLogsPermissionArn": {{ref "Arn"}},
     "LogGroupName": {{ref "Loggroupname"}},
