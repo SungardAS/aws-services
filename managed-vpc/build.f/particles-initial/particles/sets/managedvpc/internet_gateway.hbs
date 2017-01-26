@@ -1,0 +1,27 @@
+{{!-- Internet Gateway --}}
+
+{{parameter "m:vpc" "vpc/id" logicalId="VpcId" description="ID of VPC"}}
+
+{{set 'm:vpc' 'simple/create_internet_gateway' parameterLogicalId="CreateInternetGateway"}}
+
+  {{#resource "internet_gateway"
+    logicalId="InternetGateway"
+    condition="CreateInternetGatewayIsTrueCondition"
+  }}
+    "Properties": {
+   "Tags": [
+    {{#if nameTag}}{"Key": "Name", "Value": {{nameTag}} }, {{/if}}
+    {{#if managedTag}}{"Key": "Managed", "Value": {{managedTag}} }{{/if}}
+    ]
+    }
+  {{/resource}}
+
+  {{#resource logicalId="GatewayAttachment"}}
+    "Type": "AWS::EC2::VPCGatewayAttachment",
+    "Condition": "CreateInternetGatewayIsTrueCondition",
+    "Properties": {
+      "VpcId": {{ref "VpcId"}},
+      "InternetGatewayId": {{ref "InternetGateway"}}
+    }
+  {{/resource}}
+{{output "m:core" "base" logicalId="InternetGatewayId" value=(ref "InternetGateway")}}
