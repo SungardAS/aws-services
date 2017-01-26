@@ -1,6 +1,6 @@
 {{#layout}}
   {{parameter  "security_group/id" logicalId="groupId" }}
-  {{parameter  'cidrIp' logicalId="cidrIp" default="0.0.0.0/0"}}
+  {{parameter  'cidrIp' logicalId="CidrIp" default="0.0.0.0/0"}}
   {{parameter  'fromPortnumber' logicalId="FromPortnumber" }}
   {{parameter  'toPortnumber' logicalId="ToPortnumber" }}
   {{parameter  'ipProtocol' logicalId="IpProtocol" default="tcp"}}
@@ -10,7 +10,7 @@
     "FromPort":{"Ref": "FromPortnumber"},
     "IpProtocol":{"Ref": "IpProtocol"},
     "ToPort":{"Ref": "ToPortnumber"},
-    "CidrIp":{"Ref": "cidrIp"},
+    "CidrIp":{"Ref": "CidrIp"},
     "GroupId":{"Ref": "groupId"}
    }
 {{/resource}}
