@@ -1,0 +1,7 @@
+{{#layout}}
+
+  {{parameter "m:vpc" "name_tag" logicalId="NameTag"}}
+
+  {{set "managedvpc/internet_gateway" nameTag=(ref "NameTag")}}
+
+{{/layout}}
