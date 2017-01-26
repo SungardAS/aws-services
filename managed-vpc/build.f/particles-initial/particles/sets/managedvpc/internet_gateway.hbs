@@ -9,7 +9,10 @@
     condition="CreateInternetGatewayIsTrueCondition"
   }}
     "Properties": {
-      {{#if nameTag}}"Tags": [{"Key": "Name", "Value": {{helper "m:core" "propertyValue" nameTag}} }]{{/if}}
+   "Tags": [
+    {{#if nameTag}}{"Key": "Name", "Value": {{nameTag}} }, {{/if}}
+    {{#if managedTag}}{"Key": "Managed", "Value": {{managedTag}} }{{/if}}
+    ]
     }
   {{/resource}}
 

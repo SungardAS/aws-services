@@ -1,7 +1,8 @@
 {{#layout}}
 
   {{parameter "m:vpc" "name_tag" logicalId="NameTag"}}
+  {{parameter "managed_tag" logicalId="ManagedTag" default="False"}}
 
-  {{set "managedvpc/internet_gateway" nameTag=(ref "NameTag")}}
+  {{set "managedvpc/internet_gateway" nameTag=(ref "NameTag") managedTag=(ref "ManagedTag")}}i
 
 {{/layout}}
