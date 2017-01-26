@@ -3,7 +3,7 @@ var config = {
     {
       aws: {
         region: 'us-east-1',
-        bucket: 'sgas.particles-managedvpc.714270045944.us-east-1'
+        bucket: 'sgas.particles-managed-vpc.714270045944.us-east-1'
       },
       clean: true,
       validate: true,
