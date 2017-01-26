@@ -1,0 +1,10 @@
+{{#layout templateDescription="This template creates Security Group for VPC"}}
+
+{{parameter "m:vpc" "name_tag" logicalId="NameTag"}}
+{{parameter "managed_tag" logicalId="ManagedTag" default="False"}}
+
+{{set "managedvpc/security_group" nameTag=(ref "NameTag") managedTag=(ref "ManagedTag")}}
+
+
+{{/layout}}
+

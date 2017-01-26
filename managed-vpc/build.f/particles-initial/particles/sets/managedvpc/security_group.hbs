@@ -1,0 +1,16 @@
+{{!-- SecurityGroup --}}
+{{parameter "m:vpc" "vpc/id" logicalId="VpcId" description="VPC ID for Security Group" }}
+{{parameter "m:core" "base" logicalId="groupDescription" type="String" default="ManagedVPC Security Group"}}
+
+{{#resource "m:vpc" "security_group" logicalId="SecurityGroup" }}
+ "Properties": {
+  "GroupDescription":{{ref "groupDescription"}},
+  "VpcId":{{ref "VpcId"}},
+  "Tags": [
+  {{#if nameTag}}{"Key": "Name", "Value": {{nameTag}} }, {{/if}}
+  {{#if managedTag}}{"Key": "Managed", "Value": {{managedTag}} }{{/if}}
+  ]
+  }
+{{/resource}}
+
+{{set "m:vpc" "security_group/output_all" securityGroupLogicalId=(scopeId "SecurityGroup")}}
