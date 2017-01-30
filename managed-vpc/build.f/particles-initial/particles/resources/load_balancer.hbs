@@ -1,0 +1,34 @@
+{{#resource "m:ec2" "load_balancer"}}
+  "Properties": {
+    "CrossZone": true,
+    "SecurityGroups": {{helper "m:core" "propertyValue" securityGroups}},
+    "Subnets": {{helper "m:core" "propertyValue" subnets}},
+    "Instances": {{helper "m:core" "propertyValue" instances}},
+    "ConnectionSettings": {
+      "IdleTimeout": 3600
+    },
+    "Listeners": [
+      {
+        "LoadBalancerPort": {{helper "m:core" "propertyValue" loadbalancerport}},
+        "InstancePort": {{helper "m:core" "propertyValue" instanceport}},
+        "InstanceProtocol": {{helper "m:core" "propertyValue" instanceprotocol}},
+        "Protocol": {{helper "m:core" "propertyValue" protocol}},
+        "SSLCertificateId": {{helper "m:core" "propertyValue" sslcertificateid}}
+      }
+    ],
+    "HealthCheck": {
+      "HealthyThreshold": "3",
+      "Interval": "10",
+      "Timeout": "5",
+      "UnhealthyThreshold": "2",
+      "Target": {{helper "m:core" "propertyValue" target}}
+    },
+    "AccessLoggingPolicy": {
+      "EmitInterval" : {{helper "m:core" "propertyValue" loadbalancerport}},
+      "Enabled" : {{helper "m:core" "propertyValue" loadbalancerport}},
+      "S3BucketName" : {{helper "m:core" "propertyValue" loadbalancerport}},
+      "S3BucketPrefix" : {{helper "m:core" "propertyValue" loadbalancerport}}
+    }
+
+  }
+{{/resource}}
