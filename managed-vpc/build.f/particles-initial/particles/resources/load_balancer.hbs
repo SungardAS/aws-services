@@ -4,6 +4,7 @@
     "SecurityGroups": {{helper "m:core" "propertyValue" securityGroups}},
     "Subnets": {{helper "m:core" "propertyValue" subnets}},
     "Instances": {{helper "m:core" "propertyValue" instances}},
+    "Scheme": {{helper "m:core" "propertyValue" scheme}},
     "ConnectionSettings": {
       "IdleTimeout": 3600
     },
@@ -13,7 +14,13 @@
         "InstancePort": {{helper "m:core" "propertyValue" instanceport}},
         "InstanceProtocol": {{helper "m:core" "propertyValue" instanceprotocol}},
         "Protocol": {{helper "m:core" "propertyValue" protocol}},
-        "SSLCertificateId": {{helper "m:core" "propertyValue" sslcertificateid}}
+        "SSLCertificateId" : {
+          "Fn::If" : [
+            "SSLCertificateIdIsNotEmpty",
+            {{helper "m:core" "propertyValue" sslcertificateid}},
+            {"Ref" : "AWS::NoValue"}
+          ]
+        }
       }
     ],
     "HealthCheck": {
@@ -24,10 +31,10 @@
       "Target": {{helper "m:core" "propertyValue" target}}
     },
     "AccessLoggingPolicy": {
-      "EmitInterval" : {{helper "m:core" "propertyValue" loadbalancerport}},
-      "Enabled" : {{helper "m:core" "propertyValue" loadbalancerport}},
-      "S3BucketName" : {{helper "m:core" "propertyValue" loadbalancerport}},
-      "S3BucketPrefix" : {{helper "m:core" "propertyValue" loadbalancerport}}
+      "EmitInterval" : {{helper "m:core" "propertyValue" emitinterval}},
+      "Enabled" : {{helper "m:core" "propertyValue" enabled}},
+      "S3BucketName" : {{helper "m:core" "propertyValue" s3bucketname}},
+      "S3BucketPrefix" : {{helper "m:core" "propertyValue" s3bucketprefix}}
     }
 
   }

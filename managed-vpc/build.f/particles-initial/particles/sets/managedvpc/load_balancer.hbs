@@ -9,11 +9,14 @@
 {{parameter "load_balancer/listener/protocol" logicalId="InstanceProtocol" description="Specify the instance transport protocol to use for routing"}}
 {{parameter "load_balancer/listener/sslcertid" logicalId="SSLCertificateId"}}
 {{parameter "name_tag" logicalId="NameTag"}}
-{{parameter "target" logicalId="Target" description="Specifies the instance's protocol and port to check"}}
+{{parameter "load_balancer/scheme" logicalId="Scheme"}}
+{{parameter "load_balancer/target" logicalId="Target"}}
 {{parameter "load_balancer/accessloggingpolicy/emitinterval" logicalId="EmitInterval"}}
 {{parameter "load_balancer/accessloggingpolicy/enabled" logicalId="Enabled"}}
 {{parameter "load_balancer/accessloggingpolicy/s3bucketname" logicalId="S3BucketName"}}
 {{parameter "load_balancer/accessloggingpolicy/s3bucketprefix" logicalId="S3BucketPrefix"}}
+
+{{condition 'is_not_empty' logicalId=(concat "SSLCertificateId" 'IsNotEmpty') parameterLogicalId="SSLCertificateId"}}
 
 {{#resource "load_balancer" logicalId="ManagedELB01"
   nameTag=(ref "NameTag")
@@ -25,12 +28,12 @@
   instanceprotocol=(ref "InstanceProtocol")
   protocol=(ref "Protocol")
   sslcertificateid=(ref "SSLCertificateId")
-  target=(ref Target)
-  emitinterval=(ref EmitInterval)
-  enabled=(ref Enabled)
-  s3bucketname=(ref S3BucketName)
-  s3bucketprefix=(ref S3BucketPrefix)
-
+  scheme=(ref "Scheme")
+  target=(ref "Target")
+  emitinterval=(ref "EmitInterval")
+  enabled=(ref "Enabled")
+  s3bucketname=(ref "S3BucketName")
+  s3bucketprefix=(ref "S3BucketPrefix")
 }}
 "Properties": {
   {{#if nameTag}}"Tags": [{"Key": "Name", "Value": {{helper "m:core" "propertyValue" nameTag}} }]{{/if}}
