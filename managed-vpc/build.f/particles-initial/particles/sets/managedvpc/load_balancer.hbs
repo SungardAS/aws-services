@@ -39,6 +39,5 @@
 }}
 {{/resource}}
 
-{{#output 'load_balancer' logicalId=(concat "ManagedELB01" 'Id')}}
-  "Value": {"Ref": "ManagedELB01"}
-{{/output}}
+{{output 'load_balancer/id' logicalId=(concat "ManagedELB01" 'Id') loadBalancerLogicalId="ManagedELB01"}}
+{{output 'load_balancer/dns_name' logicalId=(concat "ManagedELB01" 'DNSName') loadBalancerLogicalId="ManagedELB01"}}
