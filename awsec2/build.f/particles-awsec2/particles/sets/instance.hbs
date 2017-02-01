@@ -1,7 +1,7 @@
 {{
   resource "instance"
   logicalId="Instance"
-  imageId=imageId
+  imageId=(ref "ImageId")
   instanceType=(ref "InstanceType")
   keyName=(ref "KeyPairName")
   pSubnetId=(ref "PSubnetId")

@@ -1,10 +1,8 @@
 {{#layout}}
-    {{mapping "windows_ami" logicalId="AmiMap"}}
     {{set "parameters"}}
 
     {{
       set "instance"
-      imageId='{"Fn::FindInMap": ["AmiMap", {"Ref": "AWS::Region"}, "Windows2012r2"]}'
       userData=(partial "user_data"
         stackId='{ "Ref" : "AWS::StackId" }'
         awsRegion='{ "Ref" : "AWS::Region" }'

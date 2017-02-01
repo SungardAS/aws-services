@@ -1,13 +1,13 @@
 
 {{
+  parameter "m:core" "base" logicalId="ImageId"
+  type="AWS::EC2::Image::Id"
+  description="[required] image ID for Managed ec2"
+}}
+{{
   parameter "m:core" "base" logicalId="PSubnetId"
   type="AWS::EC2::Subnet::Id"
   description="Production /Public Subnet for the ec2 instance"
-}}
-{{
-  parameter "m:core" "base" logicalId="ManagementSubnetId"
-  type="AWS::EC2::Subnet::Id"
-  description="Management Subnet for the ec2 instance"
 }}
 {{
   parameter "m:core" "base" logicalId="InstanceType"
@@ -21,13 +21,8 @@
 }}
 {{
   parameter "m:core" "base" logicalId="PSecurityGroup"
-  type="AWS::EC2::SecurityGroup::Id"
+  type="CommaDelimitedList"
   description="Production /Public SecurityGroup for the ec2 instance"
-}}
-{{
-  parameter "m:core" "base" logicalId="ManagementSecurityGroup"
-  type="AWS::EC2::SecurityGroup::Id"
-  description="Management SecurityGroup for the ec2 instance"
 }}
 {{
   parameter "m:ec2" "key_pair/key_name" logicalId="KeyPairName"

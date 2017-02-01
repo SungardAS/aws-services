@@ -11,6 +11,7 @@
   "Properties": {
     "BlockDeviceMappings": {{partial "device_mapping"}},
     "NetworkInterfaces": {{set "network_interfaces"}},
-    "Tags": [{"Key": "Name", "Value": {"Ref" : "Hostname"} }, {"Key": "Managed", "Value": ""}]
+    "Tags": [{"Key": "Name", "Value": {"Ref" : "Hostname"} }, {"Key": "Managed", "Value": ""}],
+    "DisableApiTermination" : "true"
   }
 {{/resource}}
