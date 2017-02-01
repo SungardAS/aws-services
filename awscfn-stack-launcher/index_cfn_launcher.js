@@ -62,6 +62,12 @@ exports.handler = function (event, context) {
           {func:aws_sts.assumeRoles, success:aws_cfn.getStackStatus, failure:failed, error:errored},
           {func:aws_cfn.getStackStatus, success:succeeded, failure:failed, error:errored},
         ];
+  }else if(event.actionType == "updateStack"){
+      var flows = [
+          //{func:aws_s3.addPolicy, success:aws_sts.assumeRoles, failure:failed, error:errored},
+          {func:aws_sts.assumeRoles, success:aws_cfn.updateCfnStack, failure:failed, error:errored},
+          {func:aws_cfn.updateCfnStack, success:succeeded, failure:failed, error:errored}
+      ];
   }
   aws_sts.flows = flows;
   aws_cfn.flows = flows;
