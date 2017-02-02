@@ -1,12 +1,15 @@
 {{!-- SecurityGroup --}}
-{{parameter "m:vpc" "vpc/id" logicalId="VpcId" description="VPC ID for Security Group" default="vpc-838df1e4"}}
+{{parameter "m:vpc" "vpc/id" logicalId="VpcId" description="VPC ID for Security Group" }}
 {{parameter "m:core" "base" logicalId="groupDescription" type="String" default="ManagedVPC Security Group"}}
 
-{{#resource "m:vpc" "security_group" logicalId="SecurityGroup" nameTag=(ref "NameTag")}}
+{{#resource "m:vpc" "security_group" logicalId="SecurityGroup" }}
  "Properties": {
   "GroupDescription":{{ref "groupDescription"}},
-  "VpcId":{{ref "VpcId"}}
-  {{#if nameTag}},"Tags": [{"Key": "Name", "Value": {{helper "m:core" "propertyValue" nameTag}} }]{{/if}}
+  "VpcId":{{ref "VpcId"}},
+  "Tags": [
+  {{#if nameTag}}{"Key": "Name", "Value": {{nameTag}} }, {{/if}}
+  {{#if managedTag}}{"Key": "Managed", "Value": {{managedTag}} }{{/if}}
+  ]
   }
 {{/resource}}
 
