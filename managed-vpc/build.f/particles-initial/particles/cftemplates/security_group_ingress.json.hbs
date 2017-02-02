@@ -1,8 +1,8 @@
 {{#layout}}
-  {{parameter  "security_group/id" logicalId="groupId" default="sg-aab66bd6"}}
+  {{parameter  "security_group/id" logicalId="groupId" }}
   {{parameter  'cidrIp' logicalId="cidrIp" default="0.0.0.0/0"}}
-  {{parameter  'fromPortnumber' logicalId="FromPortnumber" default="22"}}
-  {{parameter  'toPortnumber' logicalId="ToPortnumber" default="22"}}
+  {{parameter  'fromPortnumber' logicalId="FromPortnumber" }}
+  {{parameter  'toPortnumber' logicalId="ToPortnumber" }}
   {{parameter  'ipProtocol' logicalId="IpProtocol" default="tcp"}}
 
   {{#resource "security_group_ingress" logicalId="SecurityGroupIngress" }}
@@ -14,5 +14,6 @@
     "GroupId":{"Ref": "groupId"}
    }
 {{/resource}}
+{{output "m:core" "base" logicalId="SecurityGroupIngressId" value=(ref "SecurityGroupIngress")}}
 {{/layout}}
 
