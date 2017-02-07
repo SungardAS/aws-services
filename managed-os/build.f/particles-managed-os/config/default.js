@@ -34,7 +34,7 @@ regions.forEach(function(regionName) {
             region: regionName,
             bucket: 'condensation-particles.'+regionName
         },
-        prefix: 'particles-awsec2/'+versionPath,
+        prefix: 'particles-managed-os/'+versionPath,
         clean: true,
         validate: true,
         create: true

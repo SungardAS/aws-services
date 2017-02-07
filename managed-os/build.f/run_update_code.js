@@ -5,7 +5,7 @@ var environment = process.env.NODE_ENV;
 var configFile = 'default';
 if (environment)  configFile = environment;
 
-var config = require('./particles-awsec2/config/' + configFile);
+var config = require('./particles-managed-os/config/' + configFile);
 console.log(config.s3[0].aws.bucket);
 
 var functionNames = [];
@@ -13,10 +13,10 @@ var functionNames = [];
 var input = {
   "region": null,
   "bucketName": null,
-  "keyName": "particles/assets/awsec2.zip",
-  "zipFile" : "awsec2.zip",
+  "keyName": "particles/assets/managed-os.zip",
+  "zipFile" : "managed-os.zip",
   "sourceFolder" : "../..",
-  "src" : ["awsec2/index_*.js", "lib/flow_controller.js", "lib/aws/*.js"]
+  "src" : ["managed-os/index_*.js", "lib/flow_controller.js", "lib/aws/*.js"]
 }
 console.log(input);
 
