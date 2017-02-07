@@ -1,0 +1,20 @@
+{{#layout}}
+    {{set "parameters"}}
+
+    {{
+      set "instance"
+      userData=(partial "user_data"
+        stackId='{ "Ref" : "AWS::StackId" }'
+        awsRegion='{ "Ref" : "AWS::Region" }'
+      )
+    }}
+    {{
+      resource "manage_vm_wait"
+      logicalId="ManagedVMWaitCondition"
+    }}
+{{output "m:core" "base" logicalId="InstanceId" value=(ref "Instance") }}
+{{#output "m:core" "base" logicalId="PrivateIpId"}}
+  "Value" : { "Fn::GetAtt" : [ "Instance", "PrivateIp" ]}
+{{/output}}
+
+{{/layout}}

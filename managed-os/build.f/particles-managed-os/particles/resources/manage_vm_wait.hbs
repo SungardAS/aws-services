@@ -1,0 +1,9 @@
+{{#resource "m:core" "base" type="AWS::CloudFormation::WaitCondition"}}
+  "DependsOn": ["Instance"],
+  "CreationPolicy": {
+    "ResourceSignal": {
+      "Timeout": "PT15M",
+      "Count": "1"
+    }
+  }
+{{/resource}}
