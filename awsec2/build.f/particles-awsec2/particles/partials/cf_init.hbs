@@ -52,7 +52,7 @@
         "commands": {
             "rename-computer": {
                 "command": { "Fn::Join" : ["", ["powershell.exe -Command Rename-Computer -NewName ", {{helper "m:core" "propertyValue" hostname}}]]},
-                "waitAfterCompletion":5
+                "waitAfterCompletion":0
             }
         }
     },
