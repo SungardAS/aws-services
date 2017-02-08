@@ -2,6 +2,7 @@
 
 {{parameter "m:vpc" "vpc/id" logicalId="VpcId" description="ID of VPC"}}
 {{parameter "m:core" "base" type="AWS::EC2::Subnet::Id" logicalId="SubnetId" description="ID of Subnet"}}
+{{parameter "m:core" "base" type="String" logicalId="VpngatewayId" description="ID of VPN Gateway(VGW)"}}
 
 {{#
   resource "m:vpc" "route_table"
@@ -41,3 +42,13 @@
   routeTableId=(ref "RouteTable01")
   subnetId=(ref "SubnetId")
 }}
+
+{{#resource logicalId="VPNGatewayRoutePropagation"}}
+    "Type": "AWS::EC2::VPNGatewayRoutePropagation ",
+    "Properties": {
+      "RouteTableIds": {{ref "RouteTable01"}},
+      "VpnGatewayId": {{ref "VpngatewayId"}}
+    }
+{{/resource}}
+
+{{output "m:core" "base" logicalId="RouteTableId01" value=(ref "RouteTable01") description="ID of the Route Table"}}

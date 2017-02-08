@@ -1,5 +1,6 @@
 {{!-- VPN-GATEWAY --}}
 {{parameter "m:vpc" "vpc/id" logicalId="VpcId" description="ID of VPC"}}
+
 {{#resource "vpngateway" logicalId="Vpngateway" nameTag=(ref "NameTag") }}
   "Properties": {
     "Type": "ipsec.1",
@@ -14,3 +15,4 @@
     }
 {{/resource}}
 
+{{output "m:core" "base" logicalId="VpngatewayId" value=(ref "Vpngateway") description="ID of the VPN Gateway(VGW)"}}
