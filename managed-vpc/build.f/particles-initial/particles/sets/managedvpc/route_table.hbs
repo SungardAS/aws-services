@@ -46,7 +46,7 @@
 {{#resource logicalId="VPNGatewayRoutePropagation"}}
     "Type": "AWS::EC2::VPNGatewayRoutePropagation",
     "Properties": {
-      "RouteTableIds": {{ref "RouteTable01"}},
+      "RouteTableIds": [{{ref "RouteTable01"}}],
       "VpnGatewayId": {{ref "VpngatewayId"}}
     }
 {{/resource}}
