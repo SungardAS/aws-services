@@ -1,7 +1,7 @@
 {
-  "name": "managed-vpc",
+  "name": "managed-elb",
   "version": "0.0.1",
-  "description": "Condensation particles for building AWS VPC CloudFormation templates.",
+  "description": "Condensation particles for building AWS ELB CloudFormation templates.",
   "scripts": {
     "test": "./node_modules/.bin/mocha",
     "build": "./node_modules/.bin/gulp condensation:build",
