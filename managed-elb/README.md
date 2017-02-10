@@ -1,7 +1,7 @@
 
-# Managed VPC 
+# Managed ELB
 
-AWS micro service to Manage AWS VPC.
+AWS micro service to Manage AWS ELB.
 
 
 ## How To Setup
@@ -19,5 +19,3 @@ AWS micro service to Manage AWS VPC.
 ## How To Remove Service
 
     $ make clean -e AWS_REGION=<region>
-
-
