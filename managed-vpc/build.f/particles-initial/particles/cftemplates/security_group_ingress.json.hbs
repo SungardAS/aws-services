@@ -1,6 +1,17 @@
 {{#layout}}
   {{parameter  "security_group/id" logicalId="groupId" }}
-  {{parameter  'cidrIp' logicalId="CidrIp" default="0.0.0.0/0"}}
+  {{parameter  'cidrIp' logicalId="CidrIp"}}
+  {{
+    condition "m:core" 'is_populated'
+    logicalId="CidrIpIsPopulated"
+    parameterLogicalId=(scopeId "CidrIp")
+  }}
+  {{parameter  "securityGroupId" logicalId="SourceSecurityGroupId"}}
+  {{
+    condition "m:core" 'is_populated'
+    logicalId="SourceSecurityGroupIdIsPopulated"
+    parameterLogicalId=(scopeId "SourceSecurityGroupId")
+  }}
   {{parameter  'fromPortnumber' logicalId="FromPortnumber" }}
   {{parameter  'toPortnumber' logicalId="ToPortnumber" }}
   {{parameter  'ipProtocol' logicalId="IpProtocol" default="tcp"}}
@@ -10,10 +21,10 @@
     "FromPort":{"Ref": "FromPortnumber"},
     "IpProtocol":{"Ref": "IpProtocol"},
     "ToPort":{"Ref": "ToPortnumber"},
-    "CidrIp":{"Ref": "CidrIp"},
-    "GroupId":{"Ref": "groupId"}
+    "CidrIp":{"Fn::If": ["CidrIpIsPopulated", {"Ref": "CidrIp"}, {"Ref": "AWS::NoValue"}]},
+    "GroupId":{"Ref": "groupId"},
+    "SourceSecurityGroupId": {"Fn::If": ["SourceSecurityGroupIdIsPopulated", {"Ref": "SourceSecurityGroupId"}, {"Ref": "AWS::NoValue"}]}
    }
 {{/resource}}
-{{output "m:core" "base" logicalId="SecurityGroupIngressId" value=(ref "SecurityGroupIngress")}}
 {{/layout}}
 
