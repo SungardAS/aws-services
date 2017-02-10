@@ -1,0 +1,43 @@
+{{!-- Load Balancers --}}
+
+{{parameter "load_balancer/security_groups" logicalId="SecurityGroups"}}
+{{parameter "load_balancer/instance_list" logicalId="Instances"}}
+{{parameter "load_balancer/listener/port_number" logicalId="LoadBalancerPort" description="Specify the external load balancer port number"}}
+{{parameter "load_balancer/listener/port_number" logicalId="InstancePort" description="Specify the TCP port on which the instance server listens"}}
+{{parameter "load_balancer/listener/protocol" logicalId="Protocol" description="Specify the load balancer transport protocol to use for routing"}}
+{{parameter "load_balancer/listener/protocol" logicalId="InstanceProtocol" description="Specify the instance transport protocol to use for routing"}}
+{{parameter "load_balancer/listener/sslcertid" logicalId="SSLCertificateId"}}
+{{parameter "load_balancer/scheme" logicalId="Scheme"}}
+{{parameter "load_balancer/crosszone" logicalId="CrossZone"}}
+{{parameter "name_tag" logicalId="NameTag"}}
+{{parameter "load_balancer/subnets" logicalId="Subnets"}}
+{{parameter "load_balancer/accessloggingpolicy/emitinterval" logicalId="EmitInterval"}}
+{{parameter "load_balancer/accessloggingpolicy/enabled" logicalId="Enabled"}}
+{{parameter "load_balancer/accessloggingpolicy/s3bucketname" logicalId="S3BucketName"}}
+{{parameter "load_balancer/accessloggingpolicy/s3bucketprefix" logicalId="S3BucketPrefix"}}
+{{parameter "load_balancer/target" logicalId="Target"}}
+
+{{condition 'is_not_empty' logicalId=(concat "SSLCertificateId" 'IsNotEmpty') parameterLogicalId="SSLCertificateId"}}
+
+{{#resource "load_balancer" logicalId="ManagedELB01"
+  securityGroups=(ref "SecurityGroups")
+  instances=(ref "Instances")
+  loadBalancerPort=(ref "LoadBalancerPort")
+  instancePort=(ref "InstancePort")
+  instanceProtocol=(ref "InstanceProtocol")
+  protocol=(ref "Protocol")
+  sslCertificateId=(ref "SSLCertificateId")
+  scheme=(ref "Scheme")
+  crossZone=(ref "CrossZone")
+  nameTag=(ref "NameTag")
+  subnets=(ref "Subnets")
+  emitInterval=(ref "EmitInterval")
+  enabled=(ref "Enabled")
+  s3BucketName=(ref "S3BucketName")
+  s3BucketPrefix=(ref "S3BucketPrefix")
+  target=(ref "Target")
+}}
+{{/resource}}
+
+{{output 'id' logicalId=(concat "ManagedELB01" 'Id') loadBalancerLogicalId="ManagedELB01"}}
+{{output 'dns_name' logicalId=(concat "ManagedELB01" 'DNSName') loadBalancerLogicalId="ManagedELB01"}}
