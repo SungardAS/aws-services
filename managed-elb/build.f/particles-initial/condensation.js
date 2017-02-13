@@ -9,8 +9,8 @@ module.exports.initialize = function(cb) {
     if (error) return cb(error);
   });
 
-  vfs.src(["managed-vpc/index_*.js",  "managed-vpc/json/*.json", "lib/flow_controller.js", "lib/aws/*.js"],{cwd:'../../..', base:'../../..'})
-  .pipe(zip('managed-vpc.zip'))
+  vfs.src(["managed-elb/index_*.js",  "managed-elb/json/*.json", "lib/flow_controller.js", "lib/aws/*.js"],{cwd:'../../..', base:'../../..'})
+  .pipe(zip('managed-elb.zip'))
   .pipe(gulp.dest('./particles/assets'))
   .on('end', function(err, data) {
     vfs.src(['cloudformation/*.js'],{cwd:'../../..', base:'../../..'})
