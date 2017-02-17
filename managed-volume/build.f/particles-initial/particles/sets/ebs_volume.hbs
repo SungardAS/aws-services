@@ -1,0 +1,37 @@
+{{!-- Ebs Volume --}}
+
+{{parameter "InstanceId" logicalId="InstanceId" description="[required] instance ID of a ManagedOs"}}
+{{parameter "AZ" logicalId="AZ" description="[required] Availability Zone"}}
+{{parameter "Size" logicalId="Size" description="Size of ebs Volume"}}
+{{parameter "VolumeTag" logicalId="VolumeTag" description="Ebs volume tag"}}
+{{parameter "Encryption" logicalId="Encryption" description="Enable encryption"}}
+{{parameter "Type" logicalId="Type" description="Storage Type"}}
+{{parameter "Name" logicalId="Name" description="[required] Name of volume"}}
+{{parameter "Device" logicalId="Device" description="Device path of a ebs volume"}}
+
+
+
+{{#resource  logicalId="NewVolume"}}
+   "Type":"AWS::EC2::Volume",
+   "Properties": {
+   "Size": {{ref "Size"}},
+   "VolumeType": {{ref "Type"}},
+   "Encrypted": {{ref "Encryption"}},
+   "AvailabilityZone": {{ref "AZ"}},
+   "Tags": [
+         {"Key": "Name", "Value": {{ref "Name"}} },
+         {"Key": "VolumeTag","Value": {{ref "VolumeTag"}} }
+         ]
+   }
+{{/resource}}
+
+{{#resource logicalId="MountPoint"}}
+   "Type":"AWS::EC2::VolumeAttachment",
+   "Properties": {
+        "InstanceId": {{ref "InstanceId"}},
+        "VolumeId": {{ref "NewVolume"}},
+        "Device": "/dev/sdh"
+   }
+{{/resource}}
+
+
