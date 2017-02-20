@@ -19,6 +19,7 @@
    "Encrypted": {{ref "Encryption"}},
    "AvailabilityZone": {{ref "AZ"}},
    "Tags": [
+         {"Key": "Managed", "Value": "" },
          {"Key": "Name", "Value": {{ref "Name"}} },
          {"Key": "VolumeTag","Value": {{ref "VolumeTag"}} }
          ]
@@ -30,7 +31,7 @@
    "Properties": {
         "InstanceId": {{ref "InstanceId"}},
         "VolumeId": {{ref "NewVolume"}},
-        "Device": "/dev/sdh"
+        "Device": {{ref "Device"}}
    }
 {{/resource}}
 
