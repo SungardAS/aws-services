@@ -1,7 +1,7 @@
 
-# Managed ELB
+# Managed EBS VOLUME
 
-AWS micro service to Manage AWS ELB.
+AWS micro service to Manage AWS EBS VOLUME.
 
 
 ## How To Setup
