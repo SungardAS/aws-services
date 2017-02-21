@@ -3,7 +3,6 @@
 {{parameter "InstanceId" logicalId="InstanceId" description="[required] instance ID of a ManagedOs"}}
 {{parameter "AZ" logicalId="AZ" description="[required] Availability Zone"}}
 {{parameter "Size" logicalId="Size" description="Size of ebs Volume"}}
-{{parameter "VolumeTag" logicalId="VolumeTag" description="Ebs volume tag"}}
 {{parameter "Encryption" logicalId="Encryption" description="Enable encryption"}}
 {{parameter "Type" logicalId="Type" description="Storage Type"}}
 {{parameter "Name" logicalId="Name" description="[required] Name of volume"}}
@@ -20,8 +19,7 @@
    "AvailabilityZone": {{ref "AZ"}},
    "Tags": [
          {"Key": "Managed", "Value": "" },
-         {"Key": "Name", "Value": {{ref "Name"}} },
-         {"Key": "VolumeTag","Value": {{ref "VolumeTag"}} }
+         {"Key": "Name", "Value": {{ref "Name"}} }
          ]
    }
 {{/resource}}
