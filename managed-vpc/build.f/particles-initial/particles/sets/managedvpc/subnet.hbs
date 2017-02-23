@@ -16,7 +16,7 @@
   availabilityZone=(ref "AvailabilityZone")
 }}
   "Properties": {
-    {{#if nameTag}}"Tags": [{"Key": "Name", "Value": {{helper "m:core" "propertyValue" nameTag}} }]{{/if}}
+    "Tags": [{"Key": "Name", "Value": {{helper "m:core" "propertyValue" nameTag}} }, {"Key": "SubnetType", "Value": {{helper "m:core" "propertyValue" subnetType}} }]
   }
 {{/resource}}
 
