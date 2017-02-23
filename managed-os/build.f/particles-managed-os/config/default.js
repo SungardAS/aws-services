@@ -31,8 +31,8 @@ if (process.env.TRAVIS) {
 regions.forEach(function(regionName) {
     buckets.push({
         aws: {
-            region: regionName,
-            bucket: 'condensation-particles.'+regionName
+        region: 'eu-central-1',
+        bucket: 'sgas.particles-managed-os.442294194136.eu-central-1'
         },
         prefix: 'particles-managed-os/'+versionPath,
         clean: true,

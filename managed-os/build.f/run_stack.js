@@ -18,7 +18,7 @@ console.log('particles Folder = ' + particles);
 var templateStr = null;
 if (particles) {
   var fs = require("fs");
-  templateStr = fs.readFileSync(__dirname + '/particles-' + particles + "/dist/0/particles/cftemplates/template.json", {encoding:'utf8'});
+  templateStr = fs.readFileSync(__dirname + '/particles-' + particles + "/dist/0/particles-managed-os/develop/particles/cftemplates/template.json", {encoding:'utf8'});
 }
 var input = {
   region: region,
