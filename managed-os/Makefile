@@ -22,4 +22,4 @@ setup:
 
 clean:
 	npm install;
-	cd build.f; node run_stack drop --region $(AWS_REGION) --name managed-volume;
+	cd build.f; node run_stack drop --region $(AWS_REGION) --name managed-os;
