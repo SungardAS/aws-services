@@ -7,8 +7,9 @@
 {{parameter "Type" logicalId="Type" description="Storage Type"}}
 {{parameter "Name" logicalId="Name" description="[required] Name of volume"}}
 {{parameter "Device" logicalId="Device" description="Device path of a ebs volume"}}
+{{parameter "KmsId" logicalId="KmsId" description="Master key for encruption"}}
 
-
+{{condition "is_encryption_enabled" logicalId="kmsKeyId"}}
 
 {{#resource  logicalId="NewVolume"}}
    "Type":"AWS::EC2::Volume",
@@ -16,6 +17,13 @@
    "Size": {{ref "Size"}},
    "VolumeType": {{ref "Type"}},
    "Encrypted": {{ref "Encryption"}},
+   "KmsKeyId":{ 
+     "Fn::If" : [
+        "kmsKeyId",
+        {{ref "KmsId"}},
+        {"Ref" : "AWS::NoValue"}
+    ]
+},
    "AvailabilityZone": {{ref "AZ"}},
    "Tags": [
          {"Key": "Managed", "Value": "" },
