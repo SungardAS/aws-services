@@ -3,7 +3,6 @@ var argv = require('minimist')(process.argv.slice(2));
 var action = argv._[0];
 var region = argv['region'];
 var name = argv['name'];
-var parameters = argv['parameters'];
 var particles = argv['particles'];
 if (!region || !action || (action != 'launch' && action != 'drop') || !name) {
   console.log("Usage : node run_stack launch/drop --region <region> --name <stack name> [--parameters <parameter json str>] [--particles <particles folder name without 'particles-'>]");
@@ -12,7 +11,6 @@ if (!region || !action || (action != 'launch' && action != 'drop') || !name) {
 console.log('action = ' + action);
 console.log('region = ' + region);
 console.log('name = ' + name);
-console.log('parameters = ' + parameters);
 console.log('particles Folder = ' + particles);
 
 var templateStr = null;
@@ -24,7 +22,6 @@ var input = {
   region: region,
   stackName: name
 }
-if (parameters) input.parameters = JSON.parse(parameters);
 if (templateStr)  input.templateStr = templateStr;
 console.log(input);
 
