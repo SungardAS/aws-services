@@ -1,7 +1,7 @@
 {{
   resource "instance"
   logicalId="Instance"
-  imageId=(ref "ImageId")
+  imageId=(partial 'm:core' 'fn_get_att' logicalId=(scopeId "AMIInfo") attributeName="Id")
   instanceType=(ref "InstanceType")
   keyName=(ref "KeyPairName")
   pSubnetId=(ref "PSubnetId")

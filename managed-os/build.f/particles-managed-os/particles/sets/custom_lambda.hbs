@@ -1,0 +1,13 @@
+{{!-- Custom Lambda --}}
+
+{{parameter "osname" logicalId="OSName"}}
+{{parameter "service_token" logicalId="ServiceToken"}}
+
+{{#resource "custom_lambda" logicalId="AMIInfo"
+  region=(ref "AWS::Region")
+  serviceToken=(ref "ServiceToken")
+  oSName=(ref "OSName")
+}}
+{{/resource}}
+
+{{output 'id' logicalId="AMIID" functionLogicalId=(scopeId "AMIInfo")}}
