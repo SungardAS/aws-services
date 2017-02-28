@@ -37,6 +37,11 @@
   type="String"
   description="Hostname to the ec2 Instance"
 }}
+{{
+  parameter "m:core" "base" logicalId="EIP"
+  type="String"
+  description="yes/no"
+}}
 
 {{!-- parameter "m:core" "base" type="String" logicalId="SourceCidrForRDP"
   description="IP Cidr from which you are likely to RDP into the instances."

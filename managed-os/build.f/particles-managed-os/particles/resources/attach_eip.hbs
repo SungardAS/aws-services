@@ -1,0 +1,11 @@
+
+
+{{#resource }}
+   "Type" : "AWS::EC2::EIPAssociation",
+   "Condition": "isEipEnabled",
+   "Properties" : {
+        "InstanceId" : { "Ref" : "Instance" },
+        "EIP" : { "Ref" : "IPAddress" }
+        }
+   
+{{/resource}}
