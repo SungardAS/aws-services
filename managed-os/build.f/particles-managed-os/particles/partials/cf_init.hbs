@@ -52,7 +52,7 @@
         "commands": {
             "rename-computer": {
                 "command": { "Fn::Join" : ["", ["powershell.exe -Command Rename-Computer -NewName ", {{helper "m:core" "propertyValue" hostname}}]]},
-                "waitAfterCompletion": "forever"
+                "waitAfterCompletion": 0
             }
         }
     },
@@ -60,7 +60,7 @@
         "commands": {
             "add-routes": {
                 "command": { "Fn::Join": ["", ["powershell.exe -executionpolicy unrestricted -Command C:\\sungardas\\Windows.ps1 "," -gatewayip ", "{{opsware_address}}"]]},
-                "waitAfterCompletion": "forever"
+                "waitAfterCompletion": 0
             }
         }
     },
@@ -70,6 +70,6 @@
                 "command": "C:\\sungardas\\opsware-agent-50.0.59798.1-win32-6.1-X64.exe --opsw_gw_addr {{opsware_address}}:{{opsware_port}}"
             }
         },
-        "waitAfterCompletion": "forever"
+        "waitAfterCompletion": 0
     }
 }
