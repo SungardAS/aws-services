@@ -1,0 +1,11 @@
+{{
+    resource "m:lambda" "function"
+    handler="amilookup-win.handler"
+    timeout=120
+    runtime="nodejs4.3"
+    code=(
+      partial "m:lambda" "function/s3_code"
+      s3Bucket=this.s3.bucket
+      s3Key=(assetPath "amilookup-win.zip")
+    )
+}}

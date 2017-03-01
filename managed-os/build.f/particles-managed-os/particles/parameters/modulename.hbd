@@ -1,0 +1,6 @@
+{{
+parameter "m:core" "base"
+type="String"
+description="The name of the JavaScript file"
+default="amilookup-win"
+}}
