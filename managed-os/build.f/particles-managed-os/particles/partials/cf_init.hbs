@@ -32,10 +32,10 @@
                 }
             },
             "C:\\sungardas\\opsware-agent-50.0.59798.1-win32-6.1-X64.exe": {
-                "source": "https://s3.amazonaws.com/hpsa-opsware-windowsagent/opsware-agent-50.0.59798.1-win32-6.1-X64.exe"
+                "source": { "Fn::Join" : [ "", ["https://s3.amazonaws.com/", { "Ref" : "HpsaBucket" }, "/opsware-agent-50.0.59798.1-win32-6.1-X64.exe"]]}
             },
             "C:\\sungardas\\Windows.ps1": {
-                "source": "https://s3.amazonaws.com/hpsa-opsware-windowsagent/Windows.ps1"
+                "source": { "Fn::Join" : [ "", ["https://s3.amazonaws.com/", { "Ref" : "HpsaBucket" }, "/Windows.ps1"]]}
             }
         },
         "services" : {
@@ -52,7 +52,7 @@
         "commands": {
             "rename-computer": {
                 "command": { "Fn::Join" : ["", ["powershell.exe -Command Rename-Computer -NewName ", {{helper "m:core" "propertyValue" hostname}}]]},
-                "waitAfterCompletion":0
+                "waitAfterCompletion": 0
             }
         }
     },
