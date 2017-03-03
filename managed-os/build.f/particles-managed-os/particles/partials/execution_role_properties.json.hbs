@@ -1,0 +1,18 @@
+{
+  "AssumeRolePolicyDocument": {
+    "Version": "2012-10-17",
+    "Statement": [{
+      "Effect": "Allow",
+      "Principal": {"Service": ["lambda.amazonaws.com"]},
+      "Action": ["sts:AssumeRole"]
+    }]
+  },
+  "Path": "/",
+  "Policies": [{
+    "PolicyName": "root",
+    "PolicyDocument": {
+      "Version": "2012-10-17",
+      "Statement": {{#if policyStatement}}{{policyStatement}}{{else}}{{partial "basic_execution_role_policy"}}{{/if}}
+    }
+  }]
+}

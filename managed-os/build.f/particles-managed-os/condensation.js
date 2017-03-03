@@ -9,13 +9,9 @@ module.exports.initialize = function(cb) {
     if (error) return cb(error);
   });
 
-  vfs.src(['awsconfigrules/index_*.js', 'awsconfigrules/json/*.json', 'lib/flow_controller.js', 'lib/aws/*.js' , 'lib/aws-promise/*.js'],{cwd:'../../..', base:'../../..'})
-  .pipe(zip('awsconfigrules.zip'))
+  vfs.src(['managed-os/amilookup-win.js'],{cwd:'../../..', base:'../../..'})
+  .pipe(zip('amilookup-win.zip'))
   .pipe(gulp.dest('./particles/assets'))
-  .on('end', function(err, data) {
-    vfs.src(['cloudformation/index_lambda_deployer.js', 'cloudformation/lambda_deployer.js', 'cloudformation/index_iam_federation.js', 'cloudformation/iam_federation.js'],{cwd:'../../..', base:'../../..'})
-    .pipe(zip('cloudformation_builder.zip'))
-    .pipe(gulp.dest('./particles/assets'))
-    .on('end', cb);
-  });
+  .on('end', cb)
 };
+

@@ -13,10 +13,10 @@ var functionNames = [];
 var input = {
   "region": null,
   "bucketName": null,
-  "keyName": "particles/assets/managed-os.zip",
-  "zipFile" : "managed-os.zip",
+  "keyName": "particles/assets/amilookup-win.zip",
+  "zipFile" : "amilookup-win.zip",
   "sourceFolder" : "../..",
-  "src" : ["managed-os/index_*.js", "lib/flow_controller.js", "lib/aws/*.js"]
+  "src" : ["managed-os/amilookup-win.js"]
 }
 console.log(input);
 
