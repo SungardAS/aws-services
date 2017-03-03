@@ -5,9 +5,9 @@ endif
 
 TEST := false
 
-ifdef AWS_REGIONS
+ifdef AWS_REGION
 else
-	AWS_REGIONS := us-east-1 us-east-2 us-west-1 us-west-2
+	AWS_REGION := us-east-1
 endif
 
 build: setup
@@ -24,10 +24,6 @@ update:
 
 setup:
 	cd build.f/particles-managed-os; npm install; ./node_modules/.bin/gulp condensation:build; ./node_modules/.bin/gulp condensation:deploy;
-	$(foreach AWS_REGION,$(AWS_REGIONS),\
-		cd build.f; node run_stack launch --region $(AWS_REGION) --name GetAMIId --particles managed-os;)
 
 clean:
 	npm install;
-	$(foreach AWS_REGION,$(AWS_REGIONS),\
-		cd build.f; node run_stack drop --region $(AWS_REGION) --name GetAMIId;)

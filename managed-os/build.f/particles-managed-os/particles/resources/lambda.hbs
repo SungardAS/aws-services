@@ -1,8 +1,8 @@
 {{
     resource "m:lambda" "function"
     handler="managed-os/amilookup-win.handler"
-    timeout=120
     runtime="nodejs4.3"
+    functionName="GetAMIId"
     code=(
       partial "m:lambda" "function/s3_code"
       s3Bucket=this.s3.bucket
