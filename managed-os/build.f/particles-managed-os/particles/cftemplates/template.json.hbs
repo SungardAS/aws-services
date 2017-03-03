@@ -23,6 +23,9 @@
       resource "manage_vm_wait"
       logicalId="ManagedVMWaitCondition"
     }}
+    {{
+      set "custom_lambda"
+    }}
 {{output "m:core" "base" logicalId="InstanceId" value=(ref "Instance") }}
 
 {{#output "m:core" "base" logicalId="PrivateIpId"}}
