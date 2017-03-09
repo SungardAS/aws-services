@@ -1,7 +1,14 @@
 ---
-description: "The Group ID of the destination Amazon VPC security group."
+description: "Specifies SourceSecurityGroupId / DestinationSecurityGroupId required for the Security group Ingress and Egress."
 ---
 {{
   parameter "m:core" "base"
+  description="SecurityGroupIds List."
   type="String"
+  minLength="1"
+  maxLength="255"
+  allowedPattern="[\\x20-\\x7E]*"
+  constraintDescription="can contain only ASCII characters."
+  optional=true
 }}
+
