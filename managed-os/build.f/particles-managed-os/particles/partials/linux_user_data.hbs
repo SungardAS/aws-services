@@ -1,0 +1,30 @@
+{
+          "Fn::Base64": {
+            "Fn::Join": [
+              "",
+              [
+                "#!/bin/bash\n",
+				"yum -y install wget\n",
+				"sudo wget -r --no-parent -A 'epel-release-*.rpm' http://dl.fedoraproject.org/pub/epel/7/x86_64/e/ \n",
+				"sudo rpm -Uvh dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-*.rpm \n",
+				"sudo yum install -y https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-latest.amzn1.noarch.rpm \n",
+				"ln -s /usr/local/lib/python2.7/site-packages/cfnbootstrap/  /usr/lib/python2.7/site-packages/cfnbootstrap \n",				
+                "/opt/aws/bin/cfn-init -v ",
+				" --stack ", { "Ref" : "AWS::StackName" },
+                " --resource Instance ",
+                " --region ",
+                {
+                  "Ref": "AWS::Region"
+                },
+                "\n",
+                "/opt/aws/bin/cfn-signal -e $? ",
+                " --stack ", { "Ref" : "AWS::StackName" },                
+                " --resource ManagedVMWaitCondition ",
+                " --region ",
+                {
+                  "Ref": "AWS::Region"
+                }
+              ]
+            ]
+          }
+}

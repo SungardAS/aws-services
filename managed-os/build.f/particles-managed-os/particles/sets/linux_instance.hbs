@@ -1,0 +1,11 @@
+{{
+  resource "linux_instance"
+  logicalId="Instance"
+  imageId=(partial 'm:core' 'fn_get_att' logicalId=(scopeId "AMIInfo") attributeName="Id")
+  instanceType=(ref "InstanceType")
+  keyName=(ref "KeyPairName")
+  pSubnetId=(ref "PSubnetId")
+  mSubnetId=(ref "ManagementSubnetId")
+  userData=userData
+  volumeSize=(ref "VolumeSize")
+}}
