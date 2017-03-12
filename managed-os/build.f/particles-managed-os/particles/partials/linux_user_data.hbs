@@ -4,13 +4,28 @@
               "",
               [
                 "#!/bin/bash\n",
-				"yum -y install wget\n",
-				"sudo wget -r --no-parent -A 'epel-release-*.rpm' http://dl.fedoraproject.org/pub/epel/7/x86_64/e/ \n",
-				"sudo rpm -Uvh dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-*.rpm \n",
-				"sudo yum install -y https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-latest.amzn1.noarch.rpm \n",
-				"ln -s /usr/local/lib/python2.7/site-packages/cfnbootstrap/  /usr/lib/python2.7/site-packages/cfnbootstrap \n",				
+		"sleep 20\n",
+		"if   grep -i \"release 7\" /etc/redhat-release ; then\n",
+                "yum -y install wget\n",
+                "sudo wget -r --no-parent -A 'epel-release-*.rpm' http://dl.fedoraproject.org/pub/epel/7/x86_64/e/ \n",
+                "sudo rpm -Uvh dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-*.rpm \n",
+                "sudo yum install -y https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-latest.amzn1.noarch.rpm \n",
+                "ln -s /usr/local/lib/python2.7/site-packages/cfnbootstrap/  /usr/lib/python2.7/site-packages/cfnbootstrap \n",
+		"else \n",
+		"sed -i -e '/Defaults    requiretty/{ s/.*/# Defaults    requiretty/ }' /etc/sudoers\n",
+		"sudo rpm -e epel-release-7-5.noarch\n",
+		"wget http://download.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm\n",
+		"sudo rpm -ivh epel-release-6-8.noarch.rpm\n",
+		"sudo yum clean all;sudo rpmdb -v --rebuilddb\n",
+		"sudo yum -y install libselinux-python\n",
+		"sudo yum install -y https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-latest.amzn1.noarch.rpm \n",
+		"ln -s /usr/local/lib/python2.7/site-packages/cfnbootstrap/  /usr/lib/python2.6/site-packages/cfnbootstrap\n",
+		"fi\n",
                 "/opt/aws/bin/cfn-init -v ",
-				" --stack ", { "Ref" : "AWS::StackName" },
+                " --stack ",
+                {
+                  "Ref": "AWS::StackName"
+                },
                 " --resource Instance ",
                 " --region ",
                 {
@@ -18,7 +33,10 @@
                 },
                 "\n",
                 "/opt/aws/bin/cfn-signal -e $? ",
-                " --stack ", { "Ref" : "AWS::StackName" },                
+                " --stack ",
+                {
+                  "Ref": "AWS::StackName"
+                },
                 " --resource ManagedVMWaitCondition ",
                 " --region ",
                 {
