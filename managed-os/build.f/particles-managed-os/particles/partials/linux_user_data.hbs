@@ -4,6 +4,16 @@
               "",
               [
                 "#!/bin/bash\n",
+		"echo ",
+		{
+                  "Ref": "Hostname"
+                },
+		" > /proc/sys/kernel/hostname\n",
+		"echo ",
+		{
+                  "Ref": "Hostname"
+                },
+		" > /etc/hostname\n",
 		"sleep 20\n",
 		"if   grep -i \"release 7\" /etc/redhat-release ; then\n",
                 "yum -y install wget\n",

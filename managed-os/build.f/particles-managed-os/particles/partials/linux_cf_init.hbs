@@ -1,8 +1,7 @@
 {
           "configSets": {
             "default": [
-              "install_cfn",
-              "rename"
+              "install_cfn"
             ]
           },
           "install_cfn": {
@@ -49,25 +48,7 @@
               }
             }
           },
-          "rename": {
-            "commands": {
-              "rename-computer": {
-                "command": {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "hostname  ",
-                      {
-                        "Ref": "Hostname"
-                      }
-                    ]
-                  ]
-                },
-                "waitAfterCompletion": "forever"
-              }
-            }
-          },
-		  "routes": {
+	  "routes": {
             "commands": {
               "add-routes": {
                 "command": {
