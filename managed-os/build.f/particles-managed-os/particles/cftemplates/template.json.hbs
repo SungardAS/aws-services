@@ -33,6 +33,7 @@
 {{/output}}
 
 {{#output "m:core" "base" logicalId="EipId"}}
+  "Condition": "isEipEnabled",
   "Value" : { "Fn::GetAtt" : [ "Instance", "PublicIp" ]}
 {{/output}}
 
