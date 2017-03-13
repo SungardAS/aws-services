@@ -11,10 +11,10 @@ console.log(config.s3[0].aws.bucket);
 var input = {
   "region": null,
   "bucketName": null,
-  "keyName": "particles/assets/amilookup-win.zip",
-  "zipFile" : "amilookup-win.zip",
+  "keyName": "particles/assets/amilookup.zip",
+  "zipFile" : "amilookup.zip",
   "sourceFolder" : "../..",
-  "src" : ["managed-os/amilookup-win.js"]
+  "src" : ["managed-os/amilookup.js"]
 }
 console.log(input);
 
