@@ -1,5 +1,5 @@
 {{
-  resource "instance"
+  resource "linux_instance"
   logicalId="Instance"
   imageId=(partial 'm:core' 'fn_get_att' logicalId=(scopeId "AMIInfo") attributeName="Id")
   instanceType=(ref "InstanceType")

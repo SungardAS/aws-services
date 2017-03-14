@@ -1,0 +1,57 @@
+{
+          "configSets": {
+            "default": [
+              "install_cfn",
+	      "hpsaagentinstall"
+            ]
+          },
+          "install_cfn": {
+            "files": {
+              "/etc/cfn/cfn-hup.conf" : {
+                "content" : { "Fn::Join" : ["", [
+                  "[main]\n",
+                  "stack=", { "Ref" : "AWS::StackId" }, "\n",
+                  "region=", { "Ref" : "AWS::Region" }, "\n"
+                ]]},
+                "mode"    : "000400",
+                "owner"   : "root",
+                "group"   : "root"
+              },
+              "/etc/cfn/hooks.d/cfn-auto-reloader.conf" : {
+                "content": { "Fn::Join" : ["", [
+                  "[cfn-auto-reloader-hook]\n",
+                  "triggers=post.update\n",
+                  "path=Resources.Instance.Metadata.AWS::CloudFormation::Init\n",
+                  "action=/opt/aws/bin/cfn-init -v ",
+                  "         --stack ", { "Ref" : "AWS::StackName" },
+                  "         --resource Instance ",
+                  "         --region ", { "Ref" : "AWS::Region" }, "\n",
+                  "runas=root\n"
+                ]]}
+              },
+              "/tmp/opsware-agent-50.0.47910.0-linux-7SERVER-X86_64": { 
+                "source": { "Fn::Join" : [ "", ["https://s3.amazonaws.com/", { "Ref" : "HpsaBucket" }, "/opsware-agent-50.0.47910.0-linux-7SERVER-X86_64"]]}
+              }
+            },
+            "services": {
+              "linux": {
+                "cfn-hup": {
+                  "enabled": "true",
+                  "ensureRunning": "true",
+                  "files": [
+                    "/etc/cfn/cfn-hup.conf",
+                    "/etc/cfn/hooks.d/cfn-auto-reloader.conf"
+                  ]
+                }
+              }
+            }
+          },
+          "hpsaagentinstall": {
+            "commands": {
+              "1-HPSAAgent-Install": {
+                "command": "chmod 700 /tmp/opsware-agent-50.0.47910.0-linux-7SERVER-X86_64;/tmp/opsware-agent-50.0.47910.0-linux-7SERVER-X86_64 --opsw_gw_addr 65.79.161.92:3001"
+              }
+            },
+            "waitAfterCompletion": "forever"
+          }
+}

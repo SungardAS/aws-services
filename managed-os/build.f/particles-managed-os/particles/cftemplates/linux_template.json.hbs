@@ -1,0 +1,40 @@
+{{#layout}}
+   
+    {{set "parameters"}}
+
+    {{
+      set "linux_instance"
+      userData=(partial "linux_user_data"
+        stackId='{ "Ref" : "AWS::StackId" }'
+        awsRegion='{ "Ref" : "AWS::Region" }'
+      )
+    }}
+    {{condition "isEipEnabled" logicalId="isEipEnabled"}}
+    {{
+      resource "eip"
+      logicalId="IPAddress"
+    }}
+    {{
+      resource "attach_eip"
+      logicalId="AttachEip"
+    }}
+
+    {{
+      resource "manage_vm_wait"
+      logicalId="ManagedVMWaitCondition"
+    }}
+    {{
+      set "custom_lambda"
+    }}
+{{output "m:core" "base" logicalId="InstanceId" value=(ref "Instance") }}
+
+{{#output "m:core" "base" logicalId="PrivateIpId"}}
+  "Value" : { "Fn::GetAtt" : [ "Instance", "PrivateIp" ]}
+{{/output}}
+
+{{#output "m:core" "base" logicalId="EipId"}}
+  "Condition": "isEipEnabled",
+  "Value" : { "Fn::GetAtt" : [ "Instance", "PublicIp" ]}
+{{/output}}
+
+{{/layout}}
