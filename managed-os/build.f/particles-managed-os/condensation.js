@@ -9,9 +9,8 @@ module.exports.initialize = function(cb) {
     if (error) return cb(error);
   });
 
-  vfs.src(['managed-os/amilookup-win.js'],{cwd:'../../..', base:'../../..'})
-  .pipe(zip('amilookup-win.zip'))
+  vfs.src(['managed-os/amilookup.js'],{cwd:'../../..', base:'../../..'})
+  .pipe(zip('amilookup.zip'))
   .pipe(gulp.dest('./particles/assets'))
   .on('end', cb)
 };
-

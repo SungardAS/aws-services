@@ -1,6 +1,5 @@
 /**
-* A sample Lambda function that looks up the latest Windows AMI ID
-* for a given region and Windows AMI base name.
+* A Lambda function that looks up the latest AMI ID for a given region and AMI base name.
 **/
 
 // Map display OS names to AMI name patterns
@@ -9,7 +8,8 @@ var osNameToPattern = {
     "Windows Server 2008 SP2 64-bit": "Windows_Server-2008-SP2-English-64Bit-Base-*",
     "Windows Server 2008 R2 64-bit": "Windows_Server-2008-R2_SP1-English-64Bit-Base-*",
 	  "Windows Server 2012 64-bit": "Windows_Server-2012-RTM-English-64Bit-Base-*",
-	  "Windows Server 2012 R2 64-bit": "Windows_Server-2012-R2_RTM-English-64Bit-Base-*"
+	  "Windows Server 2012 R2 64-bit": "Windows_Server-2012-R2_RTM-English-64Bit-Base-*",
+    "Red Hat Enterprise Linux 7.2": "RHEL-7.2_HVM_GA*"
 };
 
 var aws = require("aws-sdk");
@@ -30,15 +30,23 @@ exports.handler = function(event, context) {
 
     console.log("OS: " + event.ResourceProperties.OSName + " -> " + osBaseName);
 
+    var firstword = event.ResourceProperties.OSName.split(" ")[0]
+
+    if (firstword == "Windows") {
+      owner = "amazon";
+    } else {
+      owner = "309956199498"
+    }
+
     var ec2 = new aws.EC2({region: event.ResourceProperties.Region});
     var describeImagesParams = {
         Filters: [{ Name: "name", Values: [osBaseName]}],
-        Owners: ["amazon"]
+        Owners: [owner]
     };
 
     console.log( "Calling describeImages...");
 
-    // Get the available AMIs for the specified Windows version.
+    // Get the available AMIs for the specified base name.
     ec2.describeImages(describeImagesParams, function(err, describeImagesResult) {
         if (err) {
             responseData = {Error: "DescribeImages call failed"};
