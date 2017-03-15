@@ -28,9 +28,6 @@
                   "         --region ", { "Ref" : "AWS::Region" }, "\n",
                   "runas=root\n"
                 ]]}
-              },
-              "/tmp/opsware-agent-50.0.47910.0-linux-7SERVER-X86_64": { 
-                "source": { "Fn::Join" : [ "", ["https://s3.amazonaws.com/", { "Ref" : "HpsaBucket" }, "/opsware-agent-50.0.47910.0-linux-7SERVER-X86_64"]]}
               }
             },
             "services": {
@@ -45,13 +42,5 @@
                 }
               }
             }
-          },
-          "hpsaagentinstall": {
-            "commands": {
-              "1-HPSAAgent-Install": {
-                "command": "chmod 700 /tmp/opsware-agent-50.0.47910.0-linux-7SERVER-X86_64;/tmp/opsware-agent-50.0.47910.0-linux-7SERVER-X86_64 --opsw_gw_addr 65.79.161.92:3001"
-              }
-            },
-            "waitAfterCompletion": "forever"
           }
 }
