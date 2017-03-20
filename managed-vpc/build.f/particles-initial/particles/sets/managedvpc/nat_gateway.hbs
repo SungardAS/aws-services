@@ -9,11 +9,7 @@
 }}
   "Properties": {
    "AllocationId":{{partial "m:core" "fn_get_att" logicalId=(scopeId "EIP") attributeName="AllocationId"}},
-   "SubnetId": {{ref "publicSubnetId"}},
-   "Tags": [
-    {{#if nameTag}}{"Key": "Name", "Value": {{nameTag}} }, {{/if}}
-    {{#if managedTag}}{"Key": "Managed", "Value": {{managedTag}} }{{/if}}
-    ]
+   "SubnetId": {{ref "publicSubnetId"}}
    }
 {{/resource}}
 
