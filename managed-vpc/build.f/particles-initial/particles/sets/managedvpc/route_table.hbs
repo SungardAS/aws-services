@@ -54,12 +54,16 @@
 {{!-- Nat Gateway Route  --}}
 
 {{parameter "m:core" "base" type="String" description="Nat Gateway ID" logicalId="NatGatewayId"}}
+{{condition "m:core" "is_equal_to" logicalId="IsRoutePrivate" parameterLogicalId="RouteType" value="private"}}
 
-{{#resource "m:vpc" "route" logicalId="NatRoute"}}
+{{#resource "m:vpc" "route" logicalId="NatRoute" 
+   condition="IsRoutePrivate"
+}}
  "Properties": {
    "DestinationCidrBlock": "0.0.0.0/0",
    "RouteTableId":{{ref "RouteTable01"}},
    "NatGatewayId":{{ref "NatGatewayId"}}
 }
 {{/resource}}
+
 {{output "m:core" "base" logicalId="RouteTableId01" value=(ref "RouteTable01") description="ID of the Route Table"}}
