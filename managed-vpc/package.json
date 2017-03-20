@@ -23,7 +23,8 @@
     "config": "^1.21.0",
     "gulp": "^3.9.1",
     "particles-core": "^0.4.5",
-    "particles-vpc": "^0.5.1"
+    "particles-vpc": "^0.5.1",
+    "particles-nat-gateway": "^0.2.2"
   },
   "devDependencies": {
     "condensation-particle-tests": "^0.5.2",
