@@ -45,7 +45,7 @@ exports.handler = function (event, context) {
                     "Sid": event.UUID,
                     "Effect": "Allow",
                     "Principal": {
-                        "AWS": [event.account]
+                        "AWS": event.account
                     },
                     "Action": "s3:GetObject",
                     "Resource": "arn:aws:s3:::" + event.bucketName + "/*"
