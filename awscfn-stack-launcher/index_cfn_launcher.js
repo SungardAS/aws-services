@@ -42,7 +42,7 @@ exports.handler = function (event, context) {
             "Id": "PolicyID-" + event.UUID,
             "Statement": [
                 {
-                    "Sid": event.UUID,
+                    "Sid": event.account,
                     "Effect": "Allow",
                     "Principal": {
                         "AWS": event.account
