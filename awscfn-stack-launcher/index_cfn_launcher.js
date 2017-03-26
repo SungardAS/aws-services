@@ -66,7 +66,7 @@ exports.handler = function (event, context) {
   }else if(event.actionType == "deleteStack"){
         input.bucketName = event.bucketName;
         var flows = [
-           {func:aws_s3.deletePolicy, success:aws_sts.assumeRoles, failure:failed, error:errored},
+           //{func:aws_s3.deletePolicy, success:aws_sts.assumeRoles, failure:failed, error:errored},
            {func:aws_sts.assumeRoles, success:aws_cfn.deleteStack, failure:failed, error:errored},
            {func:aws_cfn.deleteStack, success:succeeded, failure:failed, error:errored},
         ];
