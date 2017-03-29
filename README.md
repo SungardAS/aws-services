@@ -44,6 +44,18 @@ Libraries shared by projects
 ## <a href='https://github.com/SungardAS/aws-services/tree/develop/jenkins'>jenkins</a>
 CI/CD build jenkins server of this project
 
+## <a href='https://github.com/SungardAS/aws-services/tree/develop/managed-elb'>jenkins</a>
+Manage Internet Facing and Internal ELB in AWS VPCs
+
+## <a href='https://github.com/SungardAS/aws-services/tree/develop/managed-os'>jenkins</a>
+Provision and Manage AWS EC2 Instances
+
+## <a href='https://github.com/SungardAS/aws-services/tree/develop/managed-volume'>jenkins</a>
+Provision and Manage AWS EBS Volumes
+
+## <a href='https://github.com/SungardAS/aws-services/tree/develop/managed-vpc'>jenkins</a>
+Provision and Manage  AWS VPC's with all its contained resources
+
 ## <a href='https://github.com/SungardAS/aws-services/tree/develop/sns-message-validator'>sns-message-validator</a>
 Utility to validate the sns messages that are received through the HTTP subscriptions.
 This is the Node.js implementation of the instructions here, http://docs.aws.amazon.com/sns/latest/dg/SendMessageToHttp.verify.signature.html.

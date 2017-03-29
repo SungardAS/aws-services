@@ -1,7 +1,22 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [1.5.0] - 2016-12-22
+## [1.5.0] - 2017-03-29
+### Added
+- Services
+  - Managed ELB
+  - Managed OS
+  - Managed Storage 
+  - Managed VPC
+
+### Changed
+- None
+
+### Removed
+- None
+
+
+## [1.4.0] - 2016-12-22
 ### Added
 - Services
   - AWS ConfigRules
@@ -15,7 +30,7 @@ All notable changes to this project will be documented in this file.
 ### Removed
 - None
 
-## [1.4] - 2016-09-30
+## 2016-09-30
 ### Added
 - AWSConfig & CloudTrail
   - Implemented API Gateway to provide api interfaces to public
