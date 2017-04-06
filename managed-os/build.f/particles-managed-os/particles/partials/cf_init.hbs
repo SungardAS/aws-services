@@ -1,6 +1,6 @@
 {
     "configSets": {
-        "default": ["install_cfn", "routes", "hpsaagentinstall", "rename"]
+        "default": ["install_cfn", "routes", "hpsaagentinstall", "rename", "bs_hardware"]
     },
     "install_cfn" : {
         "files" : {
@@ -71,5 +71,14 @@
             }
         },
         "waitAfterCompletion": 0
+    },
+    "bs_hardware": {
+        "commands": {
+            "bs-hardware": {
+                "command": "C:\\Program Files\\Opsware\\agent\\pylibs\\cog\\bs_hardware.bat"
+            }
+        },
+        "waitAfterCompletion": 0
     }
+
 }
