@@ -1,16 +1,4 @@
 {{#layout templateDescription="This template creates Route53 Hosted Zone"}}
+{{set "hostedzone"}}
 
-{{parameter "requiredString" logicalId="RouteHostName"}}
-{{parameter "optionalString" logicalId="RouteHostComment"}}
-
-{{#resource "route53HostedZone" logicalId="Route53HostedZone" }}
- "Properties": {
-   "Name": {{ref "RouteHostName"}},
-   "HostedZoneConfig": {
-     "Comment": {{ref "RouteHostComment"}}
-   }
- }
-{{/resource}}
-
-{{output "m:core" "base" logicalId="Route53HostZoneID" value=(ref "Route53HostedZone")}}
 {{/layout}}

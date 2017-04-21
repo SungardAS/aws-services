@@ -1,21 +1,4 @@
 {{#layout templateDescription="This template creates Route53 Record Set"}}
 
-{{parameter "requiredString" logicalId="HostedZoneName" description="Hosted Zone Name"}}
-{{parameter "requiredString" logicalId="RecordSetName" description="Name of Record Set"}}
-{{parameter "requiredString" logicalId="RecordSetType" description="Type of Record Set, eg: A, CNAME, MX, AAAA, TXT, PTR, SRV, SPF, NAPTR"}}
-{{parameter "requiredString" logicalId="ResourceRecord" description="Value for the record set"}}
-{{parameter "requiredString" logicalId="TTLValue" description="TTL in seconds"}}
-{{parameter "requiredString" logicalId="ResourceRecord" description="Value for Record Set Type" type="CommaDelimitedList"}}
-
-{{#resource "route53RecordSet" logicalId="Route53RecordSet" type="AWS::Route53::RecordSet"}}
- "Properties": {
-    "HostedZoneName": {{ref "HostedZoneName"}},
-    "Name": {{ref "RecordSetName"}},
-    "Type": {{ref "RecordSetType"}},
-    "TTL": {{ref "TTLValue"}},
-    "ResourceRecords": {{ref "ResourceRecord"}}
- }
-{{/resource}}
-
-{{output "m:core" "base" logicalId="Route53RecordSetDomainName" value=(ref "Route53RecordSet")}}
+{{set "recordset"}}
 {{/layout}}
