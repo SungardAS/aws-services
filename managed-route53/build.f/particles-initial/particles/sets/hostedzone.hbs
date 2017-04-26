@@ -2,7 +2,6 @@
 {{parameter "optionalString" logicalId="RouteHostComment"}}
 
 {{#resource "route53HostedZone" logicalId="Route53HostedZone" }}
- "Type": "AWS::Route53::HostedZone",
  "Properties": {
    "Name": {{ref "RouteHostName"}},
    "HostedZoneConfig": {

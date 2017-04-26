@@ -1,2 +1,6 @@
-{{#resource "m:core" "base"}}
+{{#resource "m:core" "base" type="AWS::Route53::HostedZone"}}
+  {{#helper "m:core" "properties"}}
+    {{helper "m:core" "property" "Name"}}
+    {{helper "m:core" "property" "Comment" optional=true}}
+  {{/helper}}
 {{/resource}}
