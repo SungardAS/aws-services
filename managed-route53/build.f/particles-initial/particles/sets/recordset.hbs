@@ -1,4 +1,4 @@
-{{parameter "requiredString" logicalId="HostedZoneName" description="Hosted Zone Name"}}
+{{parameter "requiredString" logicalId="HostedZoneId" description="Hosted Zone Id"}}
 {{parameter "requiredString" logicalId="RecordSetName" description="Name of Record Set"}}
 {{parameter "requiredString" logicalId="RecordSetType" description="Type of Record Set, eg: A, CNAME, MX, AAAA, TXT, PTR, SRV, SPF, NAPTR"}}
 {{parameter "requiredString" logicalId="ResourceRecord" description="Value for the record set"}}
@@ -8,7 +8,7 @@
 {{#resource logicalId="Route53RecordSet"}}
  "Type": "AWS::Route53::RecordSet",
  "Properties": {
-    "HostedZoneName": {{ref "HostedZoneName"}},
+    "HostedZoneId": {{ref "HostedZoneId"}},
     "Name": {{ref "RecordSetName"}},
     "Type": {{ref "RecordSetType"}},
     "TTL": {{ref "TTLValue"}},
