@@ -35,7 +35,10 @@ exports.handler = function (event, context) {
     "us-west-2": "arn:aws:iam::113285607260:root",
     "eu-central-1": "arn:aws:iam::035351147821:root",
     "ap-northeast-2": "arn:aws:iam::492519147666:root",
-    "ap-south-1": "arn:aws:iam::977081816279:root"
+    "ap-south-1": "arn:aws:iam::977081816279:root",
+    "us-east-2": "arn:aws:iam::475085895292:root",
+    "eu-west-2": "arn:aws:iam::282025262664:root",
+    "ca-central-1": "arn:aws:iam::819402241893:root"
   };
 
   // find root account id for that region
@@ -83,7 +86,7 @@ exports.handler = function (event, context) {
     {func:aws_trail.findTrails, success:aws_trail.isLogging, failure:aws_trail.createTrail, error:errored},
     {func:aws_trail.createTrail, success:aws_trail.startLogging, failure:failed, error:errored},
     {func:aws_trail.isLogging, success:succeeded, failure:aws_trail.startLogging, error:errored},
-    {func:aws_trail.startLogging, success:succeeded, failure:failed, error:errored},
+    {func:aws_trail.startLogging, success:succeeded, failure:failed, error:errored}
   ];
   aws_sts.flows = flows;
   aws_bucket.flows = flows;
