@@ -10,6 +10,8 @@
       )
     }}
     {{condition "isEipEnabled" logicalId="isEipEnabled"}}
+    {{condition "is32BitOs" logicalId="is32BitOs"}}
+    {{condition "is64BitOs" logicalId="is64BitOs"}}
     {{
       resource "eip"
       logicalId="IPAddress"
