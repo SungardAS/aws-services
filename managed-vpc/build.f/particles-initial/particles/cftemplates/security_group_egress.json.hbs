@@ -1,17 +1,31 @@
 {{#layout}}
   {{parameter  "security_group/id" logicalId="groupId" default=""}}
-  {{parameter  "cidrIp" logicalId="CidrIp" default="0.0.0.0/0"}}
+  {{parameter  "cidrIp" logicalId="CidrIp"}}
+  {{
+    condition "m:core" 'is_not_empty'
+    logicalId="CidrIpIsNotEmpty"
+    parameterLogicalId=(scopeId "CidrIp")
+  }}
+  {{parameter  "securityGroupId" logicalId="DestinationSecurityGroupId"}}
+  {{
+    condition "m:core" 'is_not_empty'
+    logicalId="DestinationSecurityGroupIdIsNotEmpty"
+    parameterLogicalId=(scopeId "DestinationSecurityGroupId")
+  }}
+
   {{parameter  "fromPortnumber" logicalId="FromPortnumber" default="0"}}
   {{parameter  "toPortnumber" logicalId="ToPortnumber" default="65535"}}
   {{parameter  "ipProtocol" logicalId="IpProtocol" default="tcp"}}
+ 
 
-  {{#resource "security_group_egress" logicalId="SecurityGroupEgress"}}
+ {{#resource "security_group_egress" logicalId="SecurityGroupEgress"}}
    "Properties": {
     "FromPort":{"Ref": "FromPortnumber"},
     "IpProtocol":{"Ref": "IpProtocol"},
     "ToPort":{"Ref": "ToPortnumber"},
     "GroupId":{"Ref": "groupId"},
-    "CidrIp":{"Ref": "CidrIp"}
+    "CidrIp":{"Fn::If": ["CidrIpIsNotEmpty", {"Ref": "CidrIp"}, {"Ref": "AWS::NoValue"}]},
+    "DestinationSecurityGroupId": {"Fn::If": ["DestinationSecurityGroupIdIsNotEmpty", {"Ref": "DestinationSecurityGroupId"}, {"Ref": "AWS::NoValue"}]}
    }
   {{/resource}}
 {{/layout}}

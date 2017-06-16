@@ -1,0 +1,84 @@
+{
+    "configSets": {
+        "default": ["install_cfn", "routes", "hpsaagentinstall", "rename", "bs_hardware"]
+    },
+    "install_cfn" : {
+        "files" : {
+            "c:\\cfn\\cfn-hup.conf" : {
+                "content" : {
+                    "Fn::Join" : [
+                        "",
+                        [
+                            "[main]\n",
+                            "stack=", {{helper "m:core" "propertyValue" stackId}}, "\n",
+                            "region=", {{helper "m:core" "propertyValue" awsRegion}}, "\n"
+                        ]
+                    ]
+                }
+            },
+            "c:\\cfn\\hooks.d\\cfn-auto-reloader.conf" : {
+                "content": {
+                    "Fn::Join" : [
+                        "",
+                        [
+                            "[cfn-auto-reloader-hook]\n",
+                            "triggers=post.update\n",
+                            "path=Resources.Instance.Metadata.AWS::CloudFormation::Init\n",
+                            "action=cfn-init.exe -v -s ", {{helper "m:core" "propertyValue" stackId}},
+                            " -r Instance",
+                            " --region ", {{helper "m:core" "propertyValue" awsRegion}}, "\n"
+                        ]
+                    ]
+                }
+            },
+            "C:\\sungardas\\opsware-agent-50.0.59798.1-win32-6.1-X64.exe": {
+                "source": { "Fn::Join" : [ "", ["https://s3.amazonaws.com/", { "Ref" : "HpsaBucket" }, "/opsware-agent-50.0.59798.1-win32-6.1-X64.exe"]]}
+            },
+            "C:\\sungardas\\Windows.ps1": {
+                "source": { "Fn::Join" : [ "", ["https://s3.amazonaws.com/", { "Ref" : "HpsaBucket" }, "/Windows.ps1"]]}
+            }
+        },
+        "services" : {
+            "windows" : {
+                "cfn-hup" : {
+                    "enabled" : "true",
+                    "ensureRunning" : "true",
+                    "files" : ["c:\\cfn\\cfn-hup.conf", "c:\\cfn\\hooks.d\\cfn-auto-reloader.conf"]
+                }
+            }
+        }
+    },
+    "rename": {
+        "commands": {
+            "rename-computer": {
+                "command": { "Fn::Join" : ["", ["powershell.exe -Command Rename-Computer -NewName ", {{helper "m:core" "propertyValue" hostname}}]]},
+                "waitAfterCompletion": 0
+            }
+        }
+    },
+    "routes": {
+        "commands": {
+            "add-routes": {
+                "command": { "Fn::Join": ["", ["powershell.exe -executionpolicy unrestricted -Command C:\\sungardas\\Windows.ps1 "," -gatewayip ", "{{opsware_address}}"]]},
+                "waitAfterCompletion": 0
+            }
+        }
+    },
+    "hpsaagentinstall": {
+        "commands": {
+            "1-HPSAAgent-Install": {
+                "command": "C:\\sungardas\\opsware-agent-50.0.59798.1-win32-6.1-X64.exe --opsw_gw_addr {{opsware_address}}:{{opsware_port}}"
+            }
+        },
+        "waitAfterCompletion": 0
+    },
+    "bs_hardware": {
+        "commands": {
+            "bs-hardware": {
+                "command": "C:\\Program Files\\Opsware\\agent\\pylibs\\cog\\bs_hardware.bat"
+            }
+        },
+        "waitAfterCompletion": 0
+    }
+
+}

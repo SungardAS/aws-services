@@ -1,0 +1,5 @@
+{{#layout}}
+  {{parameter "m:lambda" "function/timeout" logicalId="Timeout" default="120"}}
+
+  {{set "function_and_role" timeout=(ref "Timeout")}}
+{{/layout}}

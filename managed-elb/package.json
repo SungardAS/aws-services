@@ -1,0 +1,33 @@
+{
+  "name": "manage-elb",
+  "version": "0.0.1",
+  "description": "Condensation particles for building AWS ELB CloudFormation templates.",
+  "scripts": {
+    "test": "./node_modules/.bin/mocha",
+    "build": "./node_modules/.bin/gulp condensation:build",
+    "deploy": "./node_modules/.bin/gulp condensation:deploy",
+    "gulp": "./node_modules/.bin/gulp"
+  },
+  "license": "Apache-2.0",
+  "keywords": [
+    "condensation-particles",
+    "aws",
+    "cloudformation",
+    "cloud",
+    "formation",
+    "aws",
+    "vpc"
+  ],
+  "dependencies": {
+    "condensation": "^0.5.5",
+    "config": "^1.21.0",
+    "gulp": "^3.9.1",
+    "particles-core": "^0.4.5",
+    "particles-vpc": "^0.5.1",
+    "particles-ec2": "^0.3.1"
+  },
+  "devDependencies": {
+    "condensation-particle-tests": "^0.5.2",
+    "mocha": "^2.5.3"
+  }
+}

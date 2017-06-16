@@ -1,0 +1,61 @@
+{
+          "Fn::Base64": {
+            "Fn::Join": [
+              "",
+              [
+                "#!/bin/bash\n",
+		"sleep 20\n",
+		"if   grep -i \"release 7\" /etc/redhat-release ; then\n",
+                "yum -y install wget\n",
+                "wget -r --no-parent -A 'epel-release-*.rpm' http://dl.fedoraproject.org/pub/epel/7/x86_64/e/ \n",
+                "rpm -Uvh dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-*.rpm \n",
+                "yum install -y https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-latest.amzn1.noarch.rpm \n",
+                "ln -s /usr/local/lib/python2.7/site-packages/cfnbootstrap/  /usr/lib/python2.7/site-packages/cfnbootstrap \n",
+                "cd /tmp;wget https://s3.amazonaws.com/",
+		{
+                  "Ref": "HpsaBucket"
+                },
+                "/opsware-agent-50.0.47910.0-linux-7SERVER-X86_64\n",
+		"sleep 5\n",
+		"chmod 777 /tmp/opsware-agent-50.0.47910.0-linux-7SERVER-X86_64;/tmp/opsware-agent-50.0.47910.0-linux-7SERVER-X86_64 --opsw_gw_addr 65.79.161.92:3001\n",
+		"else \n",
+		"sudo rpm -e epel-release-7-5.noarch\n",
+		"wget http://download.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm\n",
+		"rpm -ivh epel-release-6-8.noarch.rpm\n",
+		"yum clean all;sudo rpmdb -v --rebuilddb\n",
+		"yum -y install libselinux-python\n",
+		"yum install -y https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-latest.amzn1.noarch.rpm \n",
+		"ln -s /usr/local/lib/python2.7/site-packages/cfnbootstrap/  /usr/lib/python2.6/site-packages/cfnbootstrap\n",
+		"fi\n",
+                "echo \"preserve_hostname: true\" >> /etc/cloud/cloud.cfg\n",
+                "echo ",
+                {
+                  "Ref": "Hostname"
+                },
+		" > /etc/hostname\n", 
+		"/opt/opsware/agent/pylibs/cog/bs_hardware\n",               
+                "/opt/aws/bin/cfn-init -v ",
+                " --stack ",
+                {
+                  "Ref": "AWS::StackName"
+                },
+                " --resource Instance ",
+                " --region ",
+                {
+                  "Ref": "AWS::Region"
+                },
+                "\n",
+                "/opt/aws/bin/cfn-signal -e $? ",
+                " --stack ",
+                {
+                  "Ref": "AWS::StackName"
+                },
+                " --resource ManagedVMWaitCondition ",
+                " --region ",
+                {
+                  "Ref": "AWS::Region"
+                }
+              ]
+            ]
+          }
+}

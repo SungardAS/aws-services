@@ -1,0 +1,16 @@
+{{!-- Nat Gateway --}}
+
+{{parameter "m:core" "base" type="AWS::EC2::Subnet::Id" logicalId="publicSubnetId" description="Public Subnet ID"}}
+
+{{resource "eip" logicalId="EIP"}}
+
+{{#resource "nat_gateway"
+  logicalId="NAT"
+}}
+  "Properties": {
+   "AllocationId":{{partial "m:core" "fn_get_att" logicalId=(scopeId "EIP") attributeName="AllocationId"}},
+   "SubnetId": {{ref "publicSubnetId"}}
+   }
+{{/resource}}
+
+{{output "m:core" "base" logicalId="NatGatewayId" value=(ref "NAT")}}

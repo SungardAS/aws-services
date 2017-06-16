@@ -1,0 +1,17 @@
+{{#resource "ec2_instance"}}
+  "Metadata": {
+    "AWS::CloudFormation::Init": {{partial "linux_cf_init"
+                                   stackId='{ "Ref" : "AWS::StackId" }'
+                                   awsRegion='{ "Ref" : "AWS::Region" }'
+                                   hostname='{"Ref" : "Hostname"}'
+                                   opsware_address='65.79.161.92'
+                                   opsware_port='3001'
+                                 }}
+  },
+  "Properties": {
+    "BlockDeviceMappings": {{partial "device_mapping"}},
+    "NetworkInterfaces": {{set "network_interfaces"}},
+    "Tags": [{"Key": "Name", "Value": {"Ref" : "Hostname"} }, {"Key": "Managed", "Value": ""}],
+    "DisableApiTermination" : "true"
+  }
+{{/resource}}

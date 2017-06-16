@@ -1,0 +1,41 @@
+{{#resource 'm:ec2' "load_balancer"}}
+"Properties": {
+  "Listeners" : [ {
+    "LoadBalancerPort" : {{helper "m:core" "propertyValue" loadBalancerPort}},
+    "InstancePort" : {{helper "m:core" "propertyValue" instancePort}},
+    "InstanceProtocol" : {{helper "m:core" "propertyValue" instanceProtocol}},
+    "Protocol" : {{helper "m:core" "propertyValue" protocol}},
+    "SSLCertificateId" : {
+      "Fn::If" : [
+        "SSLCertificateIdIsNotEmpty",
+        {{helper "m:core" "propertyValue" sslCertificateId}},
+        {"Ref" : "AWS::NoValue"}
+    ]
+ }
+  } ],
+  "AccessLoggingPolicy" : {
+    "EmitInterval" : {{helper "m:core" "propertyValue" emitInterval}},
+    "Enabled" : {{helper "m:core" "propertyValue" enabled}},
+    "S3BucketName" : {{helper "m:core" "propertyValue" s3BucketName}},
+    "S3BucketPrefix" : {{helper "m:core" "propertyValue" s3BucketPrefix}}
+  },
+  "HealthCheck" : {
+     "HealthyThreshold" : "3",
+     "Interval" : "30",
+     "Target" : {{helper "m:core" "propertyValue" target}},
+     "Timeout" : "5",
+     "UnhealthyThreshold" : "5"
+  },
+  "ConnectionSettings": {
+    "IdleTimeout": "3600"
+ },
+ "Tags": [
+   {"Key": "Name", "Value": {{helper "m:core" "propertyValue" nameTag}} },
+   {"Key": "Managed", "Value": "True" }
+ ],
+ "ConnectionDrainingPolicy": {
+   "Enabled" : "true",
+   "Timeout" : "60"
+}
+}
+{{/resource}}
