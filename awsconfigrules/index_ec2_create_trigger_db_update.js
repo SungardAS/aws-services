@@ -269,6 +269,13 @@ function insertEbsVolumesDatatoDB(invokingEvent, ruleParameters, callback) {
                                     volumeData.Volumes.forEach(function(volume) {
                                         var endure_tag_key = ruleParameters.EndureTagKey;
                                         var vvolume_name = invokingEvent.configurationItem.tags.Name ? invokingEvent.configurationItem.tags.Name : ' ';
+
+                                        // Attaching Volume Id to Volume Name.
+                                        // This will be useful to reference the volume when we are deleting it from
+                                        // AWS Console rather than Managed Cloud AWS portal,
+                                        // since this volume will be part of MIGRATED or DR instance
+                                        vvolume_name += `:${volume.VolumeId}`;
+
                                         var vencrypt = volume.Encrypted.toString();
                                         var vsize = volume.Size;
                                         var vaccount = invokingEvent.configurationItem.awsAccountId;
