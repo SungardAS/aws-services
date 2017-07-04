@@ -6,11 +6,17 @@
 *   - MYSQL_PASSWORD (encrypted)
 *   - MYSQL_DB_INSTANCE
 *   - MASTER_AWS_ACCOUNT
+*   - QRY_VPC_ID (encrypted)
+*   - QRY_OS_ID (encrypted)
+*   - QRY_INS_VOL (encrypted)
+*   - QRY_INS_OS (encrypted)
+*   - QRY_UPDT_OS (encrypted)
 *
 **********************************************************************************************/
 const aws = require('aws-sdk');
 const mysql = require('mysql');
 const uuid = require('node-uuid');
+const util = require('util');
 
 const config = new aws.ConfigService();
 const ec2 = new aws.EC2();
@@ -118,6 +124,7 @@ function connectDB(callback) {
                     connection.connect(function (error) {
                         if (error) {
                             console.log(`Got an error while connection establishment: ${error}`);
+                            callback(error, null);
                         }
                     });
                     callback(null, connection);
@@ -143,15 +150,23 @@ function getVpcDatabaseId(vpc_stackname, callback) {
     // Connect to database
     connectDB(function(err, connection){
         if (!err) {
-            var queryStr = (`select id from managedvpc where stack_name = '${vpc_stackname}'`);
-
-            connection.query(queryStr, function (err, result) {
-                connection.end();
-                if(!err) {
-                    var dvpc_id = result[0].id;
-                    callback(null, dvpc_id);
+            var encrypted_qry_vpc_id = process.env.QRY_VPC_ID;
+            decryptData(encrypted_qry_vpc_id, function(err, qry_vpc_id) {
+                if (!err) {
+                    var queryStr = util.format(qry_vpc_id, vpc_stackname);
+                    console.log("qry vpc id", queryStr);
+                    connection.query(queryStr, function (err, result) {
+                        connection.end();
+                        if(!err) {
+                            var dvpc_id = result[0].id;
+                            callback(null, dvpc_id);
+                        } else {
+                            callback(`Error while perfoming query! ${err}`, null);
+                        }
+                    });
                 } else {
-                    callback(`Error while perfoming query! ${err}`, null);
+                    console.log(err);
+                    callback(err, null);
                 }
             });
         } else {
@@ -239,88 +254,110 @@ function insertEbsVolumesDatatoDB(invokingEvent, ruleParameters, callback) {
         if (!err) {
             checkDefined(invokingEvent.configurationItem.configuration.instanceId, 'instanceId');
             var instanceId = invokingEvent.configurationItem.configuration.instanceId;
-            var queryStr = (`select id from managedos where instance_id = '${instanceId}'`);
+            var encrypted_qry_os_id = process.env.QRY_OS_ID;
+            decryptData(encrypted_qry_os_id, function(err, qry_os_id) {
+                if (!err) {
+                    var queryStr = util.format(qry_os_id, instanceId);
+                    console.log("qry os id", qry_os_id);
+                    connection.query(queryStr, function (err, result) {
+                        connection.end();
+                        if(!err) {
+                            var dinstance_id = result[0].id;
+                            getCustomerCredentials(invokingEvent, ruleParameters, function(err, customer_creds) {
+                                if (!err) {
+                                    var ec2 = new aws.EC2({credentials: customer_creds});
+                                    checkDefined(invokingEvent.configurationItem.configuration.blockDeviceMappings, 'blockDeviceMappings');
+                                    var blockDevices = invokingEvent.configurationItem.configuration.blockDeviceMappings;
+                                    var volumeids = [];
+                                    blockDevices.forEach(function(device){
+                                        if (device.deviceName !== '/dev/xvda' && device.deviceName !== '/dev/sda1') {
+                                            volumeids.push(device.ebs.volumeId);
+                                        }
+                                    });
+                                    if (volumeids.length < 1) {
+                                        callback("Skipped", null);
+                                    }
+                                    var params = {
+                                        VolumeIds: volumeids
+                                    };
+                                    ec2.describeVolumes(params, function(err, volumeData){
+                                        if(err){
+                                            callback(err, null);
+                                        } else {
+                                            volumeData.Volumes.forEach(function(volume) {
+                                                var endure_tag_key = ruleParameters.EndureTagKey;
+                                                var vvolume_name = invokingEvent.configurationItem.tags.Name ? invokingEvent.configurationItem.tags.Name : ' ';
 
-            connection.query(queryStr, function (err, result) {
-                connection.end();
-                if(!err) {
-                    var dinstance_id = result[0].id;
-                    getCustomerCredentials(invokingEvent, ruleParameters, function(err, customer_creds) {
-                        if (!err) {
-                            var ec2 = new aws.EC2({credentials: customer_creds});
-                            checkDefined(invokingEvent.configurationItem.configuration.blockDeviceMappings, 'blockDeviceMappings');
-                            var blockDevices = invokingEvent.configurationItem.configuration.blockDeviceMappings;
-                            var volumeids = [];
-                            blockDevices.forEach(function(device){
-                                if (device.deviceName !== '/dev/xvda' && device.deviceName !== '/dev/sda1') {
-                                    volumeids.push(device.ebs.volumeId);
-                                }
-                            });
-                            if (volumeids.length < 1) {
-                                callback("Skipped", null);
-                            }
-                            var params = {
-                                VolumeIds: volumeids
-                            };
-                            ec2.describeVolumes(params, function(err, volumeData){
-                                if(err){
-                                    callback(err, null);
-                                } else {
-                                    volumeData.Volumes.forEach(function(volume) {
-                                        var endure_tag_key = ruleParameters.EndureTagKey;
-                                        var vvolume_name = invokingEvent.configurationItem.tags.Name ? invokingEvent.configurationItem.tags.Name : ' ';
+                                                // Attaching Volume Id to Volume Name.
+                                                // This will be useful to reference the volume when we are deleting it from
+                                                // AWS Console rather than Managed Cloud AWS portal,
+                                                // since this volume will be part of MIGRATED or DR instance
+                                                vvolume_name += `:${volume.VolumeId}`;
 
-                                        // Attaching Volume Id to Volume Name.
-                                        // This will be useful to reference the volume when we are deleting it from
-                                        // AWS Console rather than Managed Cloud AWS portal,
-                                        // since this volume will be part of MIGRATED or DR instance
-                                        vvolume_name += `:${volume.VolumeId}`;
+                                                var vencrypt = volume.Encrypted.toString();
+                                                var vsize = volume.Size;
+                                                var vaccount = invokingEvent.configurationItem.awsAccountId;
+                                                var vregion = invokingEvent.configurationItem.awsRegion;
+                                                var vstatus = 'CREATE_COMPLETE';
+                                                var vuuid = uuid.v4();
+                                                var vmanagedos_id = dinstance_id;
+                                                var vcreation_type = invokingEvent.configurationItem.tags[endure_tag_key].toUpperCase();
+                                                var data = {
+                                                    volume_name: vvolume_name,
+                                                    encrypt: vencrypt,
+                                                    size: vsize,
+                                                    account: vaccount,
+                                                    region: vregion,
+                                                    status: vstatus,
+                                                    uuid: vuuid,
+                                                    managedos_id: vmanagedos_id,
+                                                    creation_type: vcreation_type
+                                                };
 
-                                        var vencrypt = volume.Encrypted.toString();
-                                        var vsize = volume.Size;
-                                        var vaccount = invokingEvent.configurationItem.awsAccountId;
-                                        var vregion = invokingEvent.configurationItem.awsRegion;
-                                        var vstatus = 'CREATE_COMPLETE';
-                                        var vuuid = uuid.v4();
-                                        var vmanagedos_id = dinstance_id;
-                                        var vcreation_type = invokingEvent.configurationItem.tags[endure_tag_key].toUpperCase();
-                                        var data = {
-                                            volume_name: vvolume_name,
-                                            encrypt: vencrypt,
-                                            size: vsize,
-                                            account: vaccount,
-                                            region: vregion,
-                                            status: vstatus,
-                                            uuid: vuuid,
-                                            managedos_id: vmanagedos_id,
-                                            creation_type: vcreation_type
-                                        };
-
-                                        // Connect to database
-                                        connectDB(function(err, connection) {
-                                            if(!err) {
-                                                var queryStr = (`INSERT INTO managedvolume (volume_name, encrypt, size, account, region, status, ` +
-                                                                `uuid, managedos_id, creation_type) VALUES ('${data.volume_name}', '${data.encrypt}', ` +
-                                                                `'${data.size}', '${data.account}', '${data.region}', '${data.status}', ` +
-                                                                `'${data.uuid}', '${data.managedos_id}', '${data.creation_type}')`);
-
-                                                connection.query(queryStr, function (err, result) {
-                                                    connection.end();
+                                                // Connect to database
+                                                connectDB(function(err, connection) {
                                                     if(!err) {
-                                                        console.log("Inserted 1 row: ", result);
-                                                        callback(null, true);
+                                                        var encrypted_qry_ins_vol = process.env.QRY_INS_VOL;
+                                                        decryptData(encrypted_qry_ins_vol, function(err, qry_ins_vol) {
+                                                            if (!err) {
+                                                                var queryStr = util.format(qry_ins_vol,
+                                                                                           data.volume_name,
+                                                                                           data.encrypt,
+                                                                                           data.size,
+                                                                                           data.account,
+                                                                                           data.region,
+                                                                                           data.status,
+                                                                                           data.uuid,
+                                                                                           data.managedos_id,
+                                                                                           data.creation_type);
+                                                                console.log("qry ins vol", queryStr);
+                                                                connection.query(queryStr, function (err, result) {
+                                                                    connection.end();
+                                                                    if(!err) {
+                                                                        console.log("Inserted 1 row: ", result);
+                                                                        callback(null, true);
+                                                                    } else {
+                                                                        callback(`Error while perfoming query: ${err}`, false);
+                                                                    }
+                                                                });
+                                                            } else {
+                                                                console.log(err);
+                                                                callback(err, null);
+                                                            }
+                                                        });
                                                     } else {
-                                                        callback(`Error while perfoming query: ${err}`, false);
+                                                        callback(err, null);
                                                     }
                                                 });
-                                            } else {
-                                                callback(err, null);
-                                            }
-                                        });
+                                            });
+                                        }
                                     });
+                                } else {
+                                    callback(err, null);
                                 }
                             });
                         } else {
+                            console.log(err);
                             callback(err, null);
                         }
                     });
@@ -343,19 +380,36 @@ function insertInstanceDataToDB(data, callback) {
     connectDB(function(err, connection){
         if(!err) {
 
-            var queryStr = (`INSERT INTO managedos (host_name, key_name, instance_id, instance_type, os_type, private_ip_address, ` +
-                            `eip, account, region, status, uuid, vpc_id, creation_type) VALUES ` +
-                            `('${data.host_name}', '${data.key_name}', '${data.instance_id}', '${data.instance_type}', '${data.os_type}', ` +
-                            `'${data.private_ip_address}', '${data.eip}', '${data.account}', '${data.region}', '${data.status}', ` +
-                            `'${data.uuid}', '${data.vpc_id}', '${data.creation_type}')`);
-
-            connection.query(queryStr, function (err, result) {
-                connection.end();
-                if(!err) {
-                    console.log("Inserted 1 row: ", result);
-                    callback(null, true);
+            var encrypted_qry_ins_os = process.env.QRY_INS_OS;
+            decryptData(encrypted_qry_ins_os, function(err, qry_ins_os) {
+                if (!err) {
+                    var queryStr = util.format(qry_ins_os,
+                                               data.host_name,
+                                               data.key_name,
+                                               data.instance_id,
+                                               data.instance_type,
+                                               data.os_type,
+                                               data.private_ip_address,
+                                               data.eip,
+                                               data.account,
+                                               data.region,
+                                               data.status,
+                                               data.uuid,
+                                               data.vpc_id,
+                                               data.creation_type);
+                    console.log("qry ins os", qry_ins_os);
+                    connection.query(queryStr, function (err, result) {
+                        connection.end();
+                        if(!err) {
+                            console.log("Inserted 1 row: ", result);
+                            callback(null, true);
+                        } else {
+                            callback(`Error while perfoming query: ${err}`, false);
+                        }
+                    });
                 } else {
-                    callback(`Error while perfoming query: ${err}`, false);
+                    console.log(err);
+                    callback(err, null);
                 }
             });
         } else {
@@ -365,25 +419,42 @@ function insertInstanceDataToDB(data, callback) {
 }
 
 
-// Insert Instance data to db
+// Update Instance data to db
 function updateInstanceData(data, callback) {
 
     // Connect to database
     connectDB(function(err, connection){
         if(!err) {
 
-            var queryStr = (`UPDATE managedos SET host_name = '${data.host_name}', key_name = '${data.key_name}', ` +
-                            `instance_type = '${data.instance_type}', os_type = '${data.os_type}', private_ip_address = '${data.private_ip_address}', ` +
-                            `eip = '${data.eip}', account = '${data.account}', region = '${data.region}', status = '${data.status}', ` +
-                            `vpc_id = ${data.vpc_id}, creation_type = '${data.creation_type}' WHERE instance_id = '${data.instance_id}'`);
-
-            connection.query(queryStr, function (err, result) {
-                connection.end();
-                if(!err) {
-                    console.log("Updated 1 row: ", result);
-                    callback(null, true);
+            var encrypted_qry_updt_os = process.env.QRY_UPDT_OS;
+            decryptData(encrypted_qry_updt_os, function(err, qry_updt_os) {
+                if (!err) {
+                    var queryStr = util.format(qry_updt_os,
+                                               data.host_name,
+                                               data.key_name,
+                                               data.instance_type,
+                                               data.os_type,
+                                               data.private_ip_address,
+                                               data.eip,
+                                               data.account,
+                                               data.region,
+                                               data.status,
+                                               data.vpc_id,
+                                               data.creation_type,
+                                               data.instance_id);
+                    console.log("qry updt os", qry_updt_os);
+                    connection.query(queryStr, function (err, result) {
+                        connection.end();
+                        if(!err) {
+                            console.log("Updated 1 row: ", result);
+                            callback(null, true);
+                        } else {
+                            callback(`Error while perfoming query: ${err}`, false);
+                        }
+                    });
                 } else {
-                    callback(`Error while perfoming query: ${err}`, false);
+                    console.log(err);
+                    callback(err, null);
                 }
             });
         } else {
@@ -425,7 +496,7 @@ function configInsertValidate(invokingEvent, ruleParameters, callback) {
         }
     } else {
         console.log(`Error: ${invokingEvent.configurationItemDiff} is null`);
-        return false;
+        callback(null, false);
     }
 }
 
@@ -461,7 +532,7 @@ function configUpdateValidate(invokingEvent, ruleParameters, callback) {
         }
     } else {
         console.log(`Error: ${invokingEvent.configurationItemDiff} is null`);
-        return false;
+        callback(null, false);
     }
 }
 
@@ -470,17 +541,26 @@ function getDbInstanceId(instanceId, callback) {
     // Connect to database
     connectDB(function(err, connection){
         if(!err) {
-            var queryStr = (`select id from managedos where instance_id = '${instanceId}'`);
-            connection.query(queryStr, function (err, result) {
-                connection.end();
-                if(!err) {
-                    if (result.length > 0) {
-                        callback(null, result[0].id);
-                    } else {
-                        callback(null, false);
-                    }
+            var encrypted_qry_os_id = process.env.QRY_OS_ID;
+            decryptData(encrypted_qry_os_id, function(err, qry_os_id) {
+                if (!err) {
+                    var queryStr = util.format(qry_os_id, instanceId);
+                    console.log("qry os id", qry_os_id);
+                    connection.query(queryStr, function (err, result) {
+                        connection.end();
+                        if(!err) {
+                            if (result.length > 0) {
+                                callback(null, result[0].id);
+                            } else {
+                                callback(null, false);
+                            }
+                        } else {
+                            callback(`Error while perfoming query! ${err}`, null);
+                        }
+                    });
                 } else {
-                    callback(`Error while perfoming query! ${err}`, null);
+                    console.log(err);
+                    callback(err, null);
                 }
             });
         } else {
@@ -521,7 +601,7 @@ exports.handler = (event, context, callback) => {
                                     callback("Success");
                                 } else {
                                     console.log(`Did not insert volume data to db: ${insertVolumeDbError}`);
-                                    callback(`Did not insert volume data to db: ${insertVolumeDbError}`);
+                                    callback(`Error: Did not insert volume data to db: ${insertVolumeDbError}`);
                                 }
                             });
                         } else {
@@ -531,6 +611,7 @@ exports.handler = (event, context, callback) => {
                     });
                 } else {
                     console.log(`Could not collect data: ${data}, error: ${error}`);
+                    callback(`Error: Could not collect data: ${data}, error: ${error}`);
                 }
             });
         } else {
@@ -552,11 +633,13 @@ exports.handler = (event, context, callback) => {
                                 });
                             } else {
                                 console.log(`Could not collect update data: ${updateData}, error: ${err}`);
+                                callback(`Error: Could not collect update data: ${updateData}, error: ${err}`);
                             }
                         });
                     });
                 } else {
                     console.log("Skiping.. Config Change");
+                    callback("Skiping.. Config Change");
                 }
             });
         }
