@@ -5,6 +5,7 @@
 *   - MYSQL_USER (encrypted)
 *   - MYSQL_PASSWORD (encrypted)
 *   - MYSQL_DB_INSTANCE
+*   - MYSQL_DB_NAME
 *   - MASTER_AWS_ACCOUNT
 *   - QRY_VPC_ID (encrypted)
 *   - QRY_OS_ID (encrypted)
@@ -107,7 +108,7 @@ function decryptData(encrypted_data, callback) {
 function connectDB(callback) {
     const dbhostname = process.env.MYSQL_DB_INSTANCE;
     const dbport = 3306;
-    const dbname = 'msaws';
+    const dbname = process.env.MYSQL_DB_NAME;
     var encrypted_dbuser = process.env.MYSQL_USER;
     var encrypted_dbpassword = process.env.MYSQL_PASSWORD;
     decryptData(encrypted_dbuser, function(err, dbuser){
