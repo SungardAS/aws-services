@@ -155,7 +155,6 @@ function getVpcDatabaseId(vpc_stackname, callback) {
             decryptData(encrypted_qry_vpc_id, function(err, qry_vpc_id) {
                 if (!err) {
                     var queryStr = util.format(qry_vpc_id, vpc_stackname);
-                    console.log("qry vpc id", queryStr);
                     connection.query(queryStr, function (err, result) {
                         connection.end();
                         if(!err) {
@@ -259,7 +258,6 @@ function insertEbsVolumesDatatoDB(invokingEvent, ruleParameters, callback) {
             decryptData(encrypted_qry_os_id, function(err, qry_os_id) {
                 if (!err) {
                     var queryStr = util.format(qry_os_id, instanceId);
-                    console.log("qry os id", qry_os_id);
                     connection.query(queryStr, function (err, result) {
                         connection.end();
                         if(!err) {
@@ -331,7 +329,6 @@ function insertEbsVolumesDatatoDB(invokingEvent, ruleParameters, callback) {
                                                                                            data.uuid,
                                                                                            data.managedos_id,
                                                                                            data.creation_type);
-                                                                console.log("qry ins vol", queryStr);
                                                                 connection.query(queryStr, function (err, result) {
                                                                     connection.end();
                                                                     if(!err) {
@@ -398,7 +395,6 @@ function insertInstanceDataToDB(data, callback) {
                                                data.uuid,
                                                data.vpc_id,
                                                data.creation_type);
-                    console.log("qry ins os", qry_ins_os);
                     connection.query(queryStr, function (err, result) {
                         connection.end();
                         if(!err) {
@@ -443,7 +439,6 @@ function updateInstanceData(data, callback) {
                                                data.vpc_id,
                                                data.creation_type,
                                                data.instance_id);
-                    console.log("qry updt os", qry_updt_os);
                     connection.query(queryStr, function (err, result) {
                         connection.end();
                         if(!err) {
@@ -546,7 +541,6 @@ function getDbInstanceId(instanceId, callback) {
             decryptData(encrypted_qry_os_id, function(err, qry_os_id) {
                 if (!err) {
                     var queryStr = util.format(qry_os_id, instanceId);
-                    console.log("qry os id", qry_os_id);
                     connection.query(queryStr, function (err, result) {
                         connection.end();
                         if(!err) {
