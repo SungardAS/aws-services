@@ -47,6 +47,12 @@ function getCustomerCredentials(invokingEvent, ruleParameters, callback) {
               RoleArn: `arn:aws:iam::${customer_account}:role/${customer_role}`,
               RoleSessionName: "auth"
             };
+            var external_id = ruleParameters.ExternalId;
+            if (external_id !== undefined && external_id.trim() !== '') {
+                nextOpts.ExternalId = external_id;
+            } else {
+                console.log("No external id provided. Continuing without external id...");
+            }
             nextSTS.assumeRole(nextOpts, function(err, data){
                 if(err){
                     callback(err, null);
