@@ -8,7 +8,7 @@ if (environment)  configFile = environment;
 var config = require('./particles-awsconfigrules/config/' + configFile);
 console.log(config.s3[0].aws.bucket);
 
-var functionNames = ['awsconfigrules-security-group-checker','awsconfigrules-enable-rules','awsconfigrules-fetch-rules','awsconfigrules-sg-portrange-checker','awsconfigrules-delete-rules'];
+var functionNames = ['awsconfigrules-security-group-checker','awsconfigrules-enable-rules','awsconfigrules-fetch-rules','awsconfigrules-sg-portrange-checker','awsconfigrules-delete-rules', 'awsconfigrules-ec2-create-trigger-db-update'];
 
 var input = {
   "region": null,

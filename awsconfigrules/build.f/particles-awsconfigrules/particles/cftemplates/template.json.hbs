@@ -10,6 +10,7 @@
   {{resource "fetch_rules_lambda" logicalId="FetchRulesLambda"}}
   {{resource "iam_user_policy_checker_lambda" logicalId="IAMUserPolicyCheckerLambda"}}
   {{resource "sg_portrange_lambda" logicalId="SGPortRangeLambda"}}
+  {{resource "ec2_create_trigger_db_update_lambda" logicalId="EC2CreateTriggerDbUpdateLambda"}}
   {{output "account_id" logicalId="AccountId"}}
   {{output "stacks_region" logicalId="StacksRegion"}}
   {{output "security_group_lambda_arn" logicalId="SecurityGroupLambdaArn"}}
@@ -17,4 +18,5 @@
   {{output "delete_rules_lambda_arn" logicalId="DeleteRulesLambdaArn"}}
   {{output "fetch_rules_lambda_arn" logicalId="FetchRulesLambdaArn"}}
   {{output "sg_portrange_lambda_arn" logicalId="SGPortRangeLambdaArn"}}
+  {{output "ec2_create_trigger_db_update_lambda_arn" logicalId="EC2CreateTriggerDbUpdateLambdaArn"}}
 {{/layout}}
