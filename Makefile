@@ -1,5 +1,5 @@
 
-BUILD_SUBDIRS := lib awsconfig cloudtrail awsconfigrules awsconfig-notification-alert enhancesnapshot
+BUILD_SUBDIRS := lib awsconfig cloudtrail awsconfigrules awsconfig-notification-alert enhancesnapshot awscfn-stack-launcher managed-os managed-elb managed-vpc managed-volume
 
 ifdef AWS_REGION
 else
