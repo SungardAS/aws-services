@@ -72,7 +72,9 @@ function getCustomerCredentials(invokingEvent, ruleParameters, callback) {
 function getVpcStackName(invokingEvent, ruleParameters, callback) {
     getCustomerCredentials(invokingEvent, ruleParameters, function(err, customer_creds) {
         if (!err) {
-            var ec2 = new aws.EC2({credentials: customer_creds});
+            checkDefined(invokingEvent.configurationItem.awsRegion, 'awsRegion');
+            var customer_region = invokingEvent.configurationItem.awsRegion;
+            var ec2 = new aws.EC2({region: customer_region, credentials: customer_creds});
             checkDefined(invokingEvent.configurationItem.configuration.vpcId, 'vpcId');
             var vpcid = invokingEvent.configurationItem.configuration.vpcId;
             var params = {
@@ -134,6 +136,7 @@ function connectDB(callback) {
                             callback(error, null);
                         }
                     });
+                    console.log("Database Connection Extblished");
                     callback(null, connection);
                 } else {
                     callback(err, "Failed to decrypt dbpassword");
@@ -270,7 +273,9 @@ function insertEbsVolumesDatatoDB(invokingEvent, ruleParameters, callback) {
                             var dinstance_id = result[0].id;
                             getCustomerCredentials(invokingEvent, ruleParameters, function(err, customer_creds) {
                                 if (!err) {
-                                    var ec2 = new aws.EC2({credentials: customer_creds});
+                                    checkDefined(invokingEvent.configurationItem.awsRegion, 'awsRegion');
+                                    var customer_region = invokingEvent.configurationItem.awsRegion;
+                                    var ec2 = new aws.EC2({region: customer_region, credentials: customer_creds});
                                     checkDefined(invokingEvent.configurationItem.configuration.blockDeviceMappings, 'blockDeviceMappings');
                                     var blockDevices = invokingEvent.configurationItem.configuration.blockDeviceMappings;
                                     var volumeids = [];
