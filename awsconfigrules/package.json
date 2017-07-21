@@ -11,6 +11,6 @@
   "dependencies": {
     "minimist": "^1.1.2",
     "mysql": "2.13.0",
-    "node-uuid": "1.4.8"
+    "uuid": "^2.0.2"
   }
 }

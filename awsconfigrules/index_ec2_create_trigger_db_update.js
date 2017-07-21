@@ -16,7 +16,7 @@
 **********************************************************************************************/
 const aws = require('aws-sdk');
 const mysql = require('mysql');
-const uuid = require('node-uuid');
+const uuid = require('uuid');
 const util = require('util');
 
 const config = new aws.ConfigService();
