@@ -15,9 +15,13 @@
 		{
                   "Ref": "HpsaBucket"
                 },
-                "/opsware-agent-50.0.47910.0-linux-7SERVER-X86_64\n",
+                "/opsware-agent-redhat\n",
 		"sleep 5\n",
-		"chmod 777 /tmp/opsware-agent-50.0.47910.0-linux-7SERVER-X86_64;/tmp/opsware-agent-50.0.47910.0-linux-7SERVER-X86_64 --opsw_gw_addr 65.79.161.92:3001\n",
+		"chmod 777 /tmp/opsware-agent-redhat;/tmp/opsware-agent-redhat --opsw_gw_addr ",
+                {
+                  "Ref": "opswareAddress"
+                },
+                ":3001\n",
 		"else \n",
 		"sudo rpm -e epel-release-7-5.noarch\n",
 		"wget http://download.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm\n",
