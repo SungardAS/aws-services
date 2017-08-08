@@ -32,11 +32,9 @@
                 }
             },
             "C:\\sungardas\\opsware-agent-win64.exe": {
-                "Condition": "is64BitOs",
                 "source": { "Fn::Join" : [ "", ["https://s3.amazonaws.com/", { "Ref" : "HpsaBucket" }, "/opsware-agent-win64.exe"]]}
             },
             "C:\\sungardas\\opsware-agent-win32.exe": {
-                "Condition": "is32BitOs",
                 "source": { "Fn::Join" : [ "", ["https://s3.amazonaws.com/", { "Ref" : "HpsaBucket" }, "/opsware-agent-win32.exe"]]}
             },
             "C:\\sungardas\\Windows.ps1": {
@@ -71,13 +69,8 @@
     },
     "hpsaagentinstall": {
         "commands": {
-            "1-HPSAAgent-Install": {
-                "Condition": "is64BitOs",
-                "command":  { "Fn::Join": ["", ["C:\\sungardas\\opsware-agent-win64.exe --opsw_gw_addr", { "Ref": "opswareAddress" },":{{opsware_port}}"]]}
-            },
-            "2-HPSAAgent-Install": {
-                "Condition": "is32BitOs",
-                "command": { "Fn::Join": ["", ["C:\\sungardas\\opsware-agent-win32.exe --opsw_gw_addr",{ "Ref": "opswareAddress" }, ":{{opsware_port}}"]]}
+            "HPSAAgent-Install": {
+                "command":  { "Fn::If" : [ "is32BitOs", {"Fn::Join": ["", ["C:\\sungardas\\opsware-agent-win32.exe --opsw_gw_addr ", { "Ref": "opswareAddress" },":{{opsware_port}}"]]},{"Fn::Join": ["", ["C:\\sungardas\\opsware-agent-win64.exe --opsw_gw_addr ",{ "Ref": "opswareAddress" }, ":{{opsware_port}}"]]}]}
             }
         },
         "waitAfterCompletion": 0
