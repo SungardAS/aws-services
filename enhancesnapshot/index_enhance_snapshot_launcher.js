@@ -1,7 +1,7 @@
 //chandra
 exports.handler = function (event, context) {
 
-  var aws_sts = new (require('../lib/aws/sts'))();
+  var aws_sts = new (require('../lib/aws/lambda'))();
   //var aws_stack = new (require('../lib/aws/stack'))();
   var aws_cfn = new (require('../lib/aws/awscfn'))();
   var aws_ec2 = new (require('../lib/aws/ec2'))();

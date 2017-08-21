@@ -21,7 +21,8 @@ exports.handler = function(event, context ) {
         return eval;
     }
 
-    var aws_sts = new (require('../lib/aws-promise/sts.js'))();
+    //var aws_sts = new (require('../lib/aws-promise/sts.js'))();
+    var aws_sts = new (require('../lib/aws/lambda'))();
     var aws_config = new (require('../lib/aws/awsconfig.js'))();
     if (event.ruleParameters){
         var ruleParameters = JSON.parse(event.ruleParameters);

@@ -1,7 +1,7 @@
 
 exports.handler = function (event, context) {
 
-  var aws_sts = new (require('../lib/aws/sts'))();
+  var aws_sts = new (require('../lib/aws/lambda'))();
   var aws_topic = new (require('../lib/aws/topic.js'))();
   var aws_config = new (require('../lib/aws/awsconfig.js'))();
   var aws_role = new (require('../lib/aws/role.js'))();

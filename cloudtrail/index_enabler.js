@@ -1,7 +1,7 @@
 
 exports.handler = function (event, context) {
 
-  var aws_sts = new (require('../lib/aws/sts'))();
+  var aws_sts = new (require('../lib/aws/lambda'))();
   var aws_bucket = new (require('../lib/aws/s3bucket.js'))();
   var aws_trail = new (require('../lib/aws/cloudtrail.js'))();
 
