@@ -1,7 +1,7 @@
 
 exports.handler = function (event, context) {
 
-    var aws_sts = new (require('../lib/aws/sts'))();
+    //var aws_sts = new (require('../lib/aws/sts'))();
     var aws_sg = new (require('../lib/aws/sg-range.js'))();
     var aws_config = new (require('../lib/aws/awsconfig.js'))();
     if (event.ruleParameters){
@@ -13,19 +13,19 @@ exports.handler = function (event, context) {
         event.roleExternalId = ruleParameters.roleExternalId;
     }
 
-    if (!event.federateRoleName)  event.federateRoleName = "federate";
+    //if (!event.federateRoleName)  event.federateRoleName = "federate";
 
-    var roles = [];
+    //var roles = [];
 
-    if (event.federateAccount) {
-        roles.push({roleArn:'arn:aws:iam::' + event.federateAccount + ':role/' + event.federateRoleName});
-        var admin_role = {roleArn:'arn:aws:iam::' + event.account + ':role/' + event.roleName};
-        if (event.roleExternalId) {
-            admin_role.externalId = event.roleExternalId;
-        }
-        roles.push(admin_role);
-    }
-    console.log(roles);
+    //if (event.federateAccount) {
+    //    roles.push({roleArn:'arn:aws:iam::' + event.federateAccount + ':role/' + event.federateRoleName});
+    //    var admin_role = {roleArn:'arn:aws:iam::' + event.account + ':role/' + event.roleName};
+    //    if (event.roleExternalId) {
+    //        admin_role.externalId = event.roleExternalId;
+    //    }
+    //    roles.push(admin_role);
+   // }
+   // console.log(roles);
 
     var sessionName = event.sessionName;
     if (sessionName == null || sessionName == "") {
@@ -41,13 +41,14 @@ exports.handler = function (event, context) {
 
     var input = {
         sessionName: sessionName,
-        roles: roles,
+     //   roles: roles,
         region: ruleParameters.region,
         resourceType: invokingEvent.configurationItem.resourceType,
         timeStamp: invokingEvent.configurationItem.configurationItemCaptureTime,
         startPort: ruleParameters.startPort,
         endPort: ruleParameters.endPort,
-        resultToken: resultToken
+        resultToken: resultToken,
+        creds:event.creds
     };
 
     function succeeded(input) { context.done(null, true); }
@@ -55,11 +56,11 @@ exports.handler = function (event, context) {
     function errored(err) { context.fail(err, null); }
 
     var flows = [
-        {func:aws_sts.assumeRoles, success:aws_sg.sgInboundRulesHasPortRange, failure:failed, error:errored},
+      //  {func:aws_sts.assumeRoles, success:aws_sg.sgInboundRulesHasPortRange, failure:failed, error:errored},
         {func:aws_sg.sgInboundRulesHasPortRange, success:aws_config.sendEvaluation, failure:aws_config.sendEvaluation, error:errored},
     ];
     aws_sg.flows = flows;
-    aws_sts.flows = flows;
+    //aws_sts.flows = flows;
     aws_config.flows = flows;
 
     flows[0].func(input);

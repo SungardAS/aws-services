@@ -1,22 +1,22 @@
 
 exports.handler = function (event, context) {
 
-  var aws_sts = new (require('../lib/aws/sts'))();
+  //var aws_sts = new (require('../lib/aws/sts'))();
   var aws_bucket = new (require('../lib/aws/s3bucket.js'))();
   var aws_trail = new (require('../lib/aws/cloudtrail.js'))();
 
-  if (!event.federateRoleName)  event.federateRoleName = "federate";
+  //if (!event.federateRoleName)  event.federateRoleName = "federate";
 
-  var roles = [];
-  if (event.federateAccount) {
-    roles.push({roleArn:'arn:aws:iam::' + event.federateAccount + ':role/' + event.federateRoleName});
-    var admin_role = {roleArn:'arn:aws:iam::' + event.account + ':role/' + event.roleName};
-    if (event.roleExternalId) {
-      admin_role.externalId = event.roleExternalId;
-    }
-    roles.push(admin_role);
-  }
-  console.log(roles);
+  //var roles = [];
+  //if (event.federateAccount) {
+  //  roles.push({roleArn:'arn:aws:iam::' + event.federateAccount + ':role/' + event.federateRoleName});
+  //  var admin_role = {roleArn:'arn:aws:iam::' + event.account + ':role/' + event.roleName};
+  //  if (event.roleExternalId) {
+  //    admin_role.externalId = event.roleExternalId;
+  //  }
+  //  roles.push(admin_role);
+ // }
+ // console.log(roles);
 
   var sessionName = event.sessionName;
   if (sessionName == null || sessionName == "") {
@@ -63,11 +63,12 @@ exports.handler = function (event, context) {
 
   var input = {
     sessionName: sessionName,
-    roles: roles,
+    //roles: roles,
     region: event.region,
     trailName: data_json.trailName,
     bucketName: bucketName,
-    policyDocument: policyDoc
+    policyDocument: policyDoc,
+    creds:event.creds
   };
   if (event.multiRegion)  input.multiRegion = event.multiRegion;
 
@@ -76,7 +77,7 @@ exports.handler = function (event, context) {
   function errored(err) { context.fail(err, null); }
 
   var flows = [
-    {func:aws_sts.assumeRoles, success:aws_bucket.findBucket, failure:failed, error:errored},
+    //{func:aws_sts.assumeRoles, success:aws_bucket.findBucket, failure:failed, error:errored},
     {func:aws_bucket.findBucket, success:aws_trail.findTrails, failure:aws_bucket.createBucket, error:errored},
     {func:aws_bucket.createBucket, success:aws_bucket.addPolicy, failure:failed, error:errored},
     {func:aws_bucket.addPolicy, success:aws_trail.findTrails, failure:failed, error:errored},
@@ -85,7 +86,7 @@ exports.handler = function (event, context) {
     {func:aws_trail.isLogging, success:succeeded, failure:aws_trail.startLogging, error:errored},
     {func:aws_trail.startLogging, success:succeeded, failure:failed, error:errored},
   ];
-  aws_sts.flows = flows;
+  //aws_sts.flows = flows;
   aws_bucket.flows = flows;
   aws_trail.flows = flows;
 

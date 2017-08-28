@@ -1,22 +1,22 @@
 
 exports.handler = function (event, context) {
 
-  var aws_sts = new (require('../lib/aws/sts'))();
+  //var aws_sts = new (require('../lib/aws/sts'))();
   var aws_topic = new (require('../lib/aws/topic.js'))();
   var aws_config = new (require('../lib/aws/awsconfig.js'))();
   var aws_role = new (require('../lib/aws/role.js'))();
 
-  if (!event.federateRoleName)  event.federateRoleName = "federate";
+  //if (!event.federateRoleName)  event.federateRoleName = "federate";
 
-  var roles = [];
-  if (event.federateAccount) {
-    roles.push({roleArn:'arn:aws:iam::' + event.federateAccount + ':role/' + event.federateRoleName});
-    var admin_role = {roleArn:'arn:aws:iam::' + event.account + ':role/' + event.roleName};
-    if (event.roleExternalId) {
-      admin_role.externalId = event.roleExternalId;
-    }
-    roles.push(admin_role);
-  }
+  //var roles = [];
+  //if (event.federateAccount) {
+  //  roles.push({roleArn:'arn:aws:iam::' + event.federateAccount + ':role/' + event.federateRoleName});
+  //  var admin_role = {roleArn:'arn:aws:iam::' + event.account + ':role/' + event.roleName};
+  //  if (event.roleExternalId) {
+  //    admin_role.externalId = event.roleExternalId;
+  //  }
+  //  roles.push(admin_role);
+  //}
   console.log(roles);
 
   var sessionName = event.sessionName;
@@ -30,11 +30,12 @@ exports.handler = function (event, context) {
 
   var input = {
     sessionName: sessionName,
-    roles: roles,
+    //roles: roles,
     region: event.region,
     topicName : data_json.topicName,
     roleName : data_json.roleName + "-" + event.region,
     inlinePolicyName : data_json.inlinePolicyName,
+    creds:event.creds
   };
 
   function succeeded(input) { context.done(null, true); }
@@ -42,7 +43,7 @@ exports.handler = function (event, context) {
   function errored(err) { context.fail(err, null); }
 
   var flows = [
-    {func:aws_sts.assumeRoles, success:aws_config.findRecorders, failure:failed, error:errored},
+    //{func:aws_sts.assumeRoles, success:aws_config.findRecorders, failure:failed, error:errored},
     {func:aws_config.findRecorders, success:aws_config.findRecordersStatus, failure:aws_config.findChannels, error:errored},
     {func:aws_config.findRecordersStatus, success:aws_config.stopRecorder, failure:aws_config.findChannels, error:errored},
     {func:aws_config.stopRecorder, success:aws_config.findChannels, failure:failed, error:errored},
@@ -58,7 +59,7 @@ exports.handler = function (event, context) {
     {func:aws_role.deleteInlinePolicy, success:aws_role.deleteRole, failure:failed, error:errored},
     {func:aws_role.deleteRole, success:succeeded, failure:failed, error:errored},
   ];
-  aws_sts.flows = flows;
+  //aws_sts.flows = flows;
   aws_topic.flows = flows;
   aws_config.flows = flows;
   aws_role.flows = flows;
