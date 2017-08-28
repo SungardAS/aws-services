@@ -1,6 +1,6 @@
 exports.handler = function (event, context) {
 
-  var aws_sts = new (require('../lib/aws/sts'))();
+  //var aws_sts = new (require('../lib/aws/sts'))();
   //var aws_stack = new (require('../lib/aws/stack'))();
   var aws_cfn = new (require('../lib/aws/awscfn'))();
   var aws_ec2 = new (require('../lib/aws/ec2'))();
@@ -73,6 +73,7 @@ exports.handler = function (event, context) {
     aws_s3.flows = flows;
   }else if(event.actionType == "deleteStack"){
     input.bucketName = event.bucketName;
+    input.selfAccount = true;
     var flows = [
       {func:aws_s3.deletePolicy, success:aws_ec2.deleteLaunchAMIPermission, failure:failed, error:errored},
       {func:aws_ec2.deleteLaunchAMIPermission, success:aws_cfn.deleteStack, failure:failed, error:errored},
