@@ -1,26 +1,18 @@
 
 exports.handler = function (event, context) {
 
-  //var aws_sts = new (require('../lib/aws/sts'))();
   var aws_bucket = new (require('../lib/aws/s3bucket.js'))();
   var aws_topic = new (require('../lib/aws/topic.js'))();
   var aws_role = new (require('../lib/aws/role.js'))();
   var aws_config = new (require('../lib/aws/awsconfig.js'))();
   var aws_lambda = new (require('../lib/aws/lambda.js'))();
+  var aws  = require("aws-sdk");
 
- // if (!event.federateRoleName)  event.federateRoleName = "federate";
-
- // var roles = [];
- // if (event.federateAccount) {
- //   roles.push({roleArn:'arn:aws:iam::' + event.federateAccount + ':role/' + event.federateRoleName});
- //   var admin_role = {roleArn:'arn:aws:iam::' + event.account + ':role/' + event.roleName};
- //   if (event.roleExternalId) {
- //     admin_role.externalId = event.roleExternalId;
- //   }
- //   roles.push(admin_role);
- // }
- // console.log(roles);
-
+  var creds = new aws.Credentials({
+    accessKeyId: event.creds.AccessKeyId,
+    secretAccessKey: event.creds.SecretAccessKey,
+    sessionToken: event.creds.SessionToken
+  });
   var sessionName = event.sessionName;
   if (sessionName == null || sessionName == "") {
     sessionName = "session";
@@ -38,7 +30,6 @@ exports.handler = function (event, context) {
 
   var input = {
     sessionName: sessionName,
-    //roles: roles,
     region: event.region,
     deliveryChannelName : data_json.deliveryChannelName,
     configRecorderName : data_json.configRecorderName,
@@ -57,8 +48,9 @@ exports.handler = function (event, context) {
     topicArn : null,
     sourceArn : null,
     inlinePolicyDoc : null,
-    creds:event.creds
+    creds:creds
   };
+  console.log(input);
 
  function resetAuth(input)
    {
@@ -73,7 +65,6 @@ exports.handler = function (event, context) {
   function errored(err) { context.fail(err, null); }
 
   var flows = [
-    //{func:aws_sts.assumeRoles, success:aws_role.findRoleByPrefix, failure:failed, error:errored},
     {func:aws_role.findRoleByPrefix, success:aws_role.findInlinePolicy, failure:aws_role.createRole, error:errored},
     {func:aws_role.createRole, success:aws_role.findInlinePolicy, failure:failed, error:errored},
     {func:aws_role.findInlinePolicy, success:aws_bucket.findBucket, failure:aws_role.createInlinePolicy, error:errored},
@@ -95,7 +86,6 @@ exports.handler = function (event, context) {
     {func:aws_lambda.addPermission, success:aws_topic.subscribeLambda, failure:failed, error:errored},
     {func:aws_topic.subscribeLambda, success:succeeded, failure:failed, error:errored},
   ];
-  //aws_sts.flows = flows;
   aws_bucket.flows = flows;
   aws_topic.flows = flows;
   aws_role.flows = flows;
