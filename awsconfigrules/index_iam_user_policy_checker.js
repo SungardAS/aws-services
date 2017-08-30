@@ -1,4 +1,5 @@
 exports.handler = function(event, context ) {
+  var aws  = require("aws-sdk");
 
 
     const EVALUATION_TYPES = {
@@ -45,6 +46,11 @@ exports.handler = function(event, context ) {
     //    roles.push(admin_role);
     //}
     //console.log(roles);
+    var creds = new aws.Credentials({
+      accessKeyId: event.creds.AccessKeyId,
+      secretAccessKey: event.creds.SecretAccessKey,
+      sessionToken: event.creds.SessionToken
+    });
 
     var sessionName = event.sessionName;
     if (sessionName == null || sessionName == "") {
@@ -75,7 +81,7 @@ exports.handler = function(event, context ) {
     iamService.getUsersWithPolicies.then(function (data) {
         //iamService = new (require('../lib/aws-promise/iam.js'))();
         //global.creds = data;
-        global.creds = event.creds;
+        global.creds = creds;
         //return iamService.getUsersWithPolicies(data);
     //}).then(function(data) {
         evaluations = [];
