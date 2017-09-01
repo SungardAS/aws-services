@@ -1,5 +1,4 @@
 exports.handler = function(event, context ) {
-  var aws  = require("aws-sdk");
 
 
     const EVALUATION_TYPES = {
@@ -22,7 +21,7 @@ exports.handler = function(event, context ) {
         return eval;
     }
 
-    //var aws_sts = new (require('../lib/aws-promise/sts.js'))();
+    var aws_sts = new (require('../lib/aws-promise/sts.js'))();
     var aws_config = new (require('../lib/aws/awsconfig.js'))();
     if (event.ruleParameters){
         var ruleParameters = JSON.parse(event.ruleParameters);
@@ -33,24 +32,20 @@ exports.handler = function(event, context ) {
         event.roleExternalId = ruleParameters.roleExternalId;
     }
 
-    //if (!event.federateRoleName)  event.federateRoleName = "federate";
+    if (!event.federateRoleName)  event.federateRoleName = "federate";
 
-    //var roles = [];
+    var roles = [];
 
-    //if (event.federateAccount) {
-    //    roles.push({roleArn:'arn:aws:iam::' + event.federateAccount + ':role/' + event.federateRoleName});
-    //    var admin_role = {roleArn:'arn:aws:iam::' + event.account + ':role/' + event.roleName};
-    //    if (event.roleExternalId) {
-    //        admin_role.externalId = event.roleExternalId;
-    //    }
-    //    roles.push(admin_role);
-    //}
-    //console.log(roles);
-    var creds = new aws.Credentials({
-      accessKeyId: event.creds.AccessKeyId,
-      secretAccessKey: event.creds.SecretAccessKey,
-      sessionToken: event.creds.SessionToken
-    });
+    if (event.federateAccount) {
+        roles.push({roleArn:'arn:aws:iam::' + event.federateAccount + ':role/' + event.federateRoleName});
+        var admin_role = {roleArn:'arn:aws:iam::' + event.account + ':role/' + event.roleName};
+        if (event.roleExternalId) {
+            admin_role.externalId = event.roleExternalId;
+        }
+        roles.push(admin_role);
+    }
+    console.log(roles);
+	console.log(event)
 
     var sessionName = event.sessionName;
     if (sessionName == null || sessionName == "") {
@@ -68,22 +63,20 @@ exports.handler = function(event, context ) {
 
     var input = {
         sessionName: sessionName,
-     //   roles: roles,
+        roles: roles,
         region: ruleParameters.region,
         resourceType: invokingEvent.configurationItem.resourceType,
         resourceId: invokingEvent.configurationItem.resourceId,
         timeStamp: invokingEvent.configurationItem.configurationItemCaptureTime,
         resultToken: resultToken
     };
-    //var stsAssumeRolePromise = aws_sts.assumeRoles(input);
-    iamService = new (require('../lib/aws-promise/iam.js'))();
-    //stsAssumeRolePromise.then(function (data) {
-    iamService.getUsersWithPolicies.then(function (data) {
-        //iamService = new (require('../lib/aws-promise/iam.js'))();
-        //global.creds = data;
-        global.creds = creds;
-        //return iamService.getUsersWithPolicies(data);
-    //}).then(function(data) {
+    var stsAssumeRolePromise = aws_sts.assumeRolesByLambda(input);
+    stsAssumeRolePromise.then(function (data) {
+	console.log(data)
+        iamService = new (require('../lib/aws-promise/iam.js'))();
+        global.creds = data;
+        return iamService.getUsersWithPolicies(data);
+    }).then(function(data) {
         evaluations = [];
         var aws_config = new (require('../lib/aws/awsconfig.js'))();
         keys = Object.keys(data);

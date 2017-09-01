@@ -29,7 +29,7 @@ exports.handler = function (event, context) {
          sourceID: event.sourceID,
          resourceType: event.resourceType,
          descript: event.description,
-         params: JSON.stringify(event.params),
+         params: event.params,
          messageType: event.messageType,
          functionName: event.functionName,
          principal: event.principal,
