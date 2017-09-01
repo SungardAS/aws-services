@@ -18,6 +18,11 @@ exports.handler = function (event, context) {
   //}
   //console.log(roles);
   console.log(event);
+  var creds = new aws.Credentials({
+    accessKeyId: event.creds.AccessKeyId,
+    secretAccessKey: event.creds.SecretAccessKey,
+    sessionToken: event.creds.SessionToken
+  });
 
   var sessionName = event.sessionName;
   if (sessionName == null || sessionName == "") {
@@ -26,27 +31,18 @@ exports.handler = function (event, context) {
   function succeeded(input) { context.done(null,true);}
   function failed(input) { context.done(null, false); }
   function errored(err) { context.fail(err, false); }
-  function setCreds(input) {
-    var creds = new aws.Credentials({
-      accessKeyId: event.creds.AccessKeyId,
-      secretAccessKey: event.creds.SecretAccessKey,
-      sessionToken: event.creds.SessionToken
-    });
-    input.creds = creds;
-  console.log("1111111");
-  console.log(input);
- }
+
 
 
   var input = {
      sessionName: sessionName,
-     roles: roles,
+     //roles: roles,
      region: event.region,
      stackName: event.stackName,
      params:event.params,
      s3Url:event.url,
      account:event.account,
-     creds:JSON.parse(event.creds)
+     creds:creds
   };
   if(event.actionType == "createStack"){
         var policy = {
@@ -67,11 +63,10 @@ exports.handler = function (event, context) {
         input.bucketName = event.bucketName;
         input.policyDocument = JSON.stringify(policy);
         input.account = event.account;
-        input.selfAccount = true;
+        input.selfAccount = true;  // this flag used for check whether code require execute in master or customer account
      
         var flows = [
-           {func:aws_s3.updatePolicy, success:setCreds, failure:failed, error:errored},
-           {func:setCreds, success:aws_cfn.createCfnStack, failure:failed, error:errored},
+           {func:aws_s3.updatePolicy, success:aws_cfn.createCfnStack, failure:failed, error:errored},
            //{func:aws_sts.assumeRoles, success:aws_cfn.createCfnStack, failure:failed, error:errored},
            {func:aws_cfn.createCfnStack, success:succeeded, failure:failed, error:errored},
         ];
