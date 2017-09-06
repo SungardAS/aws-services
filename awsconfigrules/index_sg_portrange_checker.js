@@ -55,7 +55,7 @@ exports.handler = function (event, context) {
     function errored(err) { context.fail(err, null); }
 
     var flows = [
-        {func:aws_sts.assumeRoles, success:aws_sg.sgInboundRulesHasPortRange, failure:failed, error:errored},
+        {func:aws_sts.assumeRolesByLambda, success:aws_sg.sgInboundRulesHasPortRange, failure:failed, error:errored},
         {func:aws_sg.sgInboundRulesHasPortRange, success:aws_config.sendEvaluation, failure:aws_config.sendEvaluation, error:errored},
     ];
     aws_sg.flows = flows;
