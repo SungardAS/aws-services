@@ -1,5 +1,7 @@
 {{#layout}}
 
+  {{resource "lex_ec2_lambda" logicalId="LexEc2Lambda"}}
+  {{resource "lex_ec2_health_lambda" logicalId="LexEc2HealthLambda"}}
   {{resource "security_group_lambda" logicalId="SecurityGroupLambda"}}
   {{resource "lambda_execution_role" logicalId="LambdaExecutionRole"}}
   {{resource "deployer_lambda_execution_role" logicalId="DeployerLambdaExecutionRole"}}
