@@ -1,7 +1,7 @@
 
 exports.handler = function (event, context) {
 
-    var aws_sts = new (require('../lib/aws/sts'))();
+    var aws_sts = new (require('../lib/aws/lambda'))();
     var aws_ec2 = new (require('../lib/aws/ec2.js'))();
     var aws_config = new (require('../lib/aws/awsconfig.js'))();
     if (event.ruleParameters){
@@ -62,7 +62,7 @@ exports.handler = function (event, context) {
     function errored(err) { context.fail(err, null); }
 
     var flows = [
-        {func:aws_sts.assumeRoles, success:aws_ec2.securityGroupHasRules, failure:failed, error:errored},
+        {func:aws_sts.assumeRolesByLambda, success:aws_ec2.securityGroupHasRules, failure:failed, error:errored},
         {func:aws_ec2.securityGroupHasRules, success:aws_config.sendEvaluations, failure:aws_config.sendEvaluations, error:errored},
         {func:aws_config.sendEvaluations, success:succeeded, failure:failed, error:errored},
     ];

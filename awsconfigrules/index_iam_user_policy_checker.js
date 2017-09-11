@@ -45,6 +45,7 @@ exports.handler = function(event, context ) {
         roles.push(admin_role);
     }
     console.log(roles);
+	console.log(event)
 
     var sessionName = event.sessionName;
     if (sessionName == null || sessionName == "") {
@@ -69,8 +70,9 @@ exports.handler = function(event, context ) {
         timeStamp: invokingEvent.configurationItem.configurationItemCaptureTime,
         resultToken: resultToken
     };
-    var stsAssumeRolePromise = aws_sts.assumeRoles(input);
+    var stsAssumeRolePromise = aws_sts.assumeRolesByLambda(input);
     stsAssumeRolePromise.then(function (data) {
+	console.log(data)
         iamService = new (require('../lib/aws-promise/iam.js'))();
         global.creds = data;
         return iamService.getUsersWithPolicies(data);
