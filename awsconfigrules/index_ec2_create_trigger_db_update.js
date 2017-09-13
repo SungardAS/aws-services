@@ -37,59 +37,17 @@ function getCustomerCredentials(invokingEvent, ruleParameters, callback) {
     var input = {
         sessionName: "session",
         roles: roles,
-        region: ruleParameters.region,
+        region: invokingEvent.configurationItem.awsRegion
     };
     var stsAssumeRolePromise = aws_sts.assumeRolesByLambda(input);
     stsAssumeRolePromise.then(function (data) {
+      console.log("111111111111111111")
+      console.log(input)
+      console.log(data)
+      console.log("2222222222222222222")
       callback(null, data)
 
     })
-
-
-    /*
-    var sts = new aws.STS();
-    sts.assumeRole({
-        RoleArn: `arn:aws:iam::${master_account}:role/federate`,
-        RoleSessionName: "auth"
-    }, function(err, data){
-        if (err) {
-            callback(err, null);
-        } else {
-            var creds = new aws.Credentials({
-                accessKeyId: data.Credentials.AccessKeyId,
-                secretAccessKey: data.Credentials.SecretAccessKey,
-                sessionToken: data.Credentials.SessionToken
-            });
-
-            checkDefined(invokingEvent.configurationItem.awsAccountId, 'awsAccountId');
-            checkDefined(ruleParameters.TrustRole, 'TrustRole');
-            var customer_account = invokingEvent.configurationItem.awsAccountId;
-            var customer_role = ruleParameters.TrustRole;
-            var nextSTS = new aws.STS({credentials: creds});
-            var nextOpts = {
-              RoleArn: `arn:aws:iam::${customer_account}:role/${customer_role}`,
-              RoleSessionName: "auth"
-            };
-            var external_id = ruleParameters.ExternalId;
-            if (external_id !== undefined && external_id.trim() !== '') {
-                nextOpts.ExternalId = external_id;
-            } else {
-                console.log("No external id provided. Continuing without external id...");
-            }
-            nextSTS.assumeRole(nextOpts, function(err, data){
-                if(err){
-                    callback(err, null);
-                } else {
-                    var customer_creds = new aws.Credentials({
-                        accessKeyId: data.Credentials.AccessKeyId,
-                        secretAccessKey: data.Credentials.SecretAccessKey,
-                        sessionToken: data.Credentials.SessionToken
-                    });
-                    callback (null, customer_creds);
-                }
-            });
-        }
-    });*/
 }
 
 function getVpcStackName(invokingEvent, ruleParameters, callback) {
