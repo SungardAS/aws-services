@@ -18,12 +18,35 @@ const aws = require('aws-sdk');
 const mysql = require('mysql');
 const uuid = require('uuid');
 const util = require('util');
+const aws_sts = new (require('../lib/aws-promise/sts.js'))();
 
 const config = new aws.ConfigService();
 const ec2 = new aws.EC2();
 
 function getCustomerCredentials(invokingEvent, ruleParameters, callback) {
+
     var master_account = process.env.MASTER_AWS_ACCOUNT;
+    var roles = [];
+    roles.push({roleArn:'arn:aws:iam::' + master_account + ':role/federate'});
+    var admin_role = {roleArn:'arn:aws:iam::' + invokingEvent.configurationItem.awsAccountId + ':role/' + ruleParameters.TrustRole};
+    if (ruleParameters.ExternalId) {
+        admin_role.externalId = ruleParameters.ExternalId;
+    }
+    roles.push(admin_role);
+    console.log(roles);
+    var input = {
+        sessionName: "session",
+        roles: roles,
+        region: ruleParameters.region,
+    };
+    var stsAssumeRolePromise = aws_sts.assumeRolesByLambda(input);
+    stsAssumeRolePromise.then(function (data) {
+      callback(null, data)
+
+    })
+
+
+    /*
     var sts = new aws.STS();
     sts.assumeRole({
         RoleArn: `arn:aws:iam::${master_account}:role/federate`,
@@ -66,7 +89,7 @@ function getCustomerCredentials(invokingEvent, ruleParameters, callback) {
                 }
             });
         }
-    });
+    });*/
 }
 
 function getVpcStackName(invokingEvent, ruleParameters, callback) {
