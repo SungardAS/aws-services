@@ -41,12 +41,8 @@ function getCustomerCredentials(invokingEvent, ruleParameters, callback) {
     };
     var stsAssumeRolePromise = aws_sts.assumeRolesByLambda(input);
     stsAssumeRolePromise.then(function (data) {
-      console.log("111111111111111111")
       console.log(input)
-      console.log(data)
-      console.log("2222222222222222222")
       callback(null, data)
-
     })
 }
 
