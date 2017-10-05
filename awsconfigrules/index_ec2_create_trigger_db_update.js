@@ -18,55 +18,32 @@ const aws = require('aws-sdk');
 const mysql = require('mysql');
 const uuid = require('uuid');
 const util = require('util');
+const aws_sts = new (require('../lib/aws-promise/sts.js'))();
 
 const config = new aws.ConfigService();
 const ec2 = new aws.EC2();
 
 function getCustomerCredentials(invokingEvent, ruleParameters, callback) {
-    var master_account = process.env.MASTER_AWS_ACCOUNT;
-    var sts = new aws.STS();
-    sts.assumeRole({
-        RoleArn: `arn:aws:iam::${master_account}:role/federate`,
-        RoleSessionName: "auth"
-    }, function(err, data){
-        if (err) {
-            callback(err, null);
-        } else {
-            var creds = new aws.Credentials({
-                accessKeyId: data.Credentials.AccessKeyId,
-                secretAccessKey: data.Credentials.SecretAccessKey,
-                sessionToken: data.Credentials.SessionToken
-            });
 
-            checkDefined(invokingEvent.configurationItem.awsAccountId, 'awsAccountId');
-            checkDefined(ruleParameters.TrustRole, 'TrustRole');
-            var customer_account = invokingEvent.configurationItem.awsAccountId;
-            var customer_role = ruleParameters.TrustRole;
-            var nextSTS = new aws.STS({credentials: creds});
-            var nextOpts = {
-              RoleArn: `arn:aws:iam::${customer_account}:role/${customer_role}`,
-              RoleSessionName: "auth"
-            };
-            var external_id = ruleParameters.ExternalId;
-            if (external_id !== undefined && external_id.trim() !== '') {
-                nextOpts.ExternalId = external_id;
-            } else {
-                console.log("No external id provided. Continuing without external id...");
-            }
-            nextSTS.assumeRole(nextOpts, function(err, data){
-                if(err){
-                    callback(err, null);
-                } else {
-                    var customer_creds = new aws.Credentials({
-                        accessKeyId: data.Credentials.AccessKeyId,
-                        secretAccessKey: data.Credentials.SecretAccessKey,
-                        sessionToken: data.Credentials.SessionToken
-                    });
-                    callback (null, customer_creds);
-                }
-            });
-        }
-    });
+    var master_account = process.env.MASTER_AWS_ACCOUNT;
+    var roles = [];
+    roles.push({roleArn:'arn:aws:iam::' + master_account + ':role/federate'});
+    var admin_role = {roleArn:'arn:aws:iam::' + invokingEvent.configurationItem.awsAccountId + ':role/' + ruleParameters.TrustRole};
+    if (ruleParameters.ExternalId) {
+        admin_role.externalId = ruleParameters.ExternalId;
+    }
+    roles.push(admin_role);
+    console.log(roles);
+    var input = {
+        sessionName: "session",
+        roles: roles,
+        region: invokingEvent.configurationItem.awsRegion
+    };
+    var stsAssumeRolePromise = aws_sts.assumeRolesByLambda(input);
+    stsAssumeRolePromise.then(function (data) {
+      console.log(input)
+      callback(null, data)
+    })
 }
 
 function getVpcStackName(invokingEvent, ruleParameters, callback) {
