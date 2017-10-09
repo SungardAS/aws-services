@@ -1,0 +1,21 @@
+{
+  "name": "particles-awsconfrules",
+  "version": "0.0.0",
+  "description": "[Condensation](https://github.com/SungardAS/condensation) particles that build AWS CloudFormation templates.",
+  "license": "Apache-2.0",
+  "keywords": [
+    "condensation-particles"
+  ],
+  "dependencies": {
+    "condensation": "^0.4.9",
+    "config": "^1.16.0",
+    "git-rev-sync": "^1.4.0",
+    "gulp": "^3.9.0",
+    "gulp-git": "^1.7.0",
+    "gulp-zip": "^3.2.0",
+    "particles-common-core": "^0.3.6",
+    "vinyl-fs": "^2.3.1",
+    "mysql": "2.13.0",
+    "uuid": "^2.0.2"
+  }
+}

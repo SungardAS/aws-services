@@ -1,0 +1,13 @@
+{{#layout}}
+  {{
+    parameter "module:particles-common-core" "base"
+    logicalId="role"
+    type="String"
+    description="role of federation lambda"
+  }}
+
+ 
+  {{resource "deployer_lambda_execution_role" logicalId="DeployerLambdaExecutionRole"}}
+  {{resource "aws_federation_lambda" logicalId="FederationLambda"}}
+
+{{/layout}}
