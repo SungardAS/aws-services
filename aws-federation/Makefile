@@ -1,7 +1,21 @@
 
 ifdef AWS_REGION
 else
-	AWS_REGION := us-east-1
+	AWS_REGION := us-west-1
+endif
+
+ifdef ENV
+else
+
+	ENV='qa_roleName';
+
+endif
+
+ifdef ROLE
+else
+	data := $(shell cat env/${ENV})
+        ROLE := $(data)
+
 endif
 
 build: setup
@@ -18,8 +32,7 @@ update:
 
 setup:
 	cd build.f/particles-aws-federation; npm install; ./node_modules/.bin/gulp condensation:build; ./node_modules/.bin/gulp condensation:deploy;
-	cd build.f; node run_stack launch --region $(AWS_REGION) --name AwsFederation --particles aws-federation ;
-	#cd build.f; node run_stack launch --region $(AWS_REGION) --name AwsFederation --particles aws-federation --parameters $(ROLE);
+	cd build.f; node run_stack launch --region $(AWS_REGION) --name AwsFederation --particles aws-federation --parameters '[{"ParameterKey":"roleName","ParameterValue":"$(ROLE)"}]';
 
 clean:
 	npm install;

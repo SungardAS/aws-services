@@ -2,8 +2,8 @@ var config = {
   s3: [
     {
       aws: {
-        region: 'us-east-2',
-        bucket: 'sgas.particles-aws-federation.442294194136.us-east-2'
+        region: 'us-west-1',
+        bucket: 'sgas.particles-aws-federation.622821376834.us-west-1'
       },
       clean: true,
       validate: true,
@@ -12,7 +12,7 @@ var config = {
     {
       aws: {
         region: 'us-east-2',
-        bucket: 'sgas.particles-aws-federation.442294194136.us-east-2'
+        bucket: 'sgas.particles-aws-federation.622821376834.us-east-2'
       },
       clean: true,
       validate: true,

@@ -9,8 +9,7 @@ module.exports.initialize = function(cb) {
     if (error) return cb(error);
   });
 
-  //vfs.src(['awsconfigrules/index_*.js', 'awsconfigrules/json/*.json', 'awsconfigrules/node_modules/**/*', 'lib/flow_controller.js', 'lib/aws/*.js' , 'lib/aws-promise/*.js'],{cwd:'../../..', base:'../../..'})
-  vfs.src(['aws-federation/index.js', 'aws-federation/json/*.json', 'aws-federation/node_modules/**/*', 'lib/flow_controller.js', 'lib/aws-promise/*.js'],{cwd:'../../..', base:'../../..'})
+  vfs.src(['aws-federation/index.js', 'aws-federation/node_modules/**/*', 'lib/flow_controller.js', 'lib/aws-promise/*.js'],{cwd:'../../..', base:'../../..'})
   .pipe(zip('aws-federation.zip'))
   .pipe(gulp.dest('./particles/assets'))
   .on('end', function(err, data) {

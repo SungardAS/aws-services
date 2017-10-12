@@ -1,12 +1,19 @@
 
 # AWSConfigRules
 
-AWS Lambda functions to manage the AWSConfig Rules
+AWS Lambda function to manage the Federation
 
 
 ## How To Setup
 
-    $ make -e AWS_REGION=<region>
+    $ make -e AWS_REGION=<region> ENV=<dev|qa|staging|prod_roleName> | ROLE=<roleName>
+    
+    For example:
+     $ make -e AWS_REGION=us-east-1 ENV=dev_roleName
+     
+     $ make -e AWS_REGION=us-east-1 ROLE="SungardAS-aws-services-feder-LambdaFunctionIAMRole-1TJ0PPEOJSUL8"
+     
+     $ make -e AWS_REGION=us-east-1 ENV=dev_roleName ROLE="SungardAS-aws-services-feder-LambdaFunctionIAMRole-1TJ0PPEOJSUL8"
 
 
 ## How To Update Lambda Function Codes
@@ -24,4 +31,4 @@ AWS Lambda functions to manage the AWSConfig Rules
     $ cd test
     $ node run_lambda <function_name>
       where
-        <function_name> is 'one of 'index_checker', 'index_enabler' or 'index_remover'
+        <function_name> is 'index'
