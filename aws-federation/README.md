@@ -1,5 +1,5 @@
 
-# AWSConfigRules
+# AWSFederation
 
 AWS Lambda function to manage the Federation
 
