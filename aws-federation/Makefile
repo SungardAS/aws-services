@@ -13,8 +13,7 @@ endif
 
 ifdef ROLE
 else
-	data := $(shell awk -F'[/=]' '{print $$2}' env/${ENV})
-        ROLE := $(data)
+        ROLE := $(shell awk -F'[/=]' '{print $$2}' env/${ENV})
 
 endif
 
