@@ -7,13 +7,13 @@ endif
 ifdef ENV
 else
 
-	ENV='qa_roleName';
+	ENV='dev';
 
 endif
 
 ifdef ROLE
 else
-	data := $(shell cat env/${ENV})
+	data := $(shell awk -F'[/=]' '{print $$2}' env/${ENV})
         ROLE := $(data)
 
 endif
