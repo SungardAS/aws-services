@@ -39,6 +39,9 @@
             },
             "C:\\sungardas\\Windows.ps1": {
                 "source": { "Fn::Join" : [ "", ["https://s3.amazonaws.com/", { "Ref" : "HpsaBucket" }, "/Windows.ps1"]]}
+            },
+            "C:\\sungardas\\ddagent-cli-latest.msi": {
+                "source": "https://s3.amazonaws.com/ddagent-windows-stable/ddagent-cli-latest.msi"
             }
         },
         "services" : {
@@ -58,6 +61,25 @@
                 "waitAfterCompletion": 0
             }
         }
+    },
+    "datadog": {
+        "commands": {
+             "install datadog": {
+                "command": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "msiexec /qn /i C:\\sungardas\\ddagent-cli-latest.msi APIKEY='",
+                      {
+                        "Ref": "datadogApiKey"
+                      },
+		      "' "
+                    ]
+                  ]
+                },
+                "waitAfterCompletion": 0
+              }
+            }
     },
     "routes": {
         "commands": {
