@@ -41,7 +41,7 @@
                 "source": { "Fn::Join" : [ "", ["https://s3.amazonaws.com/", { "Ref" : "HpsaBucket" }, "/Windows.ps1"]]}
             },
             "C:\\sungardas\\ddagent-cli-latest.msi": {
-                "source": "https://s3.amazonaws.com/ddagent-windows-stable/ddagent-cli-latest.msi"
+                "source": {"Ref": "datadogAgentUrl"}
             }
         },
         "services" : {
