@@ -38,11 +38,15 @@
                 },
 		" > /etc/hostname\n", 
 		"/opt/opsware/agent/pylibs/cog/bs_hardware\n",
-                "DD_API_KEY=",
+                "echo -e '[datadog]\nname = Datadog, Inc.\nbaseurl = https://yum.datadoghq.com/rpm/x86_64/\n
+                "enabled=1\ngpgcheck=1\npriority=1\n",
+                "gpgkey=https://yum.datadoghq.com/DATADOG_RPM_KEY.public\n' > /etc/yum.repos.d/datadog.repo\n",
+                "$sudo_cmd yum -y --disablerepo='*' --enablerepo='datadog' install datadog-agent || $sudo_cmd yum -y install datadog-agent\n",
+                "$sudo_cmd sh -c \"sed 's/api_key:.*/api_key: ",
                 {
                   "Ref": "datadogApiKey"
                 },
-                " bash -c \" $(curl -L https://raw.githubusercontent.com/DataDog/dd-agent/master/packaging/datadog-agent/source/install_agent.sh) \" \n",
+                "/' /etc/dd-agent/datadog.conf.example > /etc/dd-agent/datadog.conf\"\n ",
                 "/opt/aws/bin/cfn-init -v ",
                 " --stack ",
                 {
