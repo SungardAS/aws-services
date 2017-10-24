@@ -1,6 +1,6 @@
 {
     "configSets": {
-        "default": ["install_cfn", "datadog", "routes", "hpsaagentinstall", "rename", "bs_hardware"]
+        "default": ["install_cfn", "datadogSignatureCheck","datadog", "routes", "hpsaagentinstall", "rename", "bs_hardware"]
     },
     "install_cfn" : {
         "files" : {
@@ -61,6 +61,14 @@
                 "waitAfterCompletion": 0
             }
         }
+    },
+    "datadogSignatureCheck": {
+        "commands": {
+             "agent signature check": {
+                "command": { "Fn::Join" : ["", ["powershell.exe   $getAuthSig = Get-AuthenticodeSignature 'C:\\sungardas\\ddagent-cli-latest.msi' ; If($getAuthSig.Status -ne 'Valid') {throw $getAuthSig.path }"]] },
+                "waitAfterCompletion": 0
+             }
+         }
     },
     "datadog": {
         "commands": {
