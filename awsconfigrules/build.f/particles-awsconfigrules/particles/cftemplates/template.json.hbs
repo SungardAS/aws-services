@@ -3,14 +3,13 @@
   {{resource "security_group_lambda" logicalId="SecurityGroupLambda"}}
   {{resource "lambda_execution_role" logicalId="LambdaExecutionRole"}}
   {{resource "deployer_lambda_execution_role" logicalId="DeployerLambdaExecutionRole"}}
-  {{resource "awsconfigrules_role_federation" logicalId="AWSConfigRulesRoleFederation"}}
-  {{resource "federation_lambda_function" logicalId="FederationLambdaFunction"}}
   {{resource "enable_rules_lambda" logicalId="EnableRulesLambda"}}
   {{resource "delete_rules_lambda" logicalId="DeleteRulesLambda"}}
   {{resource "fetch_rules_lambda" logicalId="FetchRulesLambda"}}
   {{resource "iam_user_policy_checker_lambda" logicalId="IAMUserPolicyCheckerLambda"}}
   {{resource "sg_portrange_lambda" logicalId="SGPortRangeLambda"}}
   {{resource "ec2_create_trigger_db_update_lambda" logicalId="EC2CreateTriggerDbUpdateLambda"}}
+  {{resource "ec2_create_trigger_master_lambda_proxy" logicalId="EC2CreateTriggerMasterLambdaProxy"}}
   {{output "account_id" logicalId="AccountId"}}
   {{output "stacks_region" logicalId="StacksRegion"}}
   {{output "security_group_lambda_arn" logicalId="SecurityGroupLambdaArn"}}
@@ -19,4 +18,5 @@
   {{output "fetch_rules_lambda_arn" logicalId="FetchRulesLambdaArn"}}
   {{output "sg_portrange_lambda_arn" logicalId="SGPortRangeLambdaArn"}}
   {{output "ec2_create_trigger_db_update_lambda_arn" logicalId="EC2CreateTriggerDbUpdateLambdaArn"}}
+  {{output "ec2_create_trigger_master_lambda_proxy_arn" logicalId="EC2CreateTriggerMasterLambdaProxyArn"}}
 {{/layout}}

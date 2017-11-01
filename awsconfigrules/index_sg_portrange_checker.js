@@ -1,7 +1,7 @@
 
 exports.handler = function (event, context) {
 
-    var aws_sts = new (require('../lib/aws/sts'))();
+    var aws_sts = new (require('../lib/aws/lambda'))();
     var aws_sg = new (require('../lib/aws/sg-range.js'))();
     var aws_config = new (require('../lib/aws/awsconfig.js'))();
     if (event.ruleParameters){
@@ -55,7 +55,7 @@ exports.handler = function (event, context) {
     function errored(err) { context.fail(err, null); }
 
     var flows = [
-        {func:aws_sts.assumeRoles, success:aws_sg.sgInboundRulesHasPortRange, failure:failed, error:errored},
+        {func:aws_sts.assumeRolesByLambda, success:aws_sg.sgInboundRulesHasPortRange, failure:failed, error:errored},
         {func:aws_sg.sgInboundRulesHasPortRange, success:aws_config.sendEvaluation, failure:aws_config.sendEvaluation, error:errored},
     ];
     aws_sg.flows = flows;

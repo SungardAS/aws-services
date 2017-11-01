@@ -1,12 +1,9 @@
 {{#layout}}
 
-  {{resource "federation_lambda_function" logicalId="FederationLambdaFunction"}}
-  {{resource "federation_lambda_execution_role" logicalId="FederationLambdaExecutionRole"}}
   {{resource "cloudtrail_checker_function_info" logicalId="CloudTrailCheckerFunctionInfo"}}
   {{resource "cloudtrail_enabler_function_info" logicalId="CloudTrailEnablerFunctionInfo"}}
   {{resource "cloudtrail_remover_function_info" logicalId="CloudTrailRemoverFunctionInfo"}}
   {{resource "cloudtrail_function_role_info" logicalId="CloudTrailFunctionRoleInfo"}}
-  {{resource "cloudtrail_role_federation" logicalId="CloudTrailRoleFederation"}}
 
   {{output "cloudtrail_checker_function_arn" logicalId="CloudTrailCheckerFunctionArn"}}
   {{output "cloudtrail_enabler_function_arn" logicalId="CloudTrailEnablerFunctionArn"}}

@@ -1,0 +1,16 @@
+{{#resource}}
+  "Type": "AWS::Lambda::Function",
+  "Properties": {
+    "FunctionName": "SungardAS-Federation",
+    "Code": {
+      "S3Bucket": "{{s3.bucket}}",
+      "S3Key": "{{assetPath 'aws-federation.zip'}}"
+    },
+    "Handler": "aws-federation/index.handler",
+    "Runtime": "nodejs4.3",
+    "Timeout": "60",
+    "MemorySize": "128",
+    "Role": {"Fn::Join": ["", [ "arn:aws:iam::",{ "Ref": "AWS::AccountId" }, ":role/",{"Ref": "roleName"}]]}
+  }
+{{/resource}}
+

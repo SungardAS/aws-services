@@ -9,6 +9,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "minimist": "^1.1.2"
+    "minimist": "^1.1.2",
+    "mysql": "2.13.0",
+    "uuid": "^2.0.2"
   }
 }
