@@ -13,6 +13,7 @@ managedos="managed-os/build.f/particles-managed-os/config/default.js"
 managedelb="managed-elb/build.f/particles-initial/config/default.js"
 managedvpc="managed-vpc/build.f/particles-initial/config/default.js"
 managedvolume="managed-volume/build.f/particles-managed-volume/config/default.js"
+awsfederation="aws-federation/build.f/particles-aws-federation/config/default.js"
 makefile="Makefile"
 
 sed -e '0,/BUILD_SUBDIRS/ s/^#*/#/' -i $makefile
@@ -47,6 +48,8 @@ then
        sed -i "/bucket: /c\        bucket: 'sgas.particles-managed-vpc.$account.${regions[$i]}'" $managedvpc
        sed -i "/region: /c\        region: '${regions[$i]}'," $managedvolume
        sed -i "/bucket: /c\        bucket: 'sgas.particles-managed-volume.$account.${regions[$i]}'" $managedvolume
+       sed -i "/region: /c\        region: '${regions[$i]}'," $awsfederation
+       sed -i "/bucket: /c\        bucket: 'sgas.particles-aws-federation.$account.${regions[$i]}'" $awsfederation
        make clean
        make build
        continue
@@ -57,6 +60,8 @@ else
        sed -i "/bucket: /c\        bucket: 'sgas.particles-notificationalert.$account.${regions[$i]}'" $awsconfignotificationalert
        sed -i "/region: /c\        region: '${regions[$i]}'," $managedos
        sed -i "/bucket: /c\        bucket: 'sgas.particles-managed-os.$account.${regions[$i]}'" $managedos
+       sed -i "/region: /c\        region: '${regions[$i]}'," $awsfederation
+       sed -i "/bucket: /c\        bucket: 'sgas.particles-aws-federation.$account.${regions[$i]}'" $awsfederation
        make clean
        make build
 fi
