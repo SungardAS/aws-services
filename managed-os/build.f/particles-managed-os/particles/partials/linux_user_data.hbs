@@ -43,7 +43,7 @@
                   "Ref": "datadogApiKey"
                 },
 		"\n",
-		"if $datadog_api_key == 'nodatadog'; then\n",
+		"if [ \"$datadog_api_key\" == \"nodatadog\" ] \n then\n",
                 "echo -e '[datadog]\nname = Datadog, Inc.\nbaseurl = https://yum.datadoghq.com/rpm/x86_64/\n",
                 "enabled=1\ngpgcheck=1\npriority=1\n",
                 "gpgkey=https://yum.datadoghq.com/DATADOG_RPM_KEY.public\n' > /etc/yum.repos.d/datadog.repo\n",
