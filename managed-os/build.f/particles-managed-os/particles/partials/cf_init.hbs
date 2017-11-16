@@ -65,7 +65,7 @@
     "datadogSignatureCheck": {
         "commands": {
              "agent signature check": {
-                "command": { "Fn::Join" : ["", ["powershell.exe   $getAuthSig = Get-AuthenticodeSignature 'C:\\sungardas\\ddagent-cli-latest.msi' ; If($getAuthSig.Status -ne 'Valid') {throw $getAuthSig.path }"]] },
+                "command": {"Fn::If" : [ "isDatadogApiKey", {"Fn::Join" : ["", ["powershell.exe   $getAuthSig = Get-AuthenticodeSignature 'C:\\sungardas\\ddagent-cli-latest.msi' ; If($getAuthSig.Status -ne 'Valid') {throw $getAuthSig.path }"]]},""] },
                 "waitAfterCompletion": 0
              }
          }
@@ -73,18 +73,7 @@
     "datadog": {
         "commands": {
              "install datadog": {
-                "command": {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "msiexec /qn /i C:\\sungardas\\ddagent-cli-latest.msi APIKEY='",
-                      {
-                        "Ref": "datadogApiKey"
-                      },
-		      "' "
-                    ]
-                  ]
-                },
+                "command": {"Fn::If" : [ "isDatadogApiKey", { "Fn::Join": ["",["msiexec /qn /i C:\\sungardas\\ddagent-cli-latest.msi APIKEY='",{"Ref": "datadogApiKey"},"' "]]},""]},
                 "waitAfterCompletion": 0
               }
             }
