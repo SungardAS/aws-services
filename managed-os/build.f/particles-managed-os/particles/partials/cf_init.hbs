@@ -1,6 +1,6 @@
 {
     "configSets": {
-        "default": ["install_cfn", "routes", "hpsaagentinstall", "rename", "bs_hardware"]
+        "default": ["install_cfn", "datadogSignatureCheck","datadog", "routes", "hpsaagentinstall", "rename", "bs_hardware"]
     },
     "install_cfn" : {
         "files" : {
@@ -39,6 +39,9 @@
             },
             "C:\\sungardas\\Windows.ps1": {
                 "source": { "Fn::Join" : [ "", ["https://s3.amazonaws.com/", { "Ref" : "HpsaBucket" }, "/Windows.ps1"]]}
+            },
+            "C:\\sungardas\\ddagent-cli-latest.msi": {
+                "source": {"Ref": "datadogAgentUrl"}
             }
         },
         "services" : {
@@ -58,6 +61,22 @@
                 "waitAfterCompletion": 0
             }
         }
+    },
+    "datadogSignatureCheck": {
+        "commands": {
+             "agent signature check": {
+                "command": {"Fn::If" : [ "isDatadogApiKeyEmpty", {"Fn::Join" : ["echo 'No Datadog APIKEY'", ["powershell.exe   $getAuthSig = Get-AuthenticodeSignature 'C:\\sungardas\\ddagent-cli-latest.msi' ; If($getAuthSig.Status -ne 'Valid') {throw $getAuthSig.path }"]]},""] },
+                "waitAfterCompletion": 0
+             }
+         }
+    },
+    "datadog": {
+        "commands": {
+             "install datadog": {
+                "command": {"Fn::If" : [ "isDatadogApiKeyEmpty", "echo 'No Datadog APIKEY'", { "Fn::Join": ["",["msiexec /qn /i C:\\sungardas\\ddagent-cli-latest.msi APIKEY='",{"Ref": "datadogApiKey"},"' "]]}]},
+                "waitAfterCompletion": 0
+              }
+            }
     },
     "routes": {
         "commands": {
