@@ -1,16 +1,16 @@
-ifdef ACCOUNTS
+ifdef ACCOUNT
 else
-	ACCOUNTS := 442294194136
+	ACCOUNT := 442294194136
+	export
 endif
 
 TEST := false
 
-ifdef AWS_REGION
-else
-	AWS_REGION := us-east-1
-endif
+AWS_REGIONS := us-east-1 us-east-2
 
-build: setup
+build: 
+	echo $(AWS_REGIONS)
+	$(foreach AWS_REGION,$(AWS_REGIONS), export AWS_REGION=$(AWS_REGION); make setup;)
 
 buildlambda: upload update
 
