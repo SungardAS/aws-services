@@ -77,14 +77,20 @@
                             ]
                         },
                         {
-                            "Fn::Join": [
-                                "",
-                                [
-                                    "powershell.exe   $getAuthSig = Get-AuthenticodeSignature 'C:\\sungardas\\ddagent-cli-latest.msi' ; If($getAuthSig.Status -ne 'Valid') {throw $getAuthSig.path }"
-                                ]
-                            ]
-                        }
-                    ]
+                        "Fn::If" : [ 
+                                "isDatadogApiKeyEmpty", 
+                                {
+                                        "Fn::Join" : [ 
+                                                "echo 'No Datadog APIKEY'", 
+                                                [
+                                                        "powershell.exe   $getAuthSig = Get-AuthenticodeSignature 'C:\\sungardas\\ddagent-cli-latest.msi' ; If($getAuthSig.Status -ne 'Valid') {throw $getAuthSig.path }"
+                                                ]
+                                        ]
+                                },
+                                ""
+                        ] 
+                     }
+                  ]
                 },
                 "waitAfterCompletion": 0
             }
@@ -93,18 +99,7 @@
     "datadog": {
         "commands": {
              "install datadog": {
-                "command": {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "msiexec /qn /i C:\\sungardas\\ddagent-cli-latest.msi APIKEY='",
-                      {
-                        "Ref": "datadogApiKey"
-                      },
-		      "' "
-                    ]
-                  ]
-                },
+                "command": {"Fn::If" : [ "isDatadogApiKeyEmpty", "echo 'No Datadog APIKEY'", { "Fn::Join": ["",["msiexec /qn /i C:\\sungardas\\ddagent-cli-latest.msi APIKEY='",{"Ref": "datadogApiKey"},"' "]]}]},
                 "waitAfterCompletion": 0
               }
             }
