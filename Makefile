@@ -1,3 +1,9 @@
+ifdef AWS_REGION
+else
+       AWS_REGION := us-east-1
+       export
+endif
+
 build:
 	echo $(dir)
 	make build -C $(dir)
