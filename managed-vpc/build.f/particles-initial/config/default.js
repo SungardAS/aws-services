@@ -2,8 +2,8 @@ var config = {
   s3: [
     {
       aws: {
-        region: 'us-east-1',
-        bucket: 'sgas.particles-managed-vpc.714270045944.us-east-1'
+	region: process.env.AWS_REGION,
+        bucket: `sgas.particles-managed-vpc.${process.env.ACCOUNT}.${process.env.AWS_REGION}`
       },
       clean: true,
       validate: true,
