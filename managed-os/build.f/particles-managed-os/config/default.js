@@ -1,4 +1,4 @@
-r config = {
+var config = {
   s3: [
     {
       aws: {
