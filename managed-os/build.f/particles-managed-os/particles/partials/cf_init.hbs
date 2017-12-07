@@ -64,11 +64,37 @@
     },
     "datadogSignatureCheck": {
         "commands": {
-             "agent signature check": {
-                "command": {"Fn::If" : [ "isDatadogApiKeyEmpty", {"Fn::Join" : ["echo 'No Datadog APIKEY'", ["powershell.exe   $getAuthSig = Get-AuthenticodeSignature 'C:\\sungardas\\ddagent-cli-latest.msi' ; If($getAuthSig.Status -ne 'Valid') {throw $getAuthSig.path }"]]},""] },
+            "agent signature check": {
+                "command": {
+                    "Fn::If": [
+                        "isNeedToSkipSigAuthForDataDog",
+                        {
+                            "Fn::Join": [
+                                "",
+                                [
+                                    "echo Skipped Datadog Signature authentication successfully"
+                                ]
+                            ]
+                        },
+                        {
+                        "Fn::If" : [ 
+                                "isDatadogApiKeyEmpty", 
+                                {
+                                        "Fn::Join" : [ 
+                                                "echo 'No Datadog APIKEY'", 
+                                                [
+                                                        "powershell.exe   $getAuthSig = Get-AuthenticodeSignature 'C:\\sungardas\\ddagent-cli-latest.msi' ; If($getAuthSig.Status -ne 'Valid') {throw $getAuthSig.path }"
+                                                ]
+                                        ]
+                                },
+                                ""
+                        ] 
+                     }
+                  ]
+                },
                 "waitAfterCompletion": 0
-             }
-         }
+            }
+        }
     },
     "datadog": {
         "commands": {
