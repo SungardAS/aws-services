@@ -9,7 +9,7 @@ TEST := false
 ifdef AWS_REGION
 else
 	AWS_REGION := us-west-1
-        export
+       export
 endif
 
 ifdef ENV

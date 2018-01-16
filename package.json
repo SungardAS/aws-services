@@ -1,0 +1,12 @@
+{
+  "name": "aws-services",
+  "version": "1.0.0",
+  "description": "",
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "^2.182.0",
+    "sleep": "^5.1.1"
+  }
+}
+
