@@ -1,7 +1,15 @@
+ifdef ACCOUNT
+else
+        ACCOUNT := 442294194136
+        export
+endif
+
+TEST := false
 
 ifdef AWS_REGION
 else
 	AWS_REGION := us-west-1
+        export
 endif
 
 ifdef ENV
