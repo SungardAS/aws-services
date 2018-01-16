@@ -1,7 +1,8 @@
 
-ifdef ACCOUNTS
+ifdef ACCOUNT
 else
-	ACCOUNTS := 442294194136 714270045944
+	ACCOUNT := 442294194136
+       export
 endif
 
 TEST := false
@@ -9,6 +10,7 @@ TEST := false
 ifdef AWS_REGION
 else
 	AWS_REGION := us-east-1
+       export
 endif
 
 build: setup

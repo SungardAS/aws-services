@@ -1,3 +1,4 @@
 managed-os: eu-west-3
 awsconfigrules: eu-west-3
 aws-federation: eu-west-3
+awsconfig-notification-alert: eu-west-3

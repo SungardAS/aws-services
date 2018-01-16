@@ -2,8 +2,8 @@ var config = {
   s3: [
     {
       aws: {
-        region: 'us-west-2',
-        bucket: 'sgas.particles-notificationalert.442294194136.us-west-2'
+        region: process.env.AWS_REGION,
+        bucket: `sgas.particles-notificationalert.${process.env.ACCOUNT}.${process.env.AWS_REGION}`
       },
       clean: true,
       validate: true,
