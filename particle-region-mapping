@@ -4,3 +4,6 @@ awsconfig: us-west-2
 cloudtrail: us-west-2
 aws-federation: us-west-2
 awsconfigrules: us-west-2
+managed-volume: us-west-2
+managed-elb: us-west-2
+managed-vpc: us-west-2
