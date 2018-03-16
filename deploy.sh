@@ -11,6 +11,6 @@ while IFS=: read -r key value; do
         for i in ${REGIONS[@]}; do
                 export dir=$key
                 export AWS_REGION=$i
-                make build
+                make $1
         done
 done < "$FILENAME"

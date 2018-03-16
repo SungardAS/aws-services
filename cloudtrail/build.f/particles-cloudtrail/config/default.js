@@ -2,17 +2,8 @@ var config = {
   s3: [
     {
       aws: {
-        region: 'us-east-1',
-        bucket: 'sgas.particles-cloudtrail.089476987273.us-east-1'
-      },
-      clean: true,
-      validate: true,
-      create: true
-    },
-    {
-      aws: {
-        region: 'us-west-2',
-        bucket: 'sgas.particles-cloudtrail.089476987273.us-west-2'
+        region: process.env.AWS_REGION,
+        bucket: `sgas.particles-cloudtrail.${process.env.ACCOUNT}.${process.env.AWS_REGION}`
       },
       clean: true,
       validate: true,
