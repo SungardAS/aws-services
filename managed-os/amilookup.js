@@ -7,8 +7,9 @@ var osNameToPattern = {
     "Windows Server 2008 SP2 32-bit": "Windows_Server-2008-SP2-English-32Bit-Base-*",
     "Windows Server 2008 SP2 64-bit": "Windows_Server-2008-SP2-English-64Bit-Base-*",
     "Windows Server 2008 R2 64-bit": "Windows_Server-2008-R2_SP1-English-64Bit-Base-*",
-	  "Windows Server 2012 64-bit": "Windows_Server-2012-RTM-English-64Bit-Base-*",
-	  "Windows Server 2012 R2 64-bit": "Windows_Server-2012-R2_RTM-English-64Bit-Base-*",
+    "Windows Server 2012 64-bit": "Windows_Server-2012-RTM-English-64Bit-Base-*",
+    "Windows Server 2012 R2 64-bit": "Windows_Server-2012-R2_RTM-English-64Bit-Base-*",
+    "Windows Server 2016 Base": "Windows_Server-2016-English-Full-Base-*",
     "Red Hat Enterprise Linux 7.2": "RHEL-7.2_HVM_GA*"
 };
 
