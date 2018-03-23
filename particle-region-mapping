@@ -2,7 +2,6 @@ managed-os: us-west-2
 awscfn-stack-launcher: us-west-2
 awsconfig: us-west-2
 cloudtrail: us-west-2
-aws-federation: us-west-2
 awsconfigrules: us-west-2
 managed-volume: us-west-2
 managed-elb: us-west-2
