@@ -32,13 +32,13 @@
                 }
             },
             "C:\\sungardas\\opsware-agent-win64.exe": {
-                "source": { "Fn::Join" : [ "", ["https://s3.",{ "Ref": "AWS::Region" },".amazonaws.com/", { "Ref" : "HpsaBucket" }, "/opsware-agent-win64.exe"]]}
+                "source": { "Fn::Join" : [ "", [{ "Ref" : "HpsaBucket" }, "/opsware-agent-win64.exe"]]}
             },
             "C:\\sungardas\\opsware-agent-win32.exe": {
-                "source": { "Fn::Join" : [ "", ["https://s3.",{ "Ref": "AWS::Region" },".amazonaws.com/", { "Ref" : "HpsaBucket" }, "/opsware-agent-win32.exe"]]}
+                "source": { "Fn::Join" : [ "", [{ "Ref" : "HpsaBucket" }, "/opsware-agent-win32.exe"]]}
             },
             "C:\\sungardas\\Windows.ps1": {
-                "source": { "Fn::Join" : [ "", ["https://s3.",{ "Ref": "AWS::Region" },".amazonaws.com/", { "Ref" : "HpsaBucket" }, "/Windows.ps1"]]}
+                "source": { "Fn::Join" : [ "", [{ "Ref" : "HpsaBucket" }, "/Windows.ps1"]]}
             },
             "C:\\sungardas\\ddagent-cli-latest.msi": {
                 "source": {"Ref": "datadogAgentUrl"}
