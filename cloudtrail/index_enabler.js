@@ -30,7 +30,13 @@ exports.handler = function (event, context) {
     "us-west-2": "arn:aws:iam::113285607260:root",
     "eu-central-1": "arn:aws:iam::035351147821:root",
     "ap-northeast-2": "arn:aws:iam::492519147666:root",
-    "ap-south-1": "arn:aws:iam::977081816279:root"
+    "ap-south-1": "arn:aws:iam::977081816279:root",
+    "us-east-2": "arn:aws:iam::475085895292:root",
+    "ca-central-1": "arn:aws:iam::819402241893:root",
+    "us-east-1": "arn:aws:iam::086441151436:root",
+    "ap-northeast-3": "arn:aws:iam::765225791966:root",
+    "eu-west-2": "arn:aws:iam::282025262664:root",
+    "eu-west-3": "arn:aws:iam::262312530599:root"
   };
 
   // find root account id for that region
@@ -62,6 +68,7 @@ exports.handler = function (event, context) {
     trailName: data_json.trailName,
     bucketName: bucketName,
     policyDocument: policyDoc,
+    LogFileValidation: data_json.LogFileValidation,
     creds:creds
   };
   console.log(input);
