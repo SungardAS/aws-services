@@ -1,12 +1,10 @@
 {{!-- VPN-GATEWAY --}}
 {{parameter "m:vpc" "vpc/id" logicalId="VpcId" description="ID of VPC"}}
 
-{{parameter "m:core" "base" type="String" logicalId="ActiveTransitVpcTag" description="Vgw transit vpc spoke tag name of Virtual Private Gateway"}}
-
 {{#resource "vpngateway" logicalId="VpnGateway" nameTag=(ref "NameTag") }}
   "Properties": {
     "Type": "ipsec.1",
-    "Tags" : [ { "Key" : {{ref "ActiveTransitVpcTag"}}, "Value" : "true" },{ "Key" : "Name", "Value" : {{helper "m:core" "propertyValue" nameTag}} } ]
+    "Tags" : [ { "Key" : "transitvpc:spoke", "Value" : "true" },{ "Key" : "Name", "Value" : {{helper "m:core" "propertyValue" nameTag}} } ]
   }
 {{/resource}}
 {{#resource logicalId="VpngatewayAttachment"}}
