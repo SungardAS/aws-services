@@ -7,7 +7,7 @@
       "S3Key": "{{assetPath 'spotinst-lambda.zip'}}"
     },
     "Handler": "index.handler",
-    "Runtime": "nodejs4.3",
+    "Runtime": "nodejs8.10",
     "Timeout": "60",
     "Role": { "Fn::GetAtt" : ["SpotinstLambdaExecutionRole", "Arn"] }
   }
