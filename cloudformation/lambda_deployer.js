@@ -25,7 +25,7 @@ function LambdaFunctionDeployer() {
           FunctionName: input.functionName,
           Handler: input.handler,
           Role: input.roleArn,
-          Runtime: 'nodejs4.3',
+          Runtime: 'nodejs8.10',
           Description: '',
           MemorySize: input.memorySize,
           Timeout: input.timeout

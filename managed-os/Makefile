@@ -26,7 +26,6 @@ update:
 
 setup:
 	cd build.f/particles-managed-os; npm install; ./node_modules/.bin/gulp condensation:build; ./node_modules/.bin/gulp condensation:deploy;
-	cd build.f; node run_stack launch --region $(AWS_REGION) --name GetAMIId --particles managed-os;
 
 clean:
 	npm install;

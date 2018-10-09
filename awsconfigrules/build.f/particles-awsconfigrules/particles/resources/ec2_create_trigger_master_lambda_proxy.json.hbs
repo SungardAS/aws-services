@@ -7,7 +7,7 @@
       "S3Key": "{{assetPath 'awsconfigrules.zip'}}"
     },
     "Handler": "awsconfigrules/index_ec2_create_trigger_master_lambda_proxy.handler",
-    "Runtime": "nodejs4.3",
+    "Runtime": "nodejs8.10",
     "Timeout": "60",
     "MemorySize": "128",
     "Role": { "Fn::GetAtt" : ["LambdaExecutionRole", "Arn"] }
