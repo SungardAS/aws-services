@@ -17,7 +17,7 @@ var osNameToPattern = {
     "CIS Windows Server 2012 64-bit": "CIS Microsoft Windows Server 2012 Benchmark*",
     "CIS Windows Server 2012 R2 64-bit": "CIS Microsoft Windows Server 2012 R2 Benchmark*",
     "CIS Windows Server 2016 Base": "CIS Microsoft Windows Server 2016 Benchmark*",
-    "CIS Red Hat Enterprise Linux 7.2": "CIS Red Hat Enterprise Linux 7 Benchmark*"
+    "CIS Red Hat Enterprise Linux 7": "CIS Red Hat Enterprise Linux 7 Benchmark*"
 };
 
 var aws = require("aws-sdk");
