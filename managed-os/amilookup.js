@@ -10,7 +10,13 @@ var osNameToPattern = {
     "Windows Server 2012 64-bit": "Windows_Server-2012-RTM-English-64Bit-Base-*",
     "Windows Server 2012 R2 64-bit": "Windows_Server-2012-R2_RTM-English-64Bit-Base-*",
     "Windows Server 2016 Base": "Windows_Server-2016-English-Full-Base-*",
-    "Red Hat Enterprise Linux 7.2": "RHEL-7.2_HVM_GA*"
+    "Red Hat Enterprise Linux 7.2": "RHEL-7.2_HVM_GA*",
+    "CIS Windows Server 2008 SP2 64-bit": "CIS Microsoft Windows Server 2008 Benchmark*",
+    "CIS Windows Server 2008 R2 64-bit": "CIS Microsoft Windows Server 2008 R2 Benchmark*",
+    "CIS Windows Server 2012 64-bit": "CIS Microsoft Windows Server 2012 Benchmark*",
+    "CIS Windows Server 2012 R2 64-bit": "CIS Microsoft Windows Server 2012 R2 Benchmark*",
+    "CIS Windows Server 2016 Base": "CIS Microsoft Windows Server 2016 Benchmark*",
+    "CIS Red Hat Enterprise Linux 7": "CIS Red Hat Enterprise Linux 7 Benchmark*"
 };
 
 var aws = require("aws-sdk");
@@ -35,7 +41,10 @@ exports.handler = function(event, context) {
 
     if (firstword == "Windows") {
       owner = "amazon";
-    } else {
+    } else if (firstword == "CIS") {
+        owner = "aws-marketplace";
+    }
+    else {
       owner = "309956199498"
     }
 
