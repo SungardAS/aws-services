@@ -42,7 +42,7 @@ exports.handler = function(event, context) {
     if (firstword == "Windows") {
       owner = "amazon";
     } else if (firstword == "CIS") {
-        owner = "679593333241";
+        owner = "aws-marketplace";
     }
     else {
       owner = "309956199498"
